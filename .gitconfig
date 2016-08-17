@@ -1,2 +1,2 @@
 [flake8]
-    strict = true
+strict = true
