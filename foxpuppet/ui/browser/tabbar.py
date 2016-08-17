@@ -6,6 +6,7 @@ from foxpuppet.foxpuppet import FoxPuppet
 
 
 class TabBar(FoxPuppet):
+    # Some ridiculously long line fnkdsal;jkfdlsa;jkfl;dsajkfdla;jkal;jkdfs;ajkdfas;ljfkdsal;fjdkal;
     pass
 
 
