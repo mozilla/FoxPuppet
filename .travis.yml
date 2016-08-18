@@ -1,6 +1,8 @@
 python:
   - "2.7"
   - "3.5"
+  
+sudo: "required"
 
 install:
   - "pip install -r requirements.txt --use-mirrors"
