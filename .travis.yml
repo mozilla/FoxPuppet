@@ -1,0 +1,25 @@
+python:
+  - "2.7"
+  - "3.5"
+
+sudo: "required"
+
+before_install:
+  - "pip install virtualenv"
+  - "virtualenv venv"
+  - "source venv/bin/activate"
+
+install:
+  - "pip install -r requirements.txt "
+
+notifications:
+  webhooks:
+    urls:
+      - "https://silne30-foxpuppet.getbadges.io/api/app/webhook/b71ddba7-6feb-412c-8728-3efef552d02b"
+    on_start: "change"
+
+before_script:
+  - "flake8 ."
+
+script:
+  - "py.test --capture=sys --showlocals --tb=long foxpuppet/tests "
