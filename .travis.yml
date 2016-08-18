@@ -22,4 +22,4 @@ before_script:
   - "flake8 ."
 
 script:
-  - "py.test --capture=sys tests --show-locals --tb=long"
+  - "py.test --capture=sys --showlocals --tb=long tests "
