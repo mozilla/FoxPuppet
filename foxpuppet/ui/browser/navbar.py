@@ -5,7 +5,7 @@
 from foxpuppet.foxpuppet import FoxPuppet
 
 
-class TabBar(FoxPuppet):
+class Navbar(FoxPuppet):
 
     def __init__(self, *args, **kwargs):
-        self._tabbrowser = None
+        self._locationbar = None
