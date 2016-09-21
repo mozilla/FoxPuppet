@@ -7,5 +7,5 @@ from foxpuppet.foxpuppet import FoxPuppet
 
 class BaseWindow(FoxPuppet):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         pass

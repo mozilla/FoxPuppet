@@ -40,5 +40,18 @@ class BrowserWindow(FoxPuppet):
         self.selenium.switch_to()
         self.selenium.close()
 
-    def toggle_window_size(self):
-        
+    def min_window_size(self):
+        self.selenium.switch_to()
+        return self.selenium.find_element_by_id('titlebar-min')
+
+    def max_window_size(self):
+        self.selenium.switch_to()
+        return self.selenium.find_element_by_id('titlebar-max')
+
+    def new_private_browsing_window(self):
+        self.selenium.switch_to()
+        return self.selenium.find_element_by_id('privatebrowsing-button')
+
+    def new_window_button(self):
+        self.selenium.switch_to()
+        return self.selenium.find_element_by_id('new-window-button')
