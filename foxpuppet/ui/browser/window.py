@@ -3,16 +3,19 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from foxpuppet.foxpuppet import FoxPuppet
-from . import Navbar, TabBar
-from foxpuppet.ui import Windows, BaseWindow
+from .tabbar import TabBar
+from .navbar import Navbar
+from foxpuppet.ui.windows import Windows
+from foxpuppet.ui.base_window import BaseWindow
 
 
-class BrowserWindow(FoxPuppet):
+class Browser_Window(FoxPuppet):
 
-    def __init__(self, *args, **kwargs):
-        BaseWindow.__init__()
-        self.selenium = FoxPuppet.selenium
+    def __init__(self, foxpuppet, *args, **kwargs):
+        BaseWindow()
+        self.windows = Windows(foxpuppet)
 
+        self.selenium = foxpuppet.selenium
         self._navbar = None
         self._tabbar = None
 
@@ -28,7 +31,7 @@ class BrowserWindow(FoxPuppet):
 
     @property
     def tabbar(self):
-        self.selenium.switch_to()
+        self.selenium.switch_to.window(self.windows.current)
 
         if not self._tabbar:
             tabbrowser = self.selenium.find_element_by_id('tabbrowser-tabs')
@@ -36,22 +39,45 @@ class BrowserWindow(FoxPuppet):
 
         return self._tabbar
 
-    def close(self):
-        self.selenium.switch_to()
-        self.selenium.close()
+    def close(self, handle):
+        self.selenium.switch_to.window(handle)
+        self.selenium.find_element_by_id('titlebar-close').click()
+
+    def close_all(self, exceptions=None):
+
+        windows_to_keep = exceptions or []
+
+        for handle in self.windows.all:
+            if windows_to_keep == handle:
+                continue
+            self.selenium.switch_to.window(handle)
+            self.close(handle)
 
     def min_window_size(self):
-        self.selenium.switch_to()
-        return self.selenium.find_element_by_id('titlebar-min')
+        self.selenium.switch_to.window(self.windows.current)
+        button = self.selenium.find_element_by_id('titlebar-min')
+
+        button.click()
 
     def max_window_size(self):
-        self.selenium.switch_to()
-        return self.selenium.find_element_by_id('titlebar-max')
+        self.selenium.switch_to.window(self.windows.current)
+        button = self.selenium.find_element_by_id('titlebar-max')
+
+        button.click()
 
     def new_private_browsing_window(self):
-        self.selenium.switch_to()
-        return self.selenium.find_element_by_id('privatebrowsing-button')
+        self.selenium.switch_to.window(self.windows.current)
+        button = self.selenium.find_element_by_css_selector(
+            '#privatebrowsing-button'
+        )
+
+        button.click()
 
     def new_window_button(self):
-        self.selenium.switch_to()
-        return self.selenium.find_element_by_id('new-window-button')
+        self.selenium.switch_to.window(self.windows.current)
+        self.selenium.find_element_by_id('PanelUI-menu-button').click()
+        button = self.selenium.find_element_by_css_selector(
+            '#new-window-button'
+        )
+
+        button.click()
