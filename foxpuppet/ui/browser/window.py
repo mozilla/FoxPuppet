@@ -2,14 +2,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from foxpuppet.foxpuppet import FoxPuppet
 from .tabbar import TabBar
 from .navbar import Navbar
 from foxpuppet.ui.windows import Windows
 from foxpuppet.ui.base_window import BaseWindow
 
 
-class Browser_Window(FoxPuppet):
+class Browser_Window(object):
 
     def __init__(self, foxpuppet, *args, **kwargs):
         BaseWindow()
@@ -67,6 +66,7 @@ class Browser_Window(FoxPuppet):
 
     def new_private_browsing_window(self):
         self.selenium.switch_to.window(self.windows.current)
+        self.selenium.find_element_by_id('PanelUI-menu-button').click()
         button = self.selenium.find_element_by_css_selector(
             '#privatebrowsing-button'
         )
@@ -79,5 +79,12 @@ class Browser_Window(FoxPuppet):
         button = self.selenium.find_element_by_css_selector(
             '#new-window-button'
         )
+
+        button.click()
+
+    def bookmark_page(self):
+        self.selenium.switch_to.window(self.windows.current)
+        button = self.selenium.find_element_by_css_selector(
+            '#bookmarks-menu-button')
 
         button.click()
