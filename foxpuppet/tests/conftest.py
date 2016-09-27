@@ -1,5 +1,5 @@
 import pytest
-from foxpuppet.foxpuppet import FoxPuppet
+from foxpuppet import FoxPuppet
 from foxpuppet.ui.browser.window import Browser_Window
 
 

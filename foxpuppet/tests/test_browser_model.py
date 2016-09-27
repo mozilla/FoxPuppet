@@ -1,4 +1,4 @@
-from foxpuppet.foxpuppet import FoxPuppet
+from foxpuppet import FoxPuppet
 
 
 class Test_Browser_Window:
