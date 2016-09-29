@@ -34,3 +34,6 @@ class FoxPuppet(object):
 
     def bookmark_page(self):
         self.window._bookmark_page()
+
+    def new_tab(self):
+        self.window._new_tab()

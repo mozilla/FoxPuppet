@@ -37,7 +37,7 @@ class Window(object):
 
         if not self._tabbar:
             tabbrowser = self.selenium.find_element_by_id(TAB_BROWSER)
-            self._tabbar = TabBar(lambda: self.selenium, self, tabbrowser)
+            self._tabbar = TabBar(self.selenium, tabbrowser)
 
         return self._tabbar
 
@@ -84,5 +84,11 @@ class Window(object):
     def _bookmark_page(self):
         self.selenium.switch_to.window(self.windows.current)
         button = self.navbar._bookmark_page()
+
+        button.click()
+
+    def _new_tab(self):
+        self.selenium.switch_to.window(self.windows.current)
+        button = self.tabbar._new_tab()
 
         button.click()
