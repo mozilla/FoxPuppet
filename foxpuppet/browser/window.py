@@ -4,27 +4,30 @@
 
 from .tabbar import TabBar
 from .navbar import Navbar
-from foxpuppet.ui.windows import Windows
-from foxpuppet.ui.base_window import BaseWindow
+from foxpuppet.browser.windows import Windows
+
+NAV_BAR = 'nav-bar'
+TAB_BROWSER = 'tabbrowser-tabs'
+TITLE_BAR_CLOSE = 'titlebar-close'
+TITLE_BAR_MIN = 'titlebar-min'
+TITLE_BAR_MAX = 'titlebar-max'
 
 
-class Browser_Window(object):
+class Window(object):
 
-    def __init__(self, foxpuppet, *args, **kwargs):
-        BaseWindow()
-        self.windows = Windows(foxpuppet)
-
-        self.selenium = foxpuppet.selenium
+    def __init__(self, selenium, *args, **kwargs):
+        self.selenium = selenium
+        self.windows = Windows(selenium)
         self._navbar = None
         self._tabbar = None
 
     @property
     def navbar(self):
-        self.selenium.switch_to()
+        self.selenium.switch_to.window(self.windows.current)
 
         if not self._navbar:
-            navbar = self.selenium.find_element_by_id('nav-bar')
-            self._navbar = Navbar(lambda: self.selenium, self, navbar)
+            navbar = self.selenium.find_element_by_id(NAV_BAR)
+            self._navbar = Navbar(self.selenium, navbar)
 
         return self._navbar
 
@@ -33,14 +36,14 @@ class Browser_Window(object):
         self.selenium.switch_to.window(self.windows.current)
 
         if not self._tabbar:
-            tabbrowser = self.selenium.find_element_by_id('tabbrowser-tabs')
+            tabbrowser = self.selenium.find_element_by_id(TAB_BROWSER)
             self._tabbar = TabBar(lambda: self.selenium, self, tabbrowser)
 
         return self._tabbar
 
     def close(self, handle):
         self.selenium.switch_to.window(handle)
-        self.selenium.find_element_by_id('titlebar-close').click()
+        self.selenium.find_element_by_id(TITLE_BAR_CLOSE).click()
 
     def close_all(self, exceptions=None):
 
@@ -52,39 +55,34 @@ class Browser_Window(object):
             self.selenium.switch_to.window(handle)
             self.close(handle)
 
-    def min_window_size(self):
+    def _min_window_size(self):
         self.selenium.switch_to.window(self.windows.current)
-        button = self.selenium.find_element_by_id('titlebar-min')
+        button = self.selenium.find_element_by_id(TITLE_BAR_MIN)
 
         button.click()
 
-    def max_window_size(self):
+    def _max_window_size(self):
         self.selenium.switch_to.window(self.windows.current)
-        button = self.selenium.find_element_by_id('titlebar-max')
+        button = self.selenium.find_element_by_id(TITLE_BAR_MAX)
 
         button.click()
 
-    def new_private_browsing_window(self):
+    def _new_private_browsing_window(self):
         self.selenium.switch_to.window(self.windows.current)
-        self.selenium.find_element_by_id('PanelUI-menu-button').click()
-        button = self.selenium.find_element_by_css_selector(
-            '#privatebrowsing-button'
-        )
+        button = self.navbar._open_window(private=True)
 
         button.click()
 
-    def new_window_button(self):
+    def _new_window(self):
+
+        """ Opens a Non-Private widow """
         self.selenium.switch_to.window(self.windows.current)
-        self.selenium.find_element_by_id('PanelUI-menu-button').click()
-        button = self.selenium.find_element_by_css_selector(
-            '#new-window-button'
-        )
+        button = self.navbar._open_window(private=False)
 
         button.click()
 
-    def bookmark_page(self):
+    def _bookmark_page(self):
         self.selenium.switch_to.window(self.windows.current)
-        button = self.selenium.find_element_by_css_selector(
-            '#bookmarks-menu-button')
+        button = self.navbar._bookmark_page()
 
         button.click()

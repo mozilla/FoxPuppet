@@ -5,8 +5,8 @@
 
 class Windows(object):
 
-    def __init__(self, foxpuppet):
-        self.selenium = foxpuppet.selenium
+    def __init__(self, selenium):
+        self.selenium = selenium
         self._handle = None
 
     @property
