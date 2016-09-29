@@ -24,4 +24,4 @@ before_script:
   - "flake8 ."
 
 script:
-  - "py.test --capture=sys --showlocals --tb=long foxpuppet/tests "
+  - "py.test --capture=sys --showlocals --tb=long --driver Firefox foxpuppet/tests "
