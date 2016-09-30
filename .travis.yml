@@ -16,9 +16,6 @@ before_install:
   - if [[ $TOXENV == 'discopane-ui-tests' ]]; then gunzip -c geckodriver.tar.gz | tar xopf -; fi
   - if [[ $TOXENV == 'discopane-ui-tests' ]]; then chmod +x geckodriver && sudo mv geckodriver /usr/local/bin; fi
 
-install:
-  - "pip install -r requirements.txt "
-
 notifications:
   webhooks:
     urls:
