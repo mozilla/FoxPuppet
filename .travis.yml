@@ -11,7 +11,7 @@ env:
   - TOXENV=foxpuppet GUI=1
 
 before_install:
-  - wget -0 https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/firefox-52.0a1.en-US.linux-x86_64.tar.bz2
+  - wget -O https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/firefox-52.0a1.en-US.linux-x86_64.tar.bz2
   - tar -xvf firefox-52.0a1.en-US.linux-x86_64.tar.bz2
   - chmod +x firefox/firefox && sudo mv firefox/firefox /usr/local/bin
   - if [ $TOXENV ]; then sudo pip install tox; fi
