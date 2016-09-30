@@ -7,7 +7,7 @@ python:
 sudo: "required"
 
 addons:
-    firefox: "latest"
+    firefox: "52"
 
 env:
   matrix:
