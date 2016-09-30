@@ -6,6 +6,9 @@ python:
 
 sudo: "required"
 
+addons:
+    firefox: "latest"
+
 env:
   matrix:
   - TOXENV=foxpuppet GUI=1
