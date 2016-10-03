@@ -11,9 +11,9 @@ env:
   - TOXENV=foxpuppet GUI=1
 
 before_install:
-  - wget -O firefox-nightly.tar.gz https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/firefox-52.0a1.en-US.linux-x86_64.tar.bz2
-  - tar -xvf firefox-nightly.tar.gz
-  - chmod +x firefox/firefox && sudo mv firefox/firefox /usr/local/bin
+  - pip install mozdownload
+  - mozdownload --type=daily
+  - for f in *; do if [[ $f =~ (mozilla-central|firefox-52) ]]; then tar -xvf $f; fi; break; done
   - if [ $TOXENV ]; then sudo pip install tox; fi
   - if [[ $TOXENV == 'foxpuppet' ]]; then wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz; fi
   - if [[ $TOXENV == 'foxpuppet' ]]; then gunzip -c geckodriver.tar.gz | tar xopf -; fi
@@ -30,4 +30,4 @@ before_script:
   - if [ $GUI ]; then export DISPLAY=:99.0 && sh -e /etc/init.d/xvfb start && sleep 3; fi
 
 script:
-  - "py.test --capture=sys --showlocals --tb=long --driver Firefox foxpuppet/tests"
+  - "py.test --capture=sys --showlocals --tb=long --driver Firefox --firefpx-path=firefox/firefox-bin foxpuppet/tests"
