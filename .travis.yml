@@ -30,4 +30,4 @@ before_script:
   - if [ $GUI ]; then export DISPLAY=:99.0 && sh -e /etc/init.d/xvfb start && sleep 3; fi
 
 script:
-  - "py.test --capture=sys --showlocals --tb=long --driver Firefox --firefpx-path=firefox/firefox-bin foxpuppet/tests"
+  - "py.test --capture=sys --showlocals --tb=long --driver Firefox --firefox-path=firefox/firefox-bin foxpuppet/tests"
