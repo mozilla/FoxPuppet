@@ -7,17 +7,20 @@ python:
 sudo: "required"
 
 env:
-  matrix:
-  - TOXENV=foxpuppet GUI=1
+  global:
+    - DISPLAY=:99.0
+  - PYTHON_2=2.7.11
+  - PYTHON_3=3.5.1
 
 before_install:
-  - pip install mozdownload
-  - mozdownload --type=daily
-  - for f in *; do if [[ $f =~ (mozilla-central|firefox-52) ]]; then tar -xvf $f; fi; break; done
-  - if [ $TOXENV ]; then sudo pip install tox; fi
-  - if [[ $TOXENV == 'foxpuppet' ]]; then wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz; fi
-  - if [[ $TOXENV == 'foxpuppet' ]]; then gunzip -c geckodriver.tar.gz | tar xopf -; fi
-  - if [[ $TOXENV == 'foxpuppet' ]]; then chmod +x geckodriver && sudo mv geckodriver /usr/local/bin; fi
+  - pip install mozdownload mozinstall
+  - mozdownload --type daily --branch mozilla-central --destination firefox.tar.bz2
+  - mozinstall firefox.tar.bz2
+  - sudo ln -sf $PWD/firefox/firefox /usr/local/bin/firefox
+  - pip install tox; fi
+  - wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz; fi
+  - gunzip -c geckodriver.tar.gz | tar xopf -; fi
+  - chmod +x geckodriver && sudo mv geckodriver /usr/local/bin; fi
 
 notifications:
   webhooks:
@@ -26,8 +29,7 @@ notifications:
     on_start: "change"
 
 before_script:
-  - "flake8 ."
-  - if [ $GUI ]; then export DISPLAY=:99.0 && sh -e /etc/init.d/xvfb start -screen 0 1920x1080x24 && sleep 3; fi
+  - /etc/init.d/xvfb start
 
 script:
-  - "py.test --capture=sys --showlocals --tb=long --driver Firefox --firefox-path=firefox/firefox-bin foxpuppet/tests"
+  - tox
