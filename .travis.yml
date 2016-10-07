@@ -2,12 +2,16 @@ language: python
 
 sudo: "required"
 
+python:
+    - "2.7"
+    - "3.5"
+
 env:
   global:
     - DISPLAY=:99.0
   matrix:
-    - PYTHON_2=2.7.11
-    - PYTHON_3=3.5.1
+    - PYTHON_2=2.7
+    - PYTHON_3=3.5
 
 before_install:
   - pip install mozdownload mozinstall
