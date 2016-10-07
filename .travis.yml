@@ -18,7 +18,7 @@ before_install:
   - mozdownload --type daily --branch mozilla-central --destination firefox.tar.bz2
   - mozinstall firefox.tar.bz2
   - sudo ln -sf $PWD/firefox/firefox /usr/local/bin/firefox
-  - pip install tox; fi
+  - pip install tox
   - wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz; fi
   - gunzip -c geckodriver.tar.gz | tar xopf -; fi
   - chmod +x geckodriver && sudo mv geckodriver /usr/local/bin; fi
