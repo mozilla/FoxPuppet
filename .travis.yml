@@ -22,6 +22,8 @@ before_install:
   - wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz
   - gunzip -c geckodriver.tar.gz | tar xopf -
   - chmod +x geckodriver && sudo mv geckodriver /usr/local/bin
+  - firefox --version
+  - geckodriver --version
 
 notifications:
   webhooks:
@@ -31,7 +33,6 @@ notifications:
 
 before_script:
   - sh -e /etc/init.d/xvfb start
-  - sleep 5
 
 script:
   - tox
