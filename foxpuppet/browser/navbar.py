@@ -15,7 +15,7 @@ class Navbar(object):
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
         self._locationbar = None
-        self.wait = WebDriverWait(selenium, 5)
+        self.wait = WebDriverWait(selenium, 10)
 
     def _open_window(self, private=False):
 
