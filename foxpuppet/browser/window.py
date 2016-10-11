@@ -43,7 +43,9 @@ class Window(object):
 
     def close(self, handle):
         self.selenium.switch_to.window(handle)
-        self.selenium.find_element_by_id(TITLE_BAR_CLOSE).click()
+        button = self.selenium.find_element_by_id(TITLE_BAR_CLOSE)
+
+        button.click()
 
     def close_all(self, exceptions=None):
 
@@ -77,7 +79,7 @@ class Window(object):
 
         """ Opens a Non-Private widow """
         self.selenium.switch_to.window(self.windows.current)
-        button = self.navbar._open_window(private=False)
+        button = self.navbar._open_window()
 
         button.click()
 
