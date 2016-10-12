@@ -6,37 +6,30 @@
 from foxpuppet import FoxPuppet
 
 
-# Tests opening a new private browsing window via menu
 def test_new_private_window(selenium):
-
+    """Tests opening a new private browsing window via menu"""
     foxpuppet = FoxPuppet(selenium)
-    selenium.get('http://www.google.com')
     selenium.set_context('chrome')
-    foxpuppet.new_window(private=True)
+    foxpuppet.browser.navbar.open_window(private=True)
 
 
-# Tests opening a new window via menu
 def test_open_new_window(selenium):
-
+    """Tests opening a new window via menu"""
     foxpuppet = FoxPuppet(selenium)
     selenium.set_context('chrome')
-    foxpuppet.new_window()
+    foxpuppet.browser.navbar.open_window()
     selenium.set_context('content')
-    selenium.get('http://www.android.com')
-    assert selenium.title == 'Android'
 
 
-# Tests adding a new bookmark
 def test_bookmark_button(selenium):
-
+    """"Tests adding a new bookmark"""
     foxpuppet = FoxPuppet(selenium)
     selenium.set_context('chrome')
-    foxpuppet.bookmark_page()
+    foxpuppet.browser.navbar.bookmark_page()
 
 
 def test_new_tab_button(selenium):
-
+    """Tests opening a new tab via tab bar"""
     foxpuppet = FoxPuppet(selenium)
-    selenium.get('http://www.google.com')
     selenium.set_context('chrome')
-    foxpuppet.new_tab()
+    foxpuppet.browser.tabbar.open_tab()

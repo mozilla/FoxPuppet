@@ -3,19 +3,11 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-MENU_BUTTON = 'PanelUI-menu-button'
-
-
-class TabBar(object):
+class Tabbar(object):
 
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
         self._tabbrowser = None
 
-    def _new_tab(self):
-
-        button = self.selenium.find_element_by_css_selector(
-            '#new-tab-button'
-        )
-
-        return button
+    def open_tab(self):
+        self.selenium.find_element_by_css_selector('#new-tab-button').click()

@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from .tabbar import TabBar
+from .tabbar import Tabbar
 from .navbar import Navbar
 from foxpuppet.browser.windows import Windows
 
@@ -13,16 +13,16 @@ TITLE_BAR_MIN = 'titlebar-min'
 TITLE_BAR_MAX = 'titlebar-max'
 
 
-class Window(object):
+class BrowserWindow(object):
 
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
         self.windows = Windows(selenium)
-        self._navbar = None
-        self._tabbar = None
+        self.navbar = Navbar(selenium)
+        self.tabbar = Tabbar(selenium)
 
     @property
-    def navbar(self):
+    def _navbar(self):
         self.selenium.switch_to.window(self.windows.current)
 
         if not self._navbar:
@@ -32,65 +32,21 @@ class Window(object):
         return self._navbar
 
     @property
-    def tabbar(self):
+    def _tabbar(self):
         self.selenium.switch_to.window(self.windows.current)
 
         if not self._tabbar:
             tabbrowser = self.selenium.find_element_by_id(TAB_BROWSER)
-            self._tabbar = TabBar(self.selenium, tabbrowser)
+            self._tabbar = Tabbar(self.selenium, tabbrowser)
 
         return self._tabbar
 
     def close(self, handle):
-        self.selenium.switch_to.window(handle)
-        button = self.selenium.find_element_by_id(TITLE_BAR_CLOSE)
+        self.selenium.close()
 
-        button.click()
-
-    def close_all(self, exceptions=None):
-
-        windows_to_keep = exceptions or []
-
-        for handle in self.windows.all:
-            if windows_to_keep == handle:
-                continue
-            self.selenium.switch_to.window(handle)
-            self.close(handle)
-
-    def _min_window_size(self):
-        self.selenium.switch_to.window(self.windows.current)
+    def minimize(self):
         button = self.selenium.find_element_by_id(TITLE_BAR_MIN)
-
         button.click()
 
-    def _max_window_size(self):
-        self.selenium.switch_to.window(self.windows.current)
-        button = self.selenium.find_element_by_id(TITLE_BAR_MAX)
-
-        button.click()
-
-    def _new_private_browsing_window(self):
-        self.selenium.switch_to.window(self.windows.current)
-        button = self.navbar._open_window(private=True)
-
-        button.click()
-
-    def _new_window(self):
-
-        """ Opens a Non-Private widow """
-        self.selenium.switch_to.window(self.windows.current)
-        button = self.navbar._open_window()
-
-        button.click()
-
-    def _bookmark_page(self):
-        self.selenium.switch_to.window(self.windows.current)
-        button = self.navbar._bookmark_page()
-
-        button.click()
-
-    def _new_tab(self):
-        self.selenium.switch_to.window(self.windows.current)
-        button = self.tabbar._new_tab()
-
-        button.click()
+    def maximize(self):
+        self.selenium.maximize()
