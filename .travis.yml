@@ -9,9 +9,6 @@ python:
 env:
   global:
     - DISPLAY=:99.0
-  matrix:
-    - PYTHON_2=2.7
-    - PYTHON_3=3.5
 
 before_install:
   - pip install mozdownload mozinstall
@@ -24,6 +21,9 @@ before_install:
   - chmod +x geckodriver && sudo mv geckodriver /usr/local/bin
   - firefox --version
   - geckodriver --version
+
+install:
+  pip install tox-travis
 
 notifications:
   webhooks:
