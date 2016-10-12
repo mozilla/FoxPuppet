@@ -3,28 +3,34 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-MENU_BUTTON = 'PanelUI-menu-button'
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class Navbar(object):
-
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
         self._locationbar = None
+        self._menu_button = (By.ID, 'PanelUI-menu-button')
 
     def open_window(self, private=False):
-
+        self.selenium.set_context('chrome')
         if private:
-            self.selenium.find_element_by_id(MENU_BUTTON).click()
-            self.selenium.find_element_by_css_selector(
-                '#privatebrowsing-button').click()
+            self.selenium.find_element(*self._menu_button).click()
 
-        self.selenium.find_element_by_id(MENU_BUTTON).click()
-        self.selenium.find_element_by_css_selector(
-            '#new-window-button').click()
+            element = WebDriverWait(self.selenium, 5).until(
+                EC.visibility_of(self.selenium.find_element(
+                    By.CSS_SELECTOR, '#privatebrowsing-button')))
+            element.click()
+
+        self.selenium.find_element(*self._menu_button).click()
+        element = WebDriverWait(self.selenium, 5).until(
+            EC.visibility_of(self.selenium.find_element(
+                By.CSS_SELECTOR, '#new-window-button')))
+        element.click()
 
     def bookmark_page(self):
-        button = self.selenium.find_element_by_css_selector(
-            '#bookmarks-menu-button')
-
-        return button
+        self.selenium.set_context('chrome')
+        self.selenium.find_element(
+            By.CSS_SELECTOR, '#bookmarks-menu-button').click()

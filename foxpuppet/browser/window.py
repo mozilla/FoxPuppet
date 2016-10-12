@@ -14,7 +14,6 @@ TITLE_BAR_MAX = 'titlebar-max'
 
 
 class BrowserWindow(object):
-
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
         self.windows = Windows(selenium)

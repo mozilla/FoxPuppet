@@ -3,11 +3,15 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-class Tabbar(object):
+from selenium.webdriver.common.by import By
 
+
+class Tabbar(object):
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
         self._tabbrowser = None
+        self._new_tab_locator = (By.CSS_SELECTOR, '#new-tab-button')
 
     def open_tab(self):
-        self.selenium.find_element_by_css_selector('#new-tab-button').click()
+        self.selenium.set_context('chrome')
+        self.selenium.find_element(*self._new_tab_locator).click()
