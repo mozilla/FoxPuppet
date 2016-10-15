@@ -7,10 +7,11 @@ from selenium.webdriver.common.by import By
 
 
 class Tabbar(object):
+    _new_tab_locator = (By.ID, 'new-tab-button')
+
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
         self._tabbrowser = None
-        self._new_tab_locator = (By.CSS_SELECTOR, '#new-tab-button')
 
     def open_tab(self):
         self.selenium.set_context('chrome')
