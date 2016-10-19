@@ -21,7 +21,7 @@ class TestBrowserModel(object):
     def test_open_new_window(self, selenium):
         """Tests opening a new window via menu"""
         foxpuppet = FoxPuppet(selenium)
-        foxpuppet.browser.open_window()
+        foxpuppet.browser.open_window(private=False)
         open_windows = foxpuppet.browser.windows.all
         assert len(open_windows) == 2
         assert foxpuppet.browser.is_private is False
