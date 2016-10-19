@@ -11,17 +11,22 @@ class TestBrowserModel(object):
     def test_new_private_window(self, selenium):
         """Tests opening a new private browsing window via menu"""
         foxpuppet = FoxPuppet(selenium)
-        foxpuppet.browser.navbar.open_window(private=True)
+        foxpuppet.browser.open_window(private=True)
         open_windows = foxpuppet.browser.windows.all
         assert len(open_windows) == 2
-        print foxpuppet.browser.windows.focus(open_windows[1])
+        assert foxpuppet.browser.is_private is False
+        foxpuppet.browser.windows.focus(open_windows[1])
         assert foxpuppet.browser.is_private is True
 
     def test_open_new_window(self, selenium):
         """Tests opening a new window via menu"""
         foxpuppet = FoxPuppet(selenium)
-        foxpuppet.browser.navbar.open_window()
-        assert len(foxpuppet.browser.windows.all) == 2
+        foxpuppet.browser.open_window()
+        open_windows = foxpuppet.browser.windows.all
+        assert len(open_windows) == 2
+        assert foxpuppet.browser.is_private is False
+        foxpuppet.browser.windows.focus(open_windows[1])
+        assert foxpuppet.browser.is_private is False
 
     def test_bookmark_button(self, selenium):
         """"Tests adding a new bookmark"""
