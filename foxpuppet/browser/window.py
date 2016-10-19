@@ -54,6 +54,7 @@ class BrowserWindow(object):
                 let chromeWindow = arguments[0].ownerDocument.defaultView;
                 return PrivateBrowsingUtils.isWindowPrivate(chromeWindow);
             """, self.windows.window_element)
+        self.selenium.set_context('content')
 
     def open_window(self, private=False):
         self.selenium.set_context('chrome')
@@ -64,12 +65,15 @@ class BrowserWindow(object):
         else:
             self.selenium.find_element(
                 *self._file_menu_new_window_button_locator).click()
+        self.selenium.set_context('content')
 
     def close(self):
         self.selenium.close()
 
     def minimize(self):
-        button = self.selenium.find_element(*self._title_bar_minimize_button_locator)
+        # TODO: Change minimize to work from menu
+        button = self.selenium.find_element(
+            *self._title_bar_minimize_button_locator)
         button.click()
 
     def maximize(self):
