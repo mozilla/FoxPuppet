@@ -3,7 +3,7 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from foxpuppet import FoxPuppet
+from .foxpuppet import FoxPuppet
 
 
 __all__ = ['FoxPuppet']
