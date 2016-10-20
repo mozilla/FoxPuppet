@@ -11,7 +11,6 @@ class Tabbar(object):
 
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
-        self._tabbrowser = None
 
     def open_tab(self):
         self.selenium.set_context('chrome')

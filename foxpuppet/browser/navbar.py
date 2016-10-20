@@ -7,12 +7,10 @@ from selenium.webdriver.common.by import By
 
 
 class Navbar(object):
-
     _bookmark_menu_button_locator = (By.ID, 'bookmarks-menu-button')
 
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
-        self._locationbar = None
 
     def bookmark_page(self):
         self.selenium.set_context('chrome')
