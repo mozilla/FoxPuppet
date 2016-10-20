@@ -54,17 +54,17 @@ class BrowserWindow(object):
                 let chromeWindow = arguments[0].ownerDocument.defaultView;
                 return PrivateBrowsingUtils.isWindowPrivate(chromeWindow);
             """, self.windows.window_element)
-        self.selenium.set_context('content')
 
     def open_window(self, private=False):
         self.selenium.set_context('chrome')
         self.selenium.find_element(*self._file_menu_button_locator).click()
-        if private:
-            self.selenium.find_element(
-                *self._file_menu_private_window_locator).click()
-        else:
-            self.selenium.find_element(
-                *self._file_menu_new_window_button_locator).click()
+        with self.windows.wait_for_new_window():
+            if private:
+                self.selenium.find_element(
+                    *self._file_menu_private_window_locator).click()
+            else:
+                self.selenium.find_element(
+                    *self._file_menu_new_window_button_locator).click()
         self.selenium.set_context('content')
 
     def close(self):

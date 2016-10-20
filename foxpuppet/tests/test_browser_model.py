@@ -11,9 +11,8 @@ class TestBrowserModel(object):
     def test_new_private_window(self, selenium):
         """Tests opening a new private browsing window via menu"""
         foxpuppet = FoxPuppet(selenium)
-        with foxpuppet.windows.wait_for_new_window():
-            foxpuppet.browser.open_window(private=True)
-            assert len(foxpuppet.browser.windows.all) == 2
+        foxpuppet.browser.open_window(private=True)
+        assert len(foxpuppet.browser.windows.all) == 2
         assert foxpuppet.browser.is_private is False
         foxpuppet.browser.windows.focus(foxpuppet.browser.windows.all[1])
         assert foxpuppet.browser.is_private is True
@@ -21,9 +20,8 @@ class TestBrowserModel(object):
     def test_open_new_window(self, selenium):
         """Tests opening a new window via menu"""
         foxpuppet = FoxPuppet(selenium)
-        with foxpuppet.windows.wait_for_new_window():
-            foxpuppet.browser.open_window(private=False)
-            assert len(foxpuppet.browser.windows.all) == 2
+        foxpuppet.browser.open_window(private=False)
+        assert len(foxpuppet.browser.windows.all) == 2
         assert foxpuppet.browser.is_private is False
         foxpuppet.browser.windows.focus(foxpuppet.browser.windows.all[1])
         assert foxpuppet.browser.is_private is False
