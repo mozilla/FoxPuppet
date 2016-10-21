@@ -39,6 +39,4 @@ class Windows(object):
         :returns: DOM window element.
         """
 
-        self.selenium.switch_to.window
-
         return self.selenium.find_element(By.CSS_SELECTOR, ':root')

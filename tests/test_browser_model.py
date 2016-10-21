@@ -12,18 +12,18 @@ class TestBrowserModel(object):
         """Tests opening a new private browsing window via menu"""
         foxpuppet = FoxPuppet(selenium)
         foxpuppet.browser.open_window(private=True)
-        assert len(foxpuppet.browser.windows.all) == 2
+        assert len(foxpuppet.windows.all) == 2
         assert foxpuppet.browser.is_private is False
-        foxpuppet.browser.windows.focus(foxpuppet.browser.windows.all[1])
+        foxpuppet.windows.focus(foxpuppet.windows.all[1])
         assert foxpuppet.browser.is_private is True
 
     def test_open_new_window(self, selenium):
         """Tests opening a new window via menu"""
         foxpuppet = FoxPuppet(selenium)
         foxpuppet.browser.open_window(private=False)
-        assert len(foxpuppet.browser.windows.all) == 2
+        assert len(foxpuppet.windows.all) == 2
         assert foxpuppet.browser.is_private is False
-        foxpuppet.browser.windows.focus(foxpuppet.browser.windows.all[1])
+        foxpuppet.windows.focus(foxpuppet.windows.all[1])
         assert foxpuppet.browser.is_private is False
 
     def test_bookmark_button(self, selenium):

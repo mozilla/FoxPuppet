@@ -21,27 +21,9 @@ class BrowserWindow(object):
 
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
-        self.windows = Windows(selenium)
         self.navbar = Navbar(selenium)
         self.tabbar = Tabbar(selenium)
-
-    @property
-    def _navbar(self):
-        self.selenium.switch_to.window(self.windows.current)
-
-        if not self._navbar:
-            navbar = self.selenium.find_element(*self._nav_bar_locator)
-            return Navbar(self.selenium, navbar)
-        return self._navbar
-
-    @property
-    def _tabbar(self):
-        self.selenium.switch_to.window(self.windows.current)
-
-        if not self._tabbar:
-            tabbrowser = self.selenium.find_element(*self._tab_browser_locator)
-            return Tabbar(self.selenium, tabbrowser)
-        return self._tabbar
+        self._windows = Windows(selenium)
 
     @property
     def is_private(self):
@@ -53,12 +35,13 @@ class BrowserWindow(object):
 
                 let chromeWindow = arguments[0].ownerDocument.defaultView;
                 return PrivateBrowsingUtils.isWindowPrivate(chromeWindow);
-            """, self.windows.window_element)
+            """, self._windows.window_element)
+        self.selenium.set_context('content')
 
     def open_window(self, private=False):
         self.selenium.set_context('chrome')
         self.selenium.find_element(*self._file_menu_button_locator).click()
-        with self.windows.wait_for_new_window():
+        with self._windows.wait_for_new_window():
             if private:
                 self.selenium.find_element(
                     *self._file_menu_private_window_locator).click()
