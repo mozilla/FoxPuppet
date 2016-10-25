@@ -17,6 +17,6 @@ setup(
     include_package_data=True,
     install_requires=[
         'pytest',
-        'selenium'
+        'selenium>=3.0.1'
     ]
 )
