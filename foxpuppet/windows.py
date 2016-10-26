@@ -25,6 +25,12 @@ class Windows(object):
     def focus(self, handle):
         return self.selenium.switch_to.window(handle)
 
+    def get_new_window_handle(self, handles):
+        """Get new window handle"""
+        if handles != self.selenium.window_handles:
+            new_handle = self.selenium.window_handles[len(handles):]
+        return new_handle
+
     @contextmanager
     def wait_for_new_window(self):
         handles_before = self.selenium.window_handles

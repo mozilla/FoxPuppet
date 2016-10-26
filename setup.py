@@ -3,20 +3,18 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 setup(
     name='FoxPuppet',
     version='0.1.0',
-    description='Foxpuppet for Firefox UI testing',
-    long_description='See http://foxpuppet.readthedocs.org/',
+    description='Firefox user interface testing model for use with Selenium',
+    long_description=open('README.rst').read(),
     url='https://github.com/mozilla/FoxPuppet',
-    license='MPL',
-    packages=find_packages(),
-    include_package_data=True,
+    license='MPL2',
+    packages=['foxpuppet'],
     install_requires=[
-        'pytest',
         'selenium>=3.0.1'
     ]
 )

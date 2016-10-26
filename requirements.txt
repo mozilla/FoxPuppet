@@ -1,2 +1,0 @@
-selenium == 3.0.1
-pytest == 2.9.2
