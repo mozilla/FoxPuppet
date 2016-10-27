@@ -4,6 +4,7 @@
 
 from foxpuppet.windows import Windows
 from selenium.webdriver.common.by import By
+
 from .navbar import Navbar
 from .tabbar import Tabbar
 
@@ -14,9 +15,6 @@ class BrowserWindow(object):
     _file_menu_new_window_button_locator = (By.ID, 'menu_newNavigator')
     _nav_bar_locator = (By.ID, 'nav-bar')
     _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
-    _title_bar_close_button_locator = (By.ID, 'titlebar-close')
-    _title_bar_minimize_button_locator = (By.ID, 'titlebar-min')
-    _title_bar_maximize_button_locator = (By.ID, 'titlebar-max')
 
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
@@ -40,7 +38,6 @@ class BrowserWindow(object):
     def open_window(self, private=False):
         self.selenium.set_context('chrome')
         handles_before = self.selenium.window_handles
-        print(handles_before)
         self.selenium.find_element(*self._file_menu_button_locator).click()
         with self._windows.wait_for_new_window():
             if private:
@@ -51,15 +48,3 @@ class BrowserWindow(object):
                     *self._file_menu_new_window_button_locator).click()
         self.selenium.set_context('content')
         return self._windows.get_new_window_handle(handles_before)
-
-    def close(self):
-        self.selenium.close()
-
-    def minimize(self):
-        # TODO: Change minimize to work from menu
-        button = self.selenium.find_element(
-            *self._title_bar_minimize_button_locator)
-        button.click()
-
-    def maximize(self):
-        self.selenium.maximize()
