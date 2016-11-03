@@ -2,6 +2,9 @@ language: python
 
 sudo: "required"
 
+addons:
+  firefox: "latest-nightly"
+
 env:
   global:
     - DISPLAY=:99.0
@@ -13,10 +16,6 @@ matrix:
       env: TOXENV=py27
 
 before_install:
-  - pip install mozdownload mozinstall
-  - mozdownload --type daily --branch mozilla-central --destination firefox.tar.bz2
-  - mozinstall firefox.tar.bz2
-  - sudo ln -sf $PWD/firefox/firefox /usr/local/bin/firefox
   - wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz
   - gunzip -c geckodriver.tar.gz | tar xopf -
   - chmod +x geckodriver && sudo mv geckodriver /usr/local/bin
