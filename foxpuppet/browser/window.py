@@ -43,4 +43,3 @@ class BrowserWindow(object):
                 self.selenium.find_element(
                     *self._file_menu_new_window_button_locator).click()
         self.selenium.set_context('content')
-        return self._windows.get_new_window_handle(handles_before)
