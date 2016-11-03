@@ -11,9 +11,6 @@ addons:
 env:
   global:
     - DISPLAY=:99.0
-  matrix:
-    - TOXENV=py27
-    - TOXENV=py35
 matrix:
   include:
     - python: 2.7
