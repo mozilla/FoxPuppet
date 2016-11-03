@@ -3,10 +3,8 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from foxpuppet.windows import Windows
-from selenium.webdriver.common.by import By
 
-from .navbar import Navbar
-from .tabbar import Tabbar
+from selenium.webdriver.common.by import By
 
 
 class BrowserWindow(object):
@@ -18,8 +16,6 @@ class BrowserWindow(object):
 
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
-        self.navbar = Navbar(selenium)
-        self.tabbar = Tabbar(selenium)
         self._windows = Windows(selenium)
 
     @property

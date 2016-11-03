@@ -16,20 +16,17 @@ class Windows(object):
 
     @property
     def all(self):
+        """Returns all current window handles"""
         return self.selenium.window_handles
 
     @property
     def current(self):
+        """Returns current window handle"""
         return self.selenium.current_window_handle
 
     def focus(self, handle):
+        """Switch Selenium focus to a specific window"""
         return self.selenium.switch_to.window(handle)
-
-    def get_new_window_handle(self, handles):
-        """Get new window handle"""
-        if handles != self.selenium.window_handles:
-            new_handle = self.selenium.window_handles[len(handles):]
-        return new_handle
 
     @contextmanager
     def wait_for_new_window(self):
