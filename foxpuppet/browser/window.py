@@ -33,7 +33,6 @@ class BrowserWindow(object):
 
     def open_window(self, private=False):
         self.selenium.set_context('chrome')
-        handles_before = self.selenium.window_handles
         self.selenium.find_element(*self._file_menu_button_locator).click()
         with self._windows.wait_for_new_window():
             if private:
