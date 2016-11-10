@@ -1,3 +1,0 @@
-selenium == 3.0.0b2
-flake8
-pytest == 2.9.2
