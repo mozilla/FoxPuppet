@@ -48,7 +48,7 @@ class Windows(object):
         :returns: The `window handle` of the focused chrome window.
         """
         def get_active_handle(mn):
-            with self.selenium.using_context('chrome'):
+            with self.selenium.context('chrome'):
                 return self.selenium.execute_script("""
                   Components.utils.import("resource://gre/modules/Services.jsm");
 
@@ -67,6 +67,42 @@ class Windows(object):
         return WebDriverWait(self.selenium, 30).until(
             get_active_handle, message='No focused window has been found.')
 
+    def create_window_instance(self, handle, expected_class=None):
+        """Creates a :class:`BaseWindow` instance for the given chrome window.
+
+        :param handle: The handle of the chrome window.
+        :param expected_class: Optional, check for the correct window class.
+        """
+        current_handle = self.selenium.current_window_handle
+        window = None
+
+        with self.selenium.context('chrome'):
+            try:
+                # Retrieve window type to determine the type of chrome window
+                if handle != self.selenium.current_window_handle:
+                    self.switch_to(handle)
+                window_type = self.selenium.get_window_type()
+            finally:
+                # Ensure to switch back to the original window
+                if handle != current_handle:
+                    self.switch_to(current_handle)
+
+            if window_type in self.windows_map:
+                window = self.windows_map[window_type](self.selenium, handle)
+            else:
+                window = BaseWindow(self.selenium, handle)
+
+            if expected_class is not None and type(window) is not expected_class:
+                raise errors.UnexpectedWindowTypeError('Expected window "%s" but got "%s"' %
+                                                       (expected_class, type(window)))
+
+            # Before continuing ensure the chrome window has been completed loading
+            Wait(self.selenium).until(
+                lambda _: self.loaded(handle),
+                message='Chrome window with handle "%s" did not finish loading.' % handle)
+
+        return window
+
     def switch_to(self, target):
         """Switches context to the specified chrome window.
 
@@ -78,13 +114,13 @@ class Windows(object):
         """
         target_handle = None
 
-        if target in self.selenium.chrome_window_handles:
+        if target in self.selenium.window_handles:
             target_handle = target
         elif callable(target):
-            current_handle = self.selenium.current_chrome_window_handle
+            current_handle = self.selenium.current_window_handle
 
             # switches context if callback for a chrome window returns `True`.
-            for handle in self.selenium.chrome_window_handles:
+            for handle in self.selenium.window_handles:
                 self.selenium.switch_to.window(handle)
                 window = self.create_window_instance(handle)
                 if target(window):
@@ -93,7 +129,7 @@ class Windows(object):
 
             # if no handle has been found switch back to original window
             if not target_handle:
-                self.selenium.switch_to_window(current_handle)
+                self.selenium.switch_to.window(current_handle)
 
         if target_handle is None:
             raise logging.error("No window found for '{}'" .format(target))
@@ -111,7 +147,7 @@ class Windows(object):
         :returns: The :class:`BaseWindow` for the currently active window.
         """
         return self.create_window_instance(
-            self.selenium.current_chrome_window_handle)
+            self.selenium.current_window_handle)
 
     @classmethod
     def register_window(cls, window_type, window_class):
