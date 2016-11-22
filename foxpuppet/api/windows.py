@@ -9,11 +9,13 @@ from contextlib import contextmanager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
+from foxpuppet.foxpuppet import FoxPuppet
 
-class Windows(object):
+
+class Windows(FoxPuppet):
 
     def __init__(self, selenium):
-        self.selenium = selenium
+        super(Windows, self).__init__(selenium)
         self._handle = None
 
     @property
@@ -93,11 +95,10 @@ class Windows(object):
                 window = BaseWindow(self.selenium, handle)
 
             if expected_class is not None and type(window) is not expected_class:
-                raise errors.UnexpectedWindowTypeError('Expected window "%s" but got "%s"' %
-                                                       (expected_class, type(window)))
+                logging('Expected window "%s" but got "%s"' % (expected_class, type(window)))
 
             # Before continuing ensure the chrome window has been completed loading
-            Wait(self.selenium).until(
+            WebDriverWait(self.selenium).until(
                 lambda _: self.loaded(handle),
                 message='Chrome window with handle "%s" did not finish loading.' % handle)
 

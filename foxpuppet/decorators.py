@@ -27,7 +27,7 @@ class use_class_as_property(object):
 
             if not prop:
                 module = import_module('.{}'.format(self.mod_name),
-                                       'FoxPuppet')
+                                       'foxpuppet')
                 prop = getattr(module, self.cls_name)(cls.selenium)
                 setattr(cls, tag, prop)
             func(cls, *args, **kwargs)

@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from FoxPuppet.foxpuppet import FoxPuppet
+from foxpuppet.foxpuppet import FoxPuppet
 
 from selenium.webdriver.common.by import By
 
@@ -15,7 +15,7 @@ class BrowserWindow(FoxPuppet):
     _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
 
     def __init__(self, selenium, *args, **kwargs):
-        super().__init__(selenium)
+        super(BrowserWindow, self).__init__(selenium)
 
     @property
     def is_private(self):
