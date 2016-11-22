@@ -3,7 +3,7 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from FoxPuppet.foxpuppet import FoxPuppet
+from foxpuppet.foxpuppet import FoxPuppet
 
 
 class TestBrowserModel(object):
