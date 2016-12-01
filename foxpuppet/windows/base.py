@@ -24,6 +24,16 @@ class BaseWindow(object):
 
         return self.selenium.find_element(*self._document_element)
 
+    @property
+    def firefox_version(self):
+        """ Major version of Firefox in use.
+
+        :returns: Major component of the Firefox version.
+        :rtype: int
+        """
+        version = self.selenium.capabilities['browserVersion']
+        return int(version.partition('.')[0])
+
     def close(self):
         """Closes the window"""
         self.switch_to()
