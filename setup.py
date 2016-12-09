@@ -14,4 +14,5 @@ setup(name='FoxPuppet',
       packages=['foxpuppet'],
       install_requires=['selenium>=3.0.1'],
       setup_requires=['setuptools_scm'],
-      license='Mozilla Public License 2.0 (MPL 2.0)')
+      license='Mozilla Public License 2.0 (MPL 2.0)',
+      keywords='firefox ui testing mozilla selenium')
