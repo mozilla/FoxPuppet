@@ -5,10 +5,11 @@
 from setuptools import setup
 
 setup(name='FoxPuppet',
-      version='0.1.0',
+      use_scm_version=True,
       description='Firefox user interface testing model for use with Selenium',
       long_description=open('README.rst').read(),
       url='https://github.com/mozilla/FoxPuppet',
       license='MPL2',
       packages=['foxpuppet'],
-      install_requires=['selenium>=3.0.1'])
+      install_requires=['selenium>=3.0.1'],
+      setup_requires=['setuptools_scm'])
