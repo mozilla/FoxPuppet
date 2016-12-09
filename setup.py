@@ -15,4 +15,17 @@ setup(name='FoxPuppet',
       install_requires=['selenium>=3.0.1'],
       setup_requires=['setuptools_scm'],
       license='Mozilla Public License 2.0 (MPL 2.0)',
-      keywords='firefox ui testing mozilla selenium')
+      keywords='firefox ui testing mozilla selenium',
+      classifiers=[
+          'Development Status :: 3 - Alpha',
+          'Intended Audience :: Developers',
+          'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
+          'Operating System :: POSIX',
+          'Operating System :: Microsoft :: Windows',
+          'Operating System :: MacOS :: MacOS X',
+          'Topic :: Software Development :: Quality Assurance',
+          'Topic :: Software Development :: Testing',
+          'Topic :: Utilities',
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.5'])
