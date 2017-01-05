@@ -10,3 +10,12 @@ Fox Puppet is a library for desktop firefox that provides ui interaction and sta
 .. image:: https://img.shields.io/github/issues/mozilla/FoxPuppet.svg
    :target: https://github.com/mozilla/FoxPuppet/issues
    :alt: Issues
+   
+.. image:: https://pyup.io/repos/github/mozilla/foxpuppet/shield.svg
+   :target: https://pyup.io/repos/github/mozilla/foxpuppet
+   :alt: Updates
+   
+.. image:: https://pyup.io/repos/github/mozilla/foxpuppet/python-3-shield.svg
+   :target: https://pyup.io/repos/github/mozilla/foxpuppet/
+   :alt: Python 3
+   
