@@ -35,6 +35,10 @@ matrix:
     - python: 3.5
       env: TOXENV=flake8
     - python: 3.5
+      env: TOXENV=coverage
+      addons:
+        firefox: latest
+    - python: 3.5
       env: FIREFOX=nightly
       addons:
         firefox: latest-nightly
