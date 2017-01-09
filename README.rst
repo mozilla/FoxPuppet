@@ -1,7 +1,7 @@
 FoxPuppet
 =========
 
-Fox Puppet is a library for desktop firefox that provides ui interaction and state using the `Selenium <http://seleniumhq.org/>`_ library.
+FoxPuppet is a library for automating user interactions in `Firefox <https://www.mozilla.org/en-US/firefox/products/>`_ using `Selenium <http://seleniumhq.org/>`_ .
 
 .. image:: https://img.shields.io/badge/license-MPL%202.0-blue.svg
    :target: https://github.com/mozilla/FoxPuppet/blob/master/LICENSE

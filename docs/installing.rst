@@ -3,15 +3,15 @@ Installation
 
 Requirements
 ------------
-FoxPuppet will work with python 2.6, 2.7, 3.3, 3.4, 3.5, and 3.6
+FoxPuppet will work with python 2.7, and 3.5
 
 Install FoxPuppet
 -----------------
-To install foxpuppet using `pip <https://pip.pypa.io/>`_:
+To install FoxPuppet using `pip <https://pip.pypa.io/>`_:
 
 .. code-block:: bash
 
-  $ pip install foxpuppet
+  $ pip install FoxPuppet
 
 To install from source:
 
