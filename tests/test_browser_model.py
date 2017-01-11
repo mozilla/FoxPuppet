@@ -3,25 +3,40 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from foxpuppet import FoxPuppet
+def test_initial_browser_window(foxpuppet):
+    """Tests initial state of browser windows"""
+    assert len(foxpuppet.window_manager.windows) == 1
+    assert foxpuppet.browser is not None
+    assert not foxpuppet.browser.is_private
 
 
-class TestBrowserModel(object):
+def test_new_private_window(foxpuppet):
+    """Tests opening a new private browsing window via menu"""
+    new_browser = foxpuppet.browser.open_window(private=True)
+    assert new_browser is not foxpuppet.browser
+    assert new_browser.is_private
+    assert len(foxpuppet.window_manager.windows) == 2
 
-    def test_new_private_window(self, selenium):
-        """Tests opening a new private browsing window via menu"""
-        foxpuppet = FoxPuppet(selenium)
-        foxpuppet.browser.open_window(private=True)
-        assert len(foxpuppet.windows.all) == 2
-        assert foxpuppet.browser.is_private is False
-        foxpuppet.windows.focus(foxpuppet.windows.all[1])
-        assert foxpuppet.browser.is_private is True
 
-    def test_open_new_window(self, selenium):
-        """Tests opening a new window via menu"""
-        foxpuppet = FoxPuppet(selenium)
-        foxpuppet.browser.open_window(private=False)
-        assert len(foxpuppet.windows.all) == 2
-        assert foxpuppet.browser.is_private is False
-        foxpuppet.windows.focus(foxpuppet.windows.all[1])
-        assert foxpuppet.browser.is_private is False
+def test_open_new_window(foxpuppet):
+    """Tests opening a new window via menu"""
+    new_browser = foxpuppet.browser.open_window(private=False)
+    assert new_browser is not foxpuppet.browser
+    assert not new_browser.is_private
+    assert len(foxpuppet.window_manager.windows) == 2
+
+
+def test_close_window(foxpuppet):
+    """Tests closing a window"""
+    new_browser = foxpuppet.browser.open_window()
+    new_browser.close()
+    assert len(foxpuppet.window_manager.windows) == 1
+
+
+def test_switch_to(foxpuppet, selenium):
+    """Test Switch to function"""
+    foxpuppet.browser.open_window()
+
+    # Switch to originally window opened by pytest
+    foxpuppet.browser.switch_to()
+    assert foxpuppet.browser.handle == selenium.current_window_handle
