@@ -2,11 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import pytest
-
-from foxpuppet import FoxPuppet
-
-
-@pytest.fixture
-def foxpuppet(selenium):
-    return FoxPuppet(selenium)
+from .base import BaseWindow # noqa
+from .browser import BrowserWindow # noqa
+from .window_manager import WindowManager # noqa

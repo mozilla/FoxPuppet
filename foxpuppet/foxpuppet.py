@@ -2,13 +2,16 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from .browser.window import BrowserWindow
-from .windows import Windows
+
+from .windows import WindowManager
 
 
 class FoxPuppet(object):
+    """ Class that sets up the api for interacting with the Firefox browser.
+    """
 
     def __init__(self, selenium):
         self.selenium = selenium
-        self.browser = BrowserWindow(selenium)
-        self.windows = Windows(selenium)
+        self.window_manager = WindowManager(selenium)
+        # Need to ensure the first window is a browser window
+        self.browser = self.window_manager.windows[0]

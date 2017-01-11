@@ -4,6 +4,7 @@
 
 from setuptools import setup
 
+
 setup(name='FoxPuppet',
       use_scm_version=True,
       description='Firefox user interface testing model for use with Selenium',
@@ -11,7 +12,10 @@ setup(name='FoxPuppet',
       author='Firefox Test Engineering',
       author_email='firefox-test-engineering@mozilla.com',
       url='https://github.com/mozilla/FoxPuppet',
-      packages=['foxpuppet'],
+      packages=[
+          'foxpuppet',
+          'foxpuppet.windows'
+      ],
       install_requires=['selenium>=3.0.1'],
       setup_requires=['setuptools_scm'],
       license='Mozilla Public License 2.0 (MPL 2.0)',
