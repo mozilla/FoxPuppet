@@ -14,6 +14,6 @@ class WindowManager(object):
         Sets all current window handles to appropriate window instances
         :returns: A list of BrowserWindow Instances
         """
-        from foxpuppet.windows.browser import BrowserWindow
+        from foxpuppet.windows import BrowserWindow
         return [BrowserWindow(self.selenium, handle)
                 for handle in self.selenium.window_handles]

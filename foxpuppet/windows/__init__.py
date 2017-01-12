@@ -4,4 +4,4 @@
 
 from foxpuppet.windows.base import BaseWindow # noqa
 from foxpuppet.windows.browser import BrowserWindow # noqa
-from foxpuppet.windows.window_manager import WindowManager # noqa
+from foxpuppet.windows.manager import WindowManager # noqa
