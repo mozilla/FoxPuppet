@@ -23,7 +23,7 @@ class BrowserWindow(BaseWindow):
         """Returns True if this is a Private Browsing window."""
 
         self.switch_to()
-        with self.selenium.context('chrome'):
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
             return self.selenium.execute_script(
                 """
                 Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
@@ -42,7 +42,7 @@ class BrowserWindow(BaseWindow):
         handles_before = self.selenium.window_handles
         self.switch_to()
 
-        with self.selenium.context('chrome'):
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
             # Opens private or non-private window
             self.selenium.find_element(*self._file_menu_button_locator).click()
             if private:
