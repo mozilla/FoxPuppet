@@ -1,7 +1,7 @@
 language: python
 python:
 - 2.7
-- 3.5
+- 3.6
 env:
   global:
     - DISPLAY=:99.0
@@ -31,37 +31,37 @@ matrix:
       env: FIREFOX=esr
       addons:
         firefox: latest-esr
-    - python: 3.5
+    - python: 3.6
       env: TOXENV=flake8
-    - python: 3.5
+    - python: 3.6
       env: TOXENV=docs
-    - python: 3.5
+    - python: 3.6
       env: TOXENV=coverage
       addons:
         firefox: latest
-    - python: 3.5
+    - python: 3.6
       env: FIREFOX=nightly
       addons:
         firefox: latest-nightly
-    - python: 3.5
+    - python: 3.6
       env: FIREFOX=dev
       addons:
         firefox: latest-dev
-    - python: 3.5
+    - python: 3.6
       env: FIREFOX=beta
       addons:
         firefox: latest-beta
-    - python: 3.5
+    - python: 3.6
       env: FIREFOX=release
       addons:
         firefox: latest
-    - python: 3.5
+    - python: 3.6
       env: FIREFOX=esr
       addons:
         firefox: latest-esr
   exclude:
     - python: 2.7
-    - python: 3.5
+    - python: 3.6
 
 before_install:
   - wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz
