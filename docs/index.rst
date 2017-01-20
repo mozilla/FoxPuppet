@@ -11,4 +11,4 @@ FoxPuppet is a library for automating user interactions in `Firefox <https://www
    user_guide
    development
    news
-   code
+   api
