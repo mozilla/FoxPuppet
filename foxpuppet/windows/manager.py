@@ -20,7 +20,8 @@ class WindowManager(object):
         """
         Sets all current windows to appropriate window instances.
 
-        :returns: A list of Window Instances
+        :returns: A list of Window Instances.
+        :return type: list
 
         """
         from foxpuppet.windows import BrowserWindow

@@ -1,5 +1,5 @@
-Developer Interface for FoxPuppet
-*********************************
+Developer Interface
+*******************
 
 This part of the documentation describes the interfaces for using FoxPuppet.
 
@@ -9,26 +9,18 @@ This part of the documentation describes the interfaces for using FoxPuppet.
    :inherited-members:
 
 
+Windows
+-------
 Window Manager
-==============================
+==============
 
 .. py:module:: foxpuppet.windows
 
 .. autoclass:: WindowManager
   :inherited-members:
 
-
-Base Window Model
-=================
-
-.. py:module:: foxpuppet.windows.base
-
-.. autoclass:: BaseWindow
-  :inherited-members:
-
-
-Browser Model
-=============
+Browser
+=======
 
 .. py:module:: foxpuppet.windows.browser
 
