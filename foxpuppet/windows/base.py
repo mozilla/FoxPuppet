@@ -27,6 +27,7 @@ class BaseWindow(object):
         """ Returns the inner DOM window element.
 
         :returns: DOM window element.
+        :return type: A selenium locator
         """
 
         return self.selenium.find_element(*self._document_element)

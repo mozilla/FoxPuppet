@@ -36,7 +36,11 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
     'sphinx.ext.todo',
-    'sphinx.ext.viewcode']
+    ]
+
+# intersphinx mappings
+intersphinx_mapping = {
+    'selenium': ('http://seleniumhq.github.io/selenium/docs/api/py/', None)}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

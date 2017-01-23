@@ -14,7 +14,7 @@ class BrowserWindow(BaseWindow):
 
     """Representation of a browser window.
 
-        :extends: BaseWindow
+        :extends: :class:`foxpuppet.windows.BaseWindow`
     """
 
     _file_menu_button_locator = (By.ID, 'file-menu')
@@ -60,6 +60,7 @@ class BrowserWindow(BaseWindow):
     @property
     def is_private(self):
         """:returns: True if this is a Private Browsing window.
+            :return type: bool
         """
 
         self.switch_to()
@@ -78,7 +79,8 @@ class BrowserWindow(BaseWindow):
         :param private: Optional parameter to open a private browsing window.
                         Defaults to False.
 
-        :returns: A BrowserWindow object of the opened window.
+        :returns: A BrowserWindow object of the newly opened window.
+        :return type: object
         """
 
         handles_before = self.selenium.window_handles
