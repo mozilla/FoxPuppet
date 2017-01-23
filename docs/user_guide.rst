@@ -22,6 +22,9 @@ This is an example for setting up FoxPuppet and running a simple check to see if
     foxpuppet.browser.open_window(private=True)
     assert foxpuppet.browser.is_private
 
+This test first checks the initial brower window to see if it is private. It then proceedes to open a private browser window
+and then it checks to see if that window is private.
+
 :Note: The initial browser window is automatically assigned to the :py:attr:`browser` attribute and is always available.
 
 Setup
