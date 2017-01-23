@@ -27,10 +27,6 @@ matrix:
       env: FIREFOX=release
       addons:
         firefox: latest
-    - python: 2.7
-      env: FIREFOX=esr
-      addons:
-        firefox: latest-esr
     - python: 3.6
       env: TOXENV=flake8
     - python: 3.6
@@ -51,10 +47,6 @@ matrix:
       env: FIREFOX=release
       addons:
         firefox: latest
-    - python: 3.6
-      env: FIREFOX=esr
-      addons:
-        firefox: latest-esr
   exclude:
     - python: 2.7
     - python: 3.6
