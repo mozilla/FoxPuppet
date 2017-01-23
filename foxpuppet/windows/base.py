@@ -8,6 +8,13 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class BaseWindow(object):
 
+    """
+        A base window model.
+
+        :param selenium: A selenium object.
+        :param handle: A window handle.
+    """
+
     _document_element = (By.CSS_SELECTOR, ':root')
 
     def __init__(self, selenium, handle):
@@ -20,16 +27,17 @@ class BaseWindow(object):
         """ Returns the inner DOM window element.
 
         :returns: DOM window element.
+        :return type: A selenium locator
         """
 
         return self.selenium.find_element(*self._document_element)
 
     def close(self):
-        """Closes the window"""
+        """Closes the window."""
         self.switch_to()
         self.selenium.close()
 
     def switch_to(self):
-        """Switches to the window"""
+        """Switches to the window."""
 
         self.selenium.switch_to.window(self.handle)
