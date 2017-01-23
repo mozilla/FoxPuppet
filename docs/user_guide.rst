@@ -36,7 +36,7 @@ object to be instantiated::
 
     selenium = Firefox()
 
-Now pass the Selenium object you created into the object::
+Now pass the Selenium object you created into FoxPuppet::
 
     FoxPuppet(selenium)
 
