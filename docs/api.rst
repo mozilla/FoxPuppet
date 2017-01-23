@@ -3,6 +3,9 @@ Developer Interface
 
 This part of the documentation describes the interfaces for using FoxPuppet.
 
+FoxPuppet
+---------
+
 .. py:module:: foxpuppet.foxpuppet
 
 .. autoclass:: FoxPuppet
@@ -11,6 +14,9 @@ This part of the documentation describes the interfaces for using FoxPuppet.
 
 Windows
 -------
+
+This directory contains all of the window types as well as the window manager.
+
 Window Manager
 ==============
 
@@ -19,8 +25,8 @@ Window Manager
 .. autoclass:: WindowManager
   :inherited-members:
 
-Browser
-=======
+Browser Window
+==============
 
 .. py:module:: foxpuppet.windows.browser
 
