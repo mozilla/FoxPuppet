@@ -50,7 +50,7 @@ To open a private window, set the private argument as True::
 
     foxpuppet.browser.open_window(private=True)
 
-:Note: The default behavior for open window is to open a non-private window.
+:Note: The default behavior for :py:func:`~foxpuppet.browser.open_window` is to open a non-private window.
 
 Check if a window is private
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
