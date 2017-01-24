@@ -15,7 +15,7 @@ FoxPuppet
 Windows
 -------
 
-This directory contains all of the window types as well as the window manager.
+This module contains all of the window types as well as the window manager.
 
 Window Manager
 ==============
