@@ -3,9 +3,6 @@ User Guide
 
 .. contents:: :depth: 3
 
-:Note: FoxPuppet uses Selenium as it's main driver. That means Selenium commands work
-       right along with FoxPuppet specific commands.
-
 Example
 -------
 
@@ -15,30 +12,17 @@ This is an example for setting up FoxPuppet and running a simple check to see if
     from selenium.webdriver import Firefox
 
 
-    selenium = Firefox
+    selenium = Firefox(
+        firefox_binary='path/to/firefox-bin'
+    )
     foxpuppet = FoxPuppet(selenium)
 
-    assert not foxpuppet.browser.is_private
-    foxpuppet.browser.open_window(private=True)
-    assert foxpuppet.browser.is_private
+    window = foxpuppet.browser.open_window(private=True)
+    window.close()
+    foxpuppet.browser.close()
+    selenium.quit()
 
-This test first checks the initial brower window to see if it is private. It then proceedes to open a private browser window
-and then it checks to see if that window is private.
+This test opens a non-private and a private browser window and then closes both of the windows using :py:func:`close()`.
+Finally it quits via :py:func:`selenium.quit`.
 
 :Note: The initial browser window is automatically assigned to the :py:attr:`browser` attribute and is always available.
-
-Setup
-------
-
-FoxPuppet requires a Selenium :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
-object to be instantiated::
-
-    from foxpuppet import FoxPuppet
-    from selenium.webdriver import Firefox
-
-
-    selenium = Firefox()
-
-Now pass the Selenium object you created into FoxPuppet::
-
-    FoxPuppet(selenium)
