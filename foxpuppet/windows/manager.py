@@ -9,7 +9,8 @@ class WindowManager(object):
         A window manager that controls the creation of window objects
         for interaction.
 
-        :param selenium: A selenium object.
+        :param selenium: WebDriver object.
+        :type selenium: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
     """
 
     def __init__(self, selenium):
@@ -18,9 +19,9 @@ class WindowManager(object):
     @property
     def windows(self):
         """
-        Sets all current windows to appropriate window instances.
+        Returns a list of all open windows
 
-        :returns: A list of Window Instances.
+        :returns: :py:class:`~foxpuppet.windows.browser.BrowserWindow` objects.
         :return type: list
 
         """

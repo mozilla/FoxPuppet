@@ -11,8 +11,10 @@ class BaseWindow(object):
     """
         A base window model.
 
-        :param selenium: A selenium object.
+        :param selenium: WebDriver object.
+        :type selenium: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
         :param handle: A window handle.
+        :type handle: str
     """
 
     _document_element = (By.CSS_SELECTOR, ':root')
@@ -26,8 +28,8 @@ class BaseWindow(object):
     def document_element(self):
         """ Returns the inner DOM window element.
 
-        :returns: DOM window element.
-        :return type: A selenium locator
+        :return: DOM window element.
+        :return type: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` locator
         """
 
         return self.selenium.find_element(*self._document_element)
@@ -48,6 +50,6 @@ class BaseWindow(object):
         self.selenium.close()
 
     def switch_to(self):
-        """Switches selenium focus to the window."""
+        """Switches focus for selenium commands to this window."""
 
         self.selenium.switch_to.window(self.handle)
