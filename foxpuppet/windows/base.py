@@ -36,6 +36,7 @@ class BaseWindow(object):
 
     def close(self):
         """Closes the window"""
+
         self.switch_to()
         self.selenium.close()
 
