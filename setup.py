@@ -14,9 +14,11 @@ setup(name='FoxPuppet',
       url='https://github.com/mozilla/FoxPuppet',
       packages=[
           'foxpuppet',
-          'foxpuppet.windows'
+          'foxpuppet.windows',
+          'foxpuppet.windows.browser',
+          'foxpuppet.windows.browser.notifications',
       ],
-      install_requires=['selenium>=3.0.1'],
+      install_requires=['selenium>=3.0.2'],
       setup_requires=['setuptools_scm'],
       license='Mozilla Public License 2.0 (MPL 2.0)',
       keywords='firefox ui testing mozilla selenium',
