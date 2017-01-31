@@ -83,7 +83,7 @@ class BrowserWindow(BaseWindow):
 
         :returns:
             :py:class:`~foxpuppet.windows.browser.BrowserWindow`
-                        object of the newly opened window.
+            object of the newly opened window.
         :return type: object
         """
 
