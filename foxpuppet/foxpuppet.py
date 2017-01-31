@@ -13,7 +13,8 @@ class FoxPuppet(object):
         browser.
 
         :param selenium: WebDriver object
-        :type selenium: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
+        :type selenium:
+            :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
     """
 
     def __init__(self, selenium):

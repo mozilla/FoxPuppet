@@ -12,7 +12,8 @@ class BaseWindow(object):
         A base window model.
 
         :param selenium: WebDriver object.
-        :type selenium: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
+        :type selenium:
+            :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
         :param handle: A window handle.
         :type handle: str
     """
@@ -29,7 +30,8 @@ class BaseWindow(object):
         """ Returns the inner DOM window element.
 
         :return: DOM window element.
-        :return type: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` locator
+        :return type:
+            :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` locator
         """
 
         return self.selenium.find_element(*self._document_element)

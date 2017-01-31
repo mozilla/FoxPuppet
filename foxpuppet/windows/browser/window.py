@@ -81,7 +81,9 @@ class BrowserWindow(BaseWindow):
                         Defaults to False.
         :type private: bool
 
-        :returns: :py:class:`~foxpuppet.windows.browser.BrowserWindow` object of the newly opened window.
+        :returns:
+            :py:class:`~foxpuppet.windows.browser.BrowserWindow`
+                        object of the newly opened window.
         :return type: object
         """
 
