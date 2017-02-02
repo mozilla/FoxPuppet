@@ -22,7 +22,8 @@ class WindowManager(object):
         """
         Returns a list of all open windows
 
-        :returns: :py:class:`~foxpuppet.windows.browser.BrowserWindow` objects.
+        :returns: :py:class:`~foxpuppet.windows.browser.window.BrowserWindow`
+            objects.
         :return type: list
 
         """

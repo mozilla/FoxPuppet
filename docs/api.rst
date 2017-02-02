@@ -28,7 +28,7 @@ Window Manager
 Browser Window
 ==============
 
-.. py:module:: foxpuppet.windows.browser
+.. py:module:: foxpuppet.windows.browser.window
 
 .. autoclass:: BrowserWindow
   :inherited-members:
