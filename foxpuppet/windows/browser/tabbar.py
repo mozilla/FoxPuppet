@@ -31,9 +31,8 @@ class TabBar(object):
         :return type: object
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            tab = self.selenium.find_elements(*self._tabs)
-
-        return [Tab(self.selenium) for tabs in tab]
+            return [Tab(self.selenium) for tabs in
+                    self.selenium.find_elements(*self._tabs)]
 
     def open_new_tab(self):
         """Opens a new tab in the current window.
