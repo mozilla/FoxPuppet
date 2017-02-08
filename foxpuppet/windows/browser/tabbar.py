@@ -16,9 +16,9 @@ class TabBar(object):
         :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object
     """
 
-    _new_tab_button = (By.ID, 'new-tab-button')
+    _new_tab_button_locator = (By.ID, 'new-tab-button')
     _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
-    _tabs = (By.TAG_NAME, 'tab')
+    _tabs_locator = (By.TAG_NAME, 'tab')
 
     def __init__(self, selenium, *args, **kwargs):
         self.selenium = selenium
@@ -32,7 +32,7 @@ class TabBar(object):
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             return [Tab(self.selenium) for tabs in
-                    self.selenium.find_elements(*self._tabs)]
+                    self.selenium.find_elements(*self._tabs_locator)]
 
     def open_new_tab(self):
         """Opens a new tab in the current window.
@@ -42,4 +42,5 @@ class TabBar(object):
             :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return self.selenium.find_element(*self._new_tab_button).click()
+            return self.selenium.find_element(
+                *self._new_tab_button_locator).click()

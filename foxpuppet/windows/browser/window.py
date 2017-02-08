@@ -7,8 +7,8 @@ from selenium.webdriver.common.by import By
 
 from foxpuppet import expected
 from foxpuppet.windows import BaseWindow
-from foxpuppet.windows.browser.tabbar import TabBar
 from foxpuppet.windows.browser.notifications import BaseNotification
+from foxpuppet.windows.browser.tabbar import TabBar
 
 
 class BrowserWindow(BaseWindow):
