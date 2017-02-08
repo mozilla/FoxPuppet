@@ -87,16 +87,15 @@ class BrowserWindow(BaseWindow):
         self.switch_to()
 
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            with self.open_new_element(handles_before, 'window'):
-                # Opens private or non-private window
+            # Opens private or non-private window
+            self.selenium.find_element(
+                *self._file_menu_button_locator).click()
+            if private:
                 self.selenium.find_element(
-                    *self._file_menu_button_locator).click()
-                if private:
-                    self.selenium.find_element(
-                        *self._file_menu_private_window_locator).click()
-                else:
-                    self.selenium.find_element(
-                        *self._file_menu_new_window_button_locator).click()
+                    *self._file_menu_private_window_locator).click()
+            else:
+                self.selenium.find_element(
+                    *self._file_menu_new_window_button_locator).click()
 
         return self.wait.until(
             expected.new_browser_window_is_opened(

@@ -4,11 +4,10 @@
 
 from selenium.webdriver.common.by import By
 
-from foxpuppet.windows.base import BaseWindow
 from foxpuppet.windows.browser.tab import Tab
 
 
-class TabBar(BaseWindow):
+class TabBar(object):
 
     """Representation of the tab bar which contains the tabs.
 
@@ -44,6 +43,4 @@ class TabBar(BaseWindow):
             :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            with self.open_new_element(self.tabs, 'tab'):
-                return self.selenium.find_element(
-                    *self._new_tab_button).click()
+            return self.selenium.find_element(*self._new_tab_button).click()
