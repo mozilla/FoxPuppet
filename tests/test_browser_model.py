@@ -44,6 +44,6 @@ def test_switch_to(foxpuppet, selenium):
 
 def test_open_new_tab(foxpuppet, selenium):
     """Test Open new Tab"""
-    assert len(foxpuppet.browser.tabs.all_tabs) == 1
-    foxpuppet.browser.tabs.open_new_tab()
-    assert len(foxpuppet.browser.tabs.all_tabs) == 2
+    assert len(foxpuppet.browser.tabbar.tabs) == 1
+    foxpuppet.browser.tabbar.open_new_tab()
+    assert len(foxpuppet.browser.tabbar.tabs) == 2
