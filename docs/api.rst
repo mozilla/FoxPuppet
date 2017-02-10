@@ -9,7 +9,6 @@ FoxPuppet
 .. py:module:: foxpuppet.foxpuppet
 
 .. autoclass:: FoxPuppet
-   :inherited-members:
 
 
 Windows
@@ -23,7 +22,6 @@ Window Manager
 .. py:module:: foxpuppet.windows
 
 .. autoclass:: WindowManager
-  :inherited-members:
 
 Browser Window
 ==============
