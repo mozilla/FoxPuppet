@@ -8,7 +8,13 @@ from foxpuppet.windows import WindowManager
 
 
 class FoxPuppet(object):
-    """ Class that sets up the api for interacting with the Firefox browser.
+    """
+        Class that sets up the interface for interacting with the Firefox
+        browser.
+
+        :param selenium: WebDriver object
+        :type selenium:
+            :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
     """
 
     def __init__(self, selenium):

@@ -12,7 +12,8 @@ from foxpuppet.windows.browser.notifications import BaseNotification
 
 class BrowserWindow(BaseWindow):
 
-    """Representation of a browser window."""
+    """Representation of a browser window.
+    """
 
     _file_menu_button_locator = (By.ID, 'file-menu')
     _file_menu_private_window_locator = (By.ID, 'menu_newPrivateWindow')
@@ -56,7 +57,12 @@ class BrowserWindow(BaseWindow):
 
     @property
     def is_private(self):
-        """Returns True if this is a Private Browsing window."""
+        """
+            Property that checks if the specified window is private or not.
+
+            :returns: True if this is a Private Browsing window.
+            :return type: bool
+        """
 
         self.switch_to()
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
@@ -73,6 +79,12 @@ class BrowserWindow(BaseWindow):
 
         :param private: Optional parameter to open a private browsing window.
                         Defaults to False.
+        :type private: bool
+
+        :returns:
+            :py:class:`~foxpuppet.windows.browser.window.BrowserWindow`
+            object of the newly opened window.
+        :return type: object
         """
 
         handles_before = self.selenium.window_handles

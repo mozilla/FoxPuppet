@@ -8,6 +8,16 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class BaseWindow(object):
 
+    """
+        A base window model.
+
+        :param selenium: WebDriver object.
+        :type selenium:
+            :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
+        :param handle: A window handle.
+        :type handle: str
+    """
+
     _document_element = (By.CSS_SELECTOR, ':root')
 
     def __init__(self, selenium, handle):
@@ -19,7 +29,9 @@ class BaseWindow(object):
     def document_element(self):
         """ Returns the inner DOM window element.
 
-        :returns: DOM window element.
+        :return: DOM window element.
+        :return type:
+            :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` locator
         """
 
         return self.selenium.find_element(*self._document_element)
@@ -35,12 +47,11 @@ class BaseWindow(object):
         return int(version.partition('.')[0])
 
     def close(self):
-        """Closes the window"""
-
+        """Closes the window."""
         self.switch_to()
         self.selenium.close()
 
     def switch_to(self):
-        """Switches to the window"""
+        """Switches focus for Selenium commands to this window."""
 
         self.selenium.switch_to.window(self.handle)
