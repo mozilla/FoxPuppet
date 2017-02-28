@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 
 from foxpuppet import expected
 from foxpuppet.windows import BaseWindow
+from foxpuppet.windows.browser.navbar import NavBar
 from foxpuppet.windows.browser.notifications import BaseNotification
 
 
@@ -22,6 +23,10 @@ class BrowserWindow(BaseWindow):
     _notification_locator = (
         By.CSS_SELECTOR, '#notification-popup popupnotification')
     _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
+
+    @property
+    def navbar(self):
+        return (NavBar(self.selenium))
 
     @property
     def notification(self):

@@ -40,3 +40,12 @@ def test_switch_to(foxpuppet, selenium):
     # Switch to originally window opened by pytest
     foxpuppet.browser.switch_to()
     assert foxpuppet.browser.handle == selenium.current_window_handle
+
+
+def test_tracking_protection_sheild(foxpuppet, selenium):
+    browser = foxpuppet.browser.open_window(private=True)
+    browser.switch_to()
+    selenium.get('http://cnn.com')
+    assert browser.navbar.tracking_shield
+    selenium.get('http://support.mozilla.org')
+    assert foxpuppet.window_manager.windows[1].navbar.tracking_shield

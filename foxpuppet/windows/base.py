@@ -53,5 +53,4 @@ class BaseWindow(object):
 
     def switch_to(self):
         """Switches focus for Selenium commands to this window."""
-
         self.selenium.switch_to.window(self.handle)
