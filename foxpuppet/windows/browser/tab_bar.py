@@ -27,12 +27,13 @@ class TabBar(Region):
         :returns: :py:class:`~foxpuppet.window.browser.tab.Tab`
         :return type: :py.class:`~foxpuppet.window.browser.tab.Tab`
         """
+        self.switch_to
+
         from foxpuppet.windows.browser.window import BrowserWindow
         window = BrowserWindow(
             self.selenium, self.selenium.current_window_handle)
 
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.switch_to
             return [Tab(window, Tab) for tabs in
                     self.selenium.find_elements(*self._tabs_locator)]
 
