@@ -35,5 +35,5 @@ class Tab(Region):
             self.close_button.click()
 
             # Switch selenium focus back to window
-            self.wait.until(lambda _: len(tabbar.tabs) != len(current_tabs))
             self.switch_to
+            self.wait.until(lambda _: len(tabbar.tabs) != len(current_tabs))

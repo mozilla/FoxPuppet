@@ -32,8 +32,13 @@ class TabBar(Region):
             self.selenium, self.selenium.current_window_handle)
 
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            self.switch_to
             return [Tab(window, Tab) for tabs in
                     self.selenium.find_elements(*self._tabs_locator)]
+
+    @property
+    def switch_to(self):
+        self.selenium.switch_to.window(self.selenium.current_window_handle)
 
     def open_new_tab(self):
         """Opens a new tab in the current window.
