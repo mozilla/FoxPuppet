@@ -4,10 +4,11 @@
 
 from selenium.webdriver.common.by import By
 
+from foxpuppet.region import Region
 from foxpuppet.windows.browser.tab import Tab
 
 
-class TabBar(object):
+class TabBar(Region):
 
     """Representation of the tab bar which contains the tabs.
 
@@ -17,21 +18,21 @@ class TabBar(object):
     """
 
     _new_tab_button_locator = (By.ID, 'new-tab-button')
-    _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
     _tabs_locator = (By.TAG_NAME, 'tab')
-
-    def __init__(self, selenium, *args, **kwargs):
-        self.selenium = selenium
 
     @property
     def tabs(self):
         """Returns a list of tabs.
 
         :returns: :py:class:`~foxpuppet.window.browser.tab.Tab`
-        :return type: object
+        :return type: :py.class:`~foxpuppet.window.browser.tab.Tab`
         """
+        from foxpuppet.windows.browser.window import BrowserWindow
+        window = BrowserWindow(
+            self.selenium, self.selenium.current_window_handle)
+
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return [Tab(self.selenium) for tabs in
+            return [Tab(window, Tab) for tabs in
                     self.selenium.find_elements(*self._tabs_locator)]
 
     def open_new_tab(self):
@@ -42,5 +43,6 @@ class TabBar(object):
             :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return self.selenium.find_element(
-                *self._new_tab_button_locator).click()
+            current_tabs = self.tabs
+            self.selenium.find_element(*self._new_tab_button_locator).click()
+            self.wait.until(lambda _: len(self.tabs) != len(current_tabs))

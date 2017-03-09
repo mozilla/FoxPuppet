@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from foxpuppet import expected
 from foxpuppet.windows import BaseWindow
 from foxpuppet.windows.browser.notifications import BaseNotification
-from foxpuppet.windows.browser.tabbar import TabBar
+from foxpuppet.windows.browser.tab_bar import TabBar
 
 
 class BrowserWindow(BaseWindow):
@@ -38,7 +38,9 @@ class BrowserWindow(BaseWindow):
         :returns: :py:class:`~foxpuppet.window.browser.tabbar.TabBar`
         :return type: object
         """
-        return TabBar(self.selenium)
+        window = BrowserWindow(
+            self.selenium, self.selenium.current_window_handle)
+        return TabBar(window, self.document_element)
 
     def wait_for_notification(self, notification_class=BaseNotification):
         """Waits for the specified notification to be displayed.

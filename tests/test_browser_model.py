@@ -47,3 +47,10 @@ def test_open_new_tab(foxpuppet, selenium):
     assert len(foxpuppet.browser.tabbar.tabs) == 1
     foxpuppet.browser.tabbar.open_new_tab()
     assert len(foxpuppet.browser.tabbar.tabs) == 2
+
+
+def test_close_tab(foxpuppet, selenium):
+    """Test close Tab"""
+    foxpuppet.browser.tabbar.open_new_tab()
+    foxpuppet.browser.tabbar.tabs[1].close()
+    assert len(foxpuppet.browser.tabbar.tabs) == 1
