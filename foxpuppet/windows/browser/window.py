@@ -38,9 +38,7 @@ class BrowserWindow(BaseWindow):
         :returns: :py:class:`~foxpuppet.window.browser.tabbar.TabBar`
         :return type: object
         """
-        window = BrowserWindow(
-            self.selenium, self.selenium.current_window_handle)
-        return TabBar(window, self.document_element)
+        return TabBar(self, self.document_element)
 
     def wait_for_notification(self, notification_class=BaseNotification):
         """Waits for the specified notification to be displayed.
