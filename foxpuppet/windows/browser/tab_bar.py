@@ -5,7 +5,6 @@
 from selenium.webdriver.common.by import By
 
 from foxpuppet.region import Region
-from foxpuppet.windows.browser.tab import Tab
 
 
 class TabBar(Region):
@@ -24,17 +23,11 @@ class TabBar(Region):
     def tabs(self):
         """Returns a list of tabs.
 
-        :returns: :py:class:`~foxpuppet.window.browser.tab.Tab`
-        :return type: :py.class:`~foxpuppet.window.browser.tab.Tab`
+        :returns: :py:class:`~foxpuppet.window.browser.tab_bar.Tab`
+        :return type: :py.class:`~foxpuppet.window.browser.tab_bar.Tab`
         """
-        self.switch_to
-
-        from foxpuppet.windows.browser.window import BrowserWindow
-        window = BrowserWindow(
-            self.selenium, self.selenium.current_window_handle)
-
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return [Tab(window, Tab) for tabs in
+            return [Tab(self, el) for el in
                     self.selenium.find_elements(*self._tabs_locator)]
 
     @property
@@ -52,3 +45,35 @@ class TabBar(Region):
             current_tabs = self.tabs
             self.selenium.find_element(*self._new_tab_button_locator).click()
             self.wait.until(lambda _: len(self.tabs) != len(current_tabs))
+
+
+class Tab(Region):
+
+    @property
+    def tab_bar(self):
+        """ Creates a reference to the TabBar object
+        :returns: :py:class:`~foxpuppet.window.browser.tab_bar.TabBar`
+        :return type: object
+        """
+        return TabBar(self.window, self.root)
+
+    @property
+    def close_button(self):
+        """ A reference to the close button element within each tab
+        :returns: Webdriver Object
+        :return type:
+            :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object
+        """
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            return self.root.find_anonymous_element_by_attribute(
+                'anonid', 'close-button')
+
+    def close(self):
+        """
+        Closes the selected tab
+        """
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            current_tabs = self.tab_bar.tabs
+            self.close_button.click()
+
+        self.wait.until(lambda _: len(current_tabs) != len(self.tab_bar.tabs))
