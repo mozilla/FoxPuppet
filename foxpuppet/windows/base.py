@@ -23,7 +23,7 @@ class BaseWindow(object):
     def __init__(self, selenium, handle):
         self.selenium = selenium
         self.handle = handle
-        self.wait = WebDriverWait(self.selenium, timeout=10)
+        self.wait = WebDriverWait(self.selenium, timeout=30)
 
     @property
     def document_element(self):
