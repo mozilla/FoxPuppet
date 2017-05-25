@@ -22,7 +22,7 @@ Running Tests
 You will need `Tox <http://tox.testrun.org/>`_ installed to run the tests
 against the supported Python versions.
 
-You also need to have `Geckodriver https://github.com/mozilla/geckodriver`_ installed so the tests can run Firefox.
+You also need to have `Geckodriver <https://github.com/mozilla/geckodriver>`_ installed so the tests can run Firefox.
 
 .. code-block:: bash
 
