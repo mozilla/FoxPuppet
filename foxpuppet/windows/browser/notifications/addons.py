@@ -13,14 +13,8 @@ class AddOnInstallBlocked(BaseNotification):
     def allow(self):
         """Allow the add-on to be installed"""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            if self.window.firefox_version >= 53:
-                # Notifications were restyled in Firefox 53
-                self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'button').click()
-            else:
-                self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'button').find_anonymous_element_by_attribute(
-                        'anonid', 'button').click()
+            self.root.find_anonymous_element_by_attribute(
+                'anonid', 'button').click()
 
 
 class AddOnInstallConfirmation(BaseNotification):
@@ -38,28 +32,25 @@ class AddOnInstallConfirmation(BaseNotification):
         :returns: The add-on name.
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            label = self.root.find_element(*self._addon_name_locator)
-            return label.get_property('value')
+            if self.window.firefox_version >= 55:
+                return self.root.find_anonymous_element_by_attribute(
+                    'anonid', 'description').find_element(
+                        By.CSS_SELECTOR, '.addon-webext-name').text
+            else:
+                label = self.root.find_element(*self._addon_name_locator)
+                return label.get_property('value')
 
     def cancel(self):
         """Cancel add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            if self.window.firefox_version >= 53:
-                # Notifications were restyled in Firefox 53
-                self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'secondarybutton').click()
-            else:
-                self.root.find_element(*self._cancel_locator).click()
+            self.root.find_anonymous_element_by_attribute(
+                'anonid', 'secondarybutton').click()
 
     def install(self):
         """Confirm add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            if self.window.firefox_version >= 53:
-                # Notifications were restyled in Firefox 53
-                self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'button').click()
-            else:
-                self.root.find_element(*self._confirm_locator).click()
+            self.root.find_anonymous_element_by_attribute(
+                'anonid', 'button').click()
 
 
 class AddOnInstallComplete(BaseNotification):
@@ -84,5 +75,7 @@ NOTIFICATIONS = {
     'addon-install-complete-notification': AddOnInstallComplete,
     'addon-install-restart-notification': AddOnInstallRestart,
     'addon-install-failed-notification': AddOnInstallFailed,
+    'addon-installed-notification': AddOnInstallComplete,
     'addon-progress-notification': AddOnProgress,
+    'addon-webext-permissions-notification': AddOnInstallConfirmation,
 }
