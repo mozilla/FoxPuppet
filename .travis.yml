@@ -102,5 +102,9 @@ before_script:
   - export PATH=$HOME/geckodriver:$PATH
   - firefox --version
   - geckodriver --version
+  - sh -e /etc/init.d/xvfb start
+  - sleep 10
+  - jwm &
+  - sleep 10
 script:
   - tox
