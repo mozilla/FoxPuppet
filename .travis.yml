@@ -39,6 +39,13 @@ matrix:
           packages:
             - jwm
         firefox: latest
+    - python: 2.7
+      env: FIREFOX=esr
+      addons:
+        apt:
+          packages:
+            - jwm
+        firefox: latest
     - python: 3.6
       env: TOXENV=flake8
     - python: 3.6
@@ -66,6 +73,13 @@ matrix:
         firefox: latest-beta
     - python: 3.6
       env: FIREFOX=release
+      addons:
+        apt:
+          packages:
+            - jwm
+        firefox: latest
+    - python: 3.6
+      env: FIREFOX=esr
       addons:
         apt:
           packages:
