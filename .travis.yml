@@ -88,13 +88,6 @@ matrix:
   exclude:
     - python: 2.7
     - python: 3.6
-before_install:
-  - export GECKODRIVER_DOWNLOAD=`curl -s 'https://api.github.com/repos/mozilla/geckodriver/releases/latest' | python -c "import sys, json; r = json.load(sys.stdin); print([a for a in r['assets'] if 'linux64' in a['name']][0]['browser_download_url']);"`
-  - curl -L -o geckodriver.tar.gz $GECKODRIVER_DOWNLOAD
-  - mkdir $HOME/geckodriver && tar xvf geckodriver.tar.gz -C $HOME/geckodriver
-  - export PATH=$HOME/geckodriver:$PATH
-  - firefox --version
-  - geckodriver --version
 install:
   pip install tox-travis
 notifications:
@@ -103,6 +96,12 @@ notifications:
       - "https://silne30-foxpuppet.getbadges.io/api/app/webhook/b71ddba7-6feb-412c-8728-3efef552d02b"
     on_start: "change"
 before_script:
+  - export GECKODRIVER_DOWNLOAD=`curl -s 'https://api.github.com/repos/mozilla/geckodriver/releases/latest' | python -c "import sys, json; r = json.load(sys.stdin); print([a for a in r['assets'] if 'linux64' in a['name']][0]['browser_download_url']);"`
+  - curl -L -o geckodriver.tar.gz $GECKODRIVER_DOWNLOAD
+  - mkdir $HOME/geckodriver && tar xvf geckodriver.tar.gz -C $HOME/geckodriver
+  - export PATH=$HOME/geckodriver:$PATH
+  - firefox --version
+  - geckodriver --version
   - sh -e /etc/init.d/xvfb start
   - sleep 10
   - jwm &
