@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from foxpuppet import expected
 from foxpuppet.windows import BaseWindow
 from foxpuppet.windows.browser.notifications import BaseNotification
+from foxpuppet.windows.browser.tab_bar import TabBar
 
 
 class BrowserWindow(BaseWindow):
@@ -21,7 +22,6 @@ class BrowserWindow(BaseWindow):
     _nav_bar_locator = (By.ID, 'nav-bar')
     _notification_locator = (
         By.CSS_SELECTOR, '#notification-popup popupnotification')
-    _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
 
     @property
     def notification(self):
@@ -32,6 +32,14 @@ class BrowserWindow(BaseWindow):
                 return BaseNotification.create(self, root)
         except NoSuchElementException:
             return None  # no notification is displayed
+
+    @property
+    def tabbar(self):
+        """Creates the tab bar object.
+        :returns: :py:class:`~foxpuppet.window.browser.tabbar.TabBar`
+        :return type: object
+        """
+        return TabBar(self, self.document_element)
 
     def wait_for_notification(self, notification_class=BaseNotification):
         """Waits for the specified notification to be displayed.
@@ -92,7 +100,8 @@ class BrowserWindow(BaseWindow):
 
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             # Opens private or non-private window
-            self.selenium.find_element(*self._file_menu_button_locator).click()
+            self.selenium.find_element(
+                *self._file_menu_button_locator).click()
             if private:
                 self.selenium.find_element(
                     *self._file_menu_private_window_locator).click()
