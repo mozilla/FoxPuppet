@@ -101,6 +101,7 @@ before_script:
   - mkdir $HOME/geckodriver && tar xvf geckodriver.tar.gz -C $HOME/geckodriver
   - export PATH=$HOME/geckodriver:$PATH
   - firefox --version
+  - geckodriver --version
   - sh -e /etc/init.d/xvfb start
   - sleep 10
   - jwm &
