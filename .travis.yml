@@ -97,7 +97,7 @@ notifications:
       - "https://silne30-foxpuppet.getbadges.io/api/app/webhook/b71ddba7-6feb-412c-8728-3efef552d02b"
     on_start: "change"
 before_script:
-  - export GECKODRIVER_DOWNLOAD=curl -s 'https://api.github.com/repos/mozilla/geckodriver/releases/latest'
+  - export GECKODRIVER_DOWNLOAD=`curl -s 'https://api.github.com/repos/mozilla/geckodriver/releases/latest'``
   - python -c "import sys, os, json; r = json.load(os.getenv('GECKODRIVER_DOWNLOAD')); print([a for a in r['assets'] if 'linux64' in a['name']][0]['browser_download_url'])
   - curl -L -o geckodriver.tar.gz $GECKODRIVER_DOWNLOAD
   - mkdir $HOME/geckodriver && tar xvf geckodriver.tar.gz -C $HOME/geckodriver
