@@ -90,7 +90,7 @@ matrix:
     - python: 2.7
     - python: 3.6
 install:
-  pip install tox-travis, beautifulsoup4
+  pip install tox-travis beautifulsoup4
 notifications:
   webhooks:
     urls:
