@@ -98,6 +98,8 @@ notifications:
     on_start: "change"
 before_script:
   - python geckodriver.py
+  - mkdir $HOME/geckodriver && tar xvf geckodriver.tar.gz -C $HOME/geckodriver
+  - export PATH=$HOME/geckodriver:$PATH
   - firefox --version
   - sh -e /etc/init.d/xvfb start
   - sleep 10

@@ -10,7 +10,3 @@ for link in latest.find_all('a'):
         url = 'https://github.com' + link.get('href')
         os.putenv('GECKODRIVER_URL', url)
         os.system('curl -L -o geckodriver.tar.gz $GECKODRIVER_URL')
-        os.system('mkdir $HOME/geckodriver && \
-            tar xvf geckodriver.tar.gz -C $HOME/geckodriver')
-        os.system('export PATH=$HOME/geckodriver:$PATH')
-        os.system('geckodriver --version')
