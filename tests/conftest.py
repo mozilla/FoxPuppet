@@ -42,23 +42,3 @@ def browser(foxpuppet):
 @pytest.fixture
 def foxpuppet(selenium):
     return FoxPuppet(selenium)
-
-
-@pytest.fixture(scope='session', autouse=True)
-def install_geckodriver():
-    import requests
-    import os
-    from bs4 import BeautifulSoup
-
-    r = requests.get('https://github.com/mozilla/geckodriver/releases')
-    soup = BeautifulSoup(r.text, 'html.parser')
-    latest = soup.find('div', {'class': 'label-latest'})
-    for link in latest.find_all('a'):
-        if 'linux64' in link.get('href'):
-            url = 'https://github.com' + link.get('href')
-            os.putenv('GECKODRIVER_URL', url)
-    os.system('curl -L -o geckodriver.tar.gz $GECKODRIVER_URL')
-    os.system('mkdir $HOME/geckodriver \
-        && tar xvf geckodriver.tar.gz -C $HOME/geckodriver')
-    os.system('export PATH=$HOME/geckodriver:$PATH')
-    os.system('geckodriver --version')
