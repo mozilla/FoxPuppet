@@ -40,3 +40,10 @@ def test_switch_to(foxpuppet, selenium):
     # Switch to originally window opened by pytest
     foxpuppet.browser.switch_to()
     assert foxpuppet.browser.handle == selenium.current_window_handle
+
+
+def test_open_new_tab(foxpuppet, selenium):
+    """Test Open new Tab"""
+    assert len(foxpuppet.browser.tabbar.tabs) == 1
+    foxpuppet.browser.tabbar.open_new_tab()
+    assert len(foxpuppet.browser.tabbar.tabs) == 2
