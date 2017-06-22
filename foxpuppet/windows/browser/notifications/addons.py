@@ -33,8 +33,8 @@ class AddOnInstallConfirmation(BaseNotification):
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             if self.window.firefox_version >= 55:
-                return self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'description').find_element(
+                return self.root.find_element(
+                    By.ID, 'addon-webext-perm-header').find_element(
                         By.CSS_SELECTOR, '.addon-webext-name').text
             else:
                 label = self.root.find_element(*self._addon_name_locator)
