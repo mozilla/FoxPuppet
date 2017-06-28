@@ -20,8 +20,6 @@ class AddOnInstallBlocked(BaseNotification):
 class AddOnInstallConfirmation(BaseNotification):
     """Add-on install confirmation notification."""
 
-    _web_ext_header_locator = (By.ID, 'addon-webext-perm-header')
-    _web_ext_name_locator = (By.CSS_SELECTOR, '.addon-webext-name')
     _cancel_locator = (By.ID, 'addon-install-confirmation-cancel')
     _confirm_locator = (By.ID, 'addon-install-confirmation-accept')
 
