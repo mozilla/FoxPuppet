@@ -21,7 +21,8 @@ class AddOnInstallConfirmation(BaseNotification):
     """Add-on install confirmation notification."""
 
     _addon_name_locator = (
-        By.CSS_SELECTOR, '#addon-install-confirmation-content label')
+        By.CSS_SELECTOR,
+        '#addon-webext-perm-header > .addon-webext-name')
     _cancel_locator = (By.ID, 'addon-install-confirmation-cancel')
     _confirm_locator = (By.ID, 'addon-install-confirmation-accept')
 
@@ -33,11 +34,12 @@ class AddOnInstallConfirmation(BaseNotification):
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             if self.window.firefox_version >= 55:
-                return self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'description').find_element(
-                        By.CSS_SELECTOR, '.addon-webext-name').text
+                return self.root.find_element(*self._addon_name_locator).text
             else:
-                label = self.root.find_element(*self._addon_name_locator)
+                _addon_name_locator = (
+                    By.CSS_SELECTOR,
+                    '#addon-install-confirmation-content label')
+                label = self.root.find_element(*_addon_name_locator)
                 return label.get_property('value')
 
     def cancel(self):
