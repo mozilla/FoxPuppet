@@ -2,6 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import pytest
+from selenium.webdriver.support.wait import WebDriverWait
+
 
 def test_initial_browser_window(foxpuppet):
     """Tests initial state of browser windows"""
@@ -36,16 +39,16 @@ def test_close_window(foxpuppet):
 def test_switch_to(foxpuppet, selenium):
     """Test Switch to function"""
     foxpuppet.browser.open_window()
-
     # Switch to originally window opened by pytest
     foxpuppet.browser.switch_to()
     assert foxpuppet.browser.handle == selenium.current_window_handle
 
 
-def test_tracking_protection_sheild(foxpuppet, selenium):
-    browser = foxpuppet.browser.open_window(private=True)
-    browser.switch_to()
-    selenium.get('http://cnn.com')
-    assert browser.navbar.tracking_shield
-    selenium.get('http://support.mozilla.org')
-    assert foxpuppet.window_manager.windows[1].navbar.tracking_shield
+@pytest.mark.firefox_preferences({'privacy.trackingprotection.enabled': True})
+def test_tracking_protection_shield(foxpuppet, selenium):
+    """Tests if the tracking protection icon displays"""
+    browser = foxpuppet.browser
+    assert not browser.navbar.is_tracking_shield_displayed
+    selenium.get('https://www.washingtonpost.com/')
+    WebDriverWait(selenium, timeout=5).until(
+        lambda _: browser.navbar.is_tracking_shield_displayed)

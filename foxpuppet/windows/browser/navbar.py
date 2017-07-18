@@ -2,33 +2,28 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-import time
+
+from foxpuppet.region import Region
 
 
-class NavBar(object):
+class NavBar(Region):
 
-    """Representation of the NavBar
-    :param selenium: WebDriver Object
-    :type selenium:
-        :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object
+    """Representation of the Navigation Bar
+    :param window: Window object this region appears in.
+    :param root: element that serves as the root for the region.
+    :type window: :py:class:`~.windows.BaseWindow`
+    :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement`
     """
-
-    _tracking_protection_shield_locator = (By.CSS_SELECTOR, '#tracking-protection-icon:-moz-lwtheme')
-
-    def __init__(self, selenium, *args, **kwargs):
-        self.selenium = selenium
+    _tracking_protection_shield_locator = (By.ID, 'tracking-protection-icon')
 
     @property
-    def tracking_shield(self):
-        """Returns the Tacking Protection enabled shield"""
-        time.sleep(30)
+    def is_tracking_shield_displayed(self):
+        """Tracking Protection shield
+        :returns: True or False if the Tracking Shield is displayed
+        :type return: boolean
+        """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return self.selenium.find_element(
+            el = self.selenium.find_element(
                 *self._tracking_protection_shield_locator)
-            #WebDriverWait(self.selenium, timeout=10).until(
-            #    lambda _: self.selenium.find_element(
-            #        *self._tracking_protection_shield_locator)
-            #)
+            return bool(el.get_attribute('state'))

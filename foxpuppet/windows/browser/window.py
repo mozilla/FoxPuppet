@@ -26,7 +26,14 @@ class BrowserWindow(BaseWindow):
 
     @property
     def navbar(self):
-        return (NavBar(self.selenium))
+        """Provides access to the Navigation Bar.
+        :returns: :py:class:`~foxpuppet.windows.browser.navbar.NavBar`
+        :return type: object
+        """
+        window = BaseWindow(self.selenium, self.selenium.current_window_handle)
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            el = self.selenium.find_element(*self._nav_bar_locator)
+            return NavBar(window, el)
 
     @property
     def notification(self):
