@@ -1,6 +1,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Contains BrowserWindow object representing the Firefox browser."""
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -12,9 +13,7 @@ from foxpuppet.windows.browser.notifications import BaseNotification
 
 
 class BrowserWindow(BaseWindow):
-
-    """Representation of a browser window.
-    """
+    """Representation of a browser window."""
 
     _file_menu_button_locator = (By.ID, 'file-menu')
     _file_menu_private_window_locator = (By.ID, 'menu_newPrivateWindow')
@@ -26,9 +25,11 @@ class BrowserWindow(BaseWindow):
 
     @property
     def navbar(self):
-        """Provides access to the Navigation Bar.
-        :returns: :py:class:`~foxpuppet.windows.browser.navbar.NavBar`
-        :return type: object
+        """Provide access to the Navigation Bar.
+
+        Returns:
+            obj: FoxPuppet NavBar object.
+
         """
         window = BaseWindow(self.selenium, self.selenium.current_window_handle)
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
@@ -37,7 +38,12 @@ class BrowserWindow(BaseWindow):
 
     @property
     def notification(self):
-        """Provides access to the currently displayed notification."""
+        """Provide access to the currently displayed notification.
+
+        Returns:
+            obj: FoxPuppet BaseNotification object.
+
+        """
         try:
             with self.selenium.context(self.selenium.CONTEXT_CHROME):
                 root = self.selenium.find_element(*self._notification_locator)
@@ -46,11 +52,17 @@ class BrowserWindow(BaseWindow):
             return None  # no notification is displayed
 
     def wait_for_notification(self, notification_class=BaseNotification):
-        """Waits for the specified notification to be displayed.
+        """Wait for the specified notification to be displayed.
 
-        :param notification_class: Optional, the notification class to wait
-         for. If `None` is specified it will wait for any notification to be
-         closed. Defaults to `BaseNotification`.
+        Args:
+            notification_class (:obj:`BaseNotification`, optional):
+                The notification class to wait for. If `None` is specified it
+                will wait for any notification to be closed. Defaults to
+                `BaseNotification`.
+
+        Returns:
+            obj: Firefox notification.
+
         """
         if notification_class:
             if notification_class is BaseNotification:
@@ -69,13 +81,12 @@ class BrowserWindow(BaseWindow):
 
     @property
     def is_private(self):
-        """
-            Property that checks if the specified window is private or not.
+        """Property that checks if the specified window is private or not.
 
-            :returns: True if this is a Private Browsing window.
-            :return type: bool
-        """
+        Returns:
+            bool: True if this is a Private Browsing window.
 
+        """
         self.switch_to()
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             return self.selenium.execute_script(
@@ -87,18 +98,16 @@ class BrowserWindow(BaseWindow):
                 """, self.document_element)
 
     def open_window(self, private=False):
-        """Opens a new browser window
+        """Open a new browser window.
 
-        :param private: Optional parameter to open a private browsing window.
-                        Defaults to False.
-        :type private: bool
+        Args:
+            private (bool): Optional parameter to open a private browsing
+                window. Defaults to False.
 
-        :returns:
-            :py:class:`~foxpuppet.windows.browser.window.BrowserWindow`
-            object of the newly opened window.
-        :return type: object
+        Returns:
+            obj: BrowserWindow object of newly opened window.
+
         """
-
         handles_before = self.selenium.window_handles
         self.switch_to()
 

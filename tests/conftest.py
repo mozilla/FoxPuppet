@@ -1,14 +1,15 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Contains the configuration files for pytest."""
 
 import pytest
-
 from foxpuppet import FoxPuppet
 
 
 @pytest.mark.hookwrapper
 def pytest_runtest_makereport(item, call):
+    """Add a report to the generated html report."""
     pytest_html = item.config.pluginmanager.getplugin('html')
     outcome = yield
     report = outcome.get_result()
@@ -26,6 +27,7 @@ def pytest_runtest_makereport(item, call):
 
 @pytest.fixture(scope='session')
 def webserver():
+    """Pytest fixture that starts a local webserver."""
     from .webserver import WebServer
     webserver = WebServer()
     webserver.start()
@@ -35,10 +37,11 @@ def webserver():
 
 @pytest.fixture
 def browser(foxpuppet):
-    """Initial Firefox browser window."""
+    """First Firefox browser window opened."""
     return foxpuppet.browser
 
 
 @pytest.fixture
 def foxpuppet(selenium):
+    """Initialize the FoxPuppet object."""
     return FoxPuppet(selenium)

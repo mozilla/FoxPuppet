@@ -1,17 +1,18 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
-
-from foxpuppet.windows.browser.notifications import BaseNotification
+"""Contains all current install notifications Firefox will display."""
 
 from selenium.webdriver.common.by import By
+
+from foxpuppet.windows.browser.notifications import BaseNotification
 
 
 class AddOnInstallBlocked(BaseNotification):
     """Add-on install blocked notification."""
 
     def allow(self):
-        """Allow the add-on to be installed"""
+        """Allow the add-on to be installed."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.root.find_anonymous_element_by_attribute(
                 'anonid', 'button').click()
@@ -29,7 +30,10 @@ class AddOnInstallConfirmation(BaseNotification):
     @property
     def addon_name(self):
         """Provide access to the add-on name.
-        :returns: The add-on name.
+
+        Returns:
+            obj: Webdriver element.
+
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             if self.window.firefox_version >= 55:
