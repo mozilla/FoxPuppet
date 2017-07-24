@@ -29,7 +29,6 @@ class AddOnInstallConfirmation(BaseNotification):
     @property
     def addon_name(self):
         """Provide access to the add-on name.
-
         :returns: The add-on name.
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
@@ -57,6 +56,13 @@ class AddOnInstallConfirmation(BaseNotification):
 
 class AddOnInstallComplete(BaseNotification):
     """Add-on install complete notification."""
+
+    def close(self):
+        """Close the notification"""
+
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            self.root.find_anonymous_element_by_attribute(
+                'anonid', 'button').click()
 
 
 class AddOnInstallRestart(BaseNotification):
