@@ -42,6 +42,12 @@ def confirmation_notification(browser, blocked_notification):
     return browser.wait_for_notification(AddOnInstallConfirmation)
 
 
+@pytest.fixture
+def complete_notification(browser, confirmation_notification):
+    confirmation_notification.install()
+    return browser.wait_for_notification(AddOnInstallComplete)
+
+
 def test_open_close_notification(browser, blocked_notification):
     """Trigger and dismiss a notification"""
     assert blocked_notification is not None
@@ -89,3 +95,9 @@ def test_confirm_addon_install(addon, browser, confirmation_notification):
     assert confirmation_notification.addon_name == addon.name
     confirmation_notification.install()
     browser.wait_for_notification(AddOnInstallComplete)
+
+
+def test_addon_install_complete(addon, browser, complete_notification):
+    """Complete add-on installation and close notification"""
+    complete_notification.close()
+    browser.wait_for_notification(None)
