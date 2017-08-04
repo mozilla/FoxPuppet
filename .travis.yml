@@ -1,100 +1,95 @@
 language: python
-python:
-- 2.7
-- 3.6
+_aliases:
+  - &apt
+    apt:
+      packages:
+        - jwm
+  - &nightly
+    env: FIREFOX=nightly
+    addons:
+      <<: *apt
+      firefox: latest-nightly
+  - &dev
+    env: FIREFOX=dev
+    addons:
+      <<: *apt
+      firefox: latest-dev
+  - &beta
+    env: FIREFOX=beta
+    addons:
+      <<: *apt
+      firefox: latest-beta
+  - &release
+    env: FIREFOX=release
+    addons:
+      <<: *apt
+      firefox: latest
+  - &esr
+    env: FIREFOX=esr
+    addons:
+      <<: *apt
+      firefox: latest-esr
+jobs:
+  include:
+    - stage:
+      python: 3.6
+      env: TOXENV=flake8
+      before_script: skip
+    - stage:
+      python: 3.6
+      env: TOXENV=docs
+      before_script: skip
+    - stage:
+      python: 2.7
+      <<: *nightly
+    - stage:
+      python: 2.7
+      <<: *dev
+    - stage:
+      python: 2.7
+      <<: *beta
+    - stage:
+      python: 2.7
+      <<: *release
+    - stage:
+      python: 2.7
+      <<: *esr
+    - stage:
+      python: 3.6
+      <<: *nightly
+    - stage:
+      python: 3.6
+      <<: *dev
+    - stage:
+      python: 3.6
+      <<: *beta
+    - stage:
+      python: 3.6
+      <<: *release
+    - stage:
+      python: 3.6
+      <<: *esr
+    - stage: deploy
+      python: 3.6
+      before_script: skip
+      script: skip
+      install: skip
+      deploy:
+        provider: pypi
+        user: davehunt
+        password:
+          secure:
+            DU7213U/qKunwscaaYbhFkLHHwjlkjZaJimIknAHlpscnH7CxoxVL2oiphpcsE+3nKm+CO4VTi/jaOlNIbOCBccj9Ol+QHhv26vr1XqLxT9IlVmFtpeNK9XilDigLBx7FjpVpEjq/01cjJLW238hAcbUGDf8sx7Fl7ce7qJqe3R8Yszusrt3zWaUnsTvKOnvk/vaiRfQHz38eBGhEWlyMycWoXVfAzdg1UWKdV0qg+xl07kd/byNkP4eREUTVXm/37CyD/7mnGM7yr/sxEyB+OLMthMDt4BBAlThGha1QzJwsHvy9jHzsvUbW6WIs00jwfAcCflHcbolNJcigbk5QTlVIwlBP4jQTnbYXUvfseYZ3yo2SLbfHgXLJcXm290oWSz0XcF95bhOyySFS5GHoy0uo9BAxPqYngiQtWcfAFfmNTHFhc/8dADpGtkCQHQIRdPmn65j+RIwknOWTn1ryrjqJ1ZnCA2D9hoFfpm55/SpJE74gwDX+6uj5x8kPF3pDJauhiPlAPe/nxpgbDNZpVWv98GTIsWYI0Ae0hyj0w7uKySuKEKjiLBhJ/09pVjT6uaz6qTjZmQhXTH7VkcS3VL3i8pTkC7J/PYYw8cyLfhlFFO80MH1I6HGyMtAnACS0D7BaBMK7OENCDJsyXGCcp78w7lbCdpXkwALe2zk+wE=
+        distributions: sdist bdist_wheel
+        on:
+          tags: true
+          repo: mozilla/FoxPuppet
+cache:
+  pip: true
 env:
   global:
     - DISPLAY=:99.0
-matrix:
-  include:
-    - python: 2.7
-      env: TOXENV=flake8
-    - python: 2.7
-      env: TOXENV=docs
-    - python: 2.7
-      env: FIREFOX=nightly
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest-nightly
-    - python: 2.7
-      env: FIREFOX=dev
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest-dev
-    - python: 2.7
-      env: FIREFOX=beta
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest-beta
-    - python: 2.7
-      env: FIREFOX=release
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest
-    - python: 2.7
-      env: FIREFOX=esr
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest
-    - python: 3.6
-      env: TOXENV=flake8
-    - python: 3.6
-      env: TOXENV=docs
-    - python: 3.6
-      env: FIREFOX=nightly
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest-nightly
-    - python: 3.6
-      env: FIREFOX=dev
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest-dev
-    - python: 3.6
-      env: FIREFOX=beta
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest-beta
-    - python: 3.6
-      env: FIREFOX=release
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest
-    - python: 3.6
-      env: FIREFOX=esr
-      addons:
-        apt:
-          packages:
-            - jwm
-        firefox: latest
-  exclude:
-    - python: 2.7
-    - python: 3.6
-install:
-  pip install tox-travis
-notifications:
-  webhooks:
-    urls:
-      - "https://silne30-foxpuppet.getbadges.io/api/app/webhook/b71ddba7-6feb-412c-8728-3efef552d02b"
-    on_start: "change"
+install: pip install tox-travis
 before_script:
   - wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz
   - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
@@ -105,5 +100,4 @@ before_script:
   - sleep 10
   - jwm &
   - sleep 10
-script:
-  - tox
+script: tox
