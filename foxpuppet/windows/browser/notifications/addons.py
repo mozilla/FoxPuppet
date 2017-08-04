@@ -44,25 +44,26 @@ class AddOnInstallConfirmation(BaseNotification):
     def cancel(self):
         """Cancel add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute(
-                'anonid', 'secondarybutton').click()
+            if self.window.firefox_version >= 53:
+                # Notifications were restyled in Firefox 53
+                self.root.find_anonymous_element_by_attribute(
+                    'anonid', 'secondarybutton').click()
+            else:
+                self.root.find_element(*self._cancel_locator).click()
 
     def install(self):
         """Confirm add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute(
-                'anonid', 'button').click()
+            if self.window.firefox_version >= 53:
+                # Notifications were restyled in Firefox 53
+                self.root.find_anonymous_element_by_attribute(
+                    'anonid', 'button').click()
+            else:
+                self.root.find_element(*self._confirm_locator).click()
 
 
 class AddOnInstallComplete(BaseNotification):
     """Add-on install complete notification."""
-
-    def close(self):
-        """Close the notification"""
-
-        with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute(
-                'anonid', 'button').click()
 
 
 class AddOnInstallRestart(BaseNotification):
