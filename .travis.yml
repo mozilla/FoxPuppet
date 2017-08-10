@@ -10,15 +10,15 @@ _aliases:
       firefox: latest-nightly
     before_script: skip
   - &dev
-    env: FIREFOX=dev
+    env: FIREFOX=dev MOZ_HEADLESS=1
     addons:
-      <<: *apt
       firefox: latest-dev
+    before_script: skip
   - &beta
-    env: FIREFOX=beta
+    env: FIREFOX=beta MOZ_HEADLESS=1
     addons:
-      <<: *apt
       firefox: latest-beta
+    before_script: skip
   - &release
     env: FIREFOX=release
     addons:
