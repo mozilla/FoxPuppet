@@ -30,7 +30,7 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
 class WebServer(object):
     """Web server for serving local files within the /web directory."""
 
-    def __init__(self, host='', port=8000):
+    def __init__(self, host='', port=0):
         """Set up web server.
 
         Args:
