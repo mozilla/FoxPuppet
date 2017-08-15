@@ -28,7 +28,7 @@ class BrowserWindow(BaseWindow):
         """Provide access to the Navigation Bar.
 
         Returns:
-            obj: FoxPuppet NavBar object.
+            :py:class:`NavBar`: FoxPuppet NavBar object.
 
         """
         window = BaseWindow(self.selenium, self.selenium.current_window_handle)
@@ -41,7 +41,7 @@ class BrowserWindow(BaseWindow):
         """Provide access to the currently displayed notification.
 
         Returns:
-            obj: FoxPuppet BaseNotification object.
+            :py:class:`BaseNotification`: FoxPuppet BaseNotification object.
 
         """
         try:
@@ -55,13 +55,13 @@ class BrowserWindow(BaseWindow):
         """Wait for the specified notification to be displayed.
 
         Args:
-            notification_class (:obj:`BaseNotification`, optional):
+            notification_class (:py:class:`BaseNotification`, optional):
                 The notification class to wait for. If `None` is specified it
                 will wait for any notification to be closed. Defaults to
                 `BaseNotification`.
 
         Returns:
-            obj: Firefox notification.
+            :py:class:`BaseNotification`: Firefox notification.
 
         """
         if notification_class:
@@ -105,7 +105,7 @@ class BrowserWindow(BaseWindow):
                 window. Defaults to False.
 
         Returns:
-            obj: BrowserWindow object of newly opened window.
+            :py:class:`BrowserWindow`: Opened window.
 
         """
         handles_before = self.selenium.window_handles

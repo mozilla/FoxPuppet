@@ -10,7 +10,7 @@ class new_browser_window_is_opened(object):
     """An expectation for checking that a new window is found.
 
     Returns:
-        A BrowserWindow object.
+        :py:class:`BrowserWindow`: Browser window.
 
     """
 
@@ -31,7 +31,7 @@ class new_browser_window_is_opened(object):
         """Check to see if a new window has opened.
 
         Returns:
-            obj: BrowserWindow object of new window.
+            :py:class:`BrowserWindow`: Opened window.
 
         """
         handles = list(set(self.selenium.window_handles) - set(self.handles))

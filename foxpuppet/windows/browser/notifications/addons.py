@@ -32,7 +32,7 @@ class AddOnInstallConfirmation(BaseNotification):
         """Provide access to the add-on name.
 
         Returns:
-            obj: Webdriver element.
+            str: Add-on name.
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):

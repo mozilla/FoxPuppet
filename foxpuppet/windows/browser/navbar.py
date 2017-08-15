@@ -12,9 +12,12 @@ class NavBar(Region):
     """Representation of the navigation bar.
 
     Args:
-        window (:obj: `BaseWindow`): Window object this region appears in.
-        root (WebDriver Element): Element that serves as the root for the
+        window (:py:class:`BaseWindow`): Window object this region appears in.
+        root
+            (:py:class:`~selenium.webdriver.remote.webelement.WebElement`):
+            WebDriver element object that serves as the root for the
             region.
+
     """
 
     _tracking_protection_shield_locator = (By.ID, 'tracking-protection-icon')

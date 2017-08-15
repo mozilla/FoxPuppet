@@ -30,7 +30,8 @@ class BaseWindow(object):
         """Return the inner DOM window element.
 
         Returns:
-            obj: WebDriver element object for the DOM window element.
+            :py:class:`~selenium.webdriver.remote.webelement.WebElement`:
+                WebDriver element object for the DOM window element.
 
         """
         return self.selenium.find_element(*self._document_element)

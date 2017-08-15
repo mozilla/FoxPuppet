@@ -1,7 +1,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
-"""Contains the configuration files for pytest."""
+"""Configuration files for pytest."""
 
 import pytest
 from foxpuppet import FoxPuppet
@@ -27,7 +27,7 @@ def pytest_runtest_makereport(item, call):
 
 @pytest.fixture(scope='session')
 def webserver():
-    """Pytest fixture that starts a local webserver."""
+    """Fixture that starts a local web server."""
     from .webserver import WebServer
     webserver = WebServer()
     webserver.start()

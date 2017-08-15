@@ -3,4 +3,5 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 """Contains the notification interaction API and supporting files."""
 
-from foxpuppet.windows.browser.notifications.base import BaseNotification # noqa
+from foxpuppet.windows.browser.notifications.base import (  # noqa: F401
+    BaseNotification)

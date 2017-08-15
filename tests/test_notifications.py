@@ -1,20 +1,21 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-"""Test files for notifications API."""
+"""Tests for the notifications API."""
 
 from selenium.common.exceptions import TimeoutException
 
 import pytest
 from foxpuppet.windows.browser.notifications import BaseNotification
-from foxpuppet.windows.browser.notifications.addons import (AddOnInstallBlocked, # noqa
-                                                            AddOnInstallComplete, # noqa
-                                                            AddOnInstallConfirmation) # noqa
+from foxpuppet.windows.browser.notifications.addons import (  # noqa: I001
+    AddOnInstallBlocked,  # noqa: I001
+    AddOnInstallComplete,  # noqa: I001
+    AddOnInstallConfirmation)  # noqa: I001
 
 
 @pytest.fixture
 def firefox_options(firefox_options):
-    """Pytest fixture for configuring firefox."""
+    """Fixture for configuring Firefox."""
     # Due to https://bugzilla.mozilla.org/show_bug.cgi?id=1329939 we need the
     # initial browser window to be in the foreground. Without this, the
     # notifications will not be displayed.
@@ -24,10 +25,11 @@ def firefox_options(firefox_options):
 
 @pytest.fixture
 def addon():
-    """Pytest fixture creating an installable addon.
+    """Fixture for creating an installable add-on.
 
     Returns:
-        obj: Addon class containing a name and a path to the addon.
+        :py:class:`AddOn`: Add-on object containing a name and a path to the
+            add-on.
 
     """
     class AddOn(object):
@@ -38,10 +40,10 @@ def addon():
 
 @pytest.fixture
 def blocked_notification(addon, browser, webserver, selenium):
-    """Pytest fixture causing a blocked notification to appear in firefox.
+    """Fixture causing a blocked notification to appear in Firefox.
 
     Returns:
-        obj: Foxpuppet AddOnInstallBlocked notification object.
+        :py:class:`AddOnInstallBlocked`: Firefox notification.
 
     """
     selenium.get(webserver.url())
@@ -51,10 +53,10 @@ def blocked_notification(addon, browser, webserver, selenium):
 
 @pytest.fixture
 def confirmation_notification(browser, blocked_notification):
-    """Pytest fixture that allows an addon to be installed.
+    """Fixture that allows an add-on to be installed.
 
     Returns:
-        obj: Foxpuppet AddOnInstallConfirmation notification object.
+        :py:class:`AddOnInstallConfirmation`: Firefox notification.
 
     """
     blocked_notification.allow()
@@ -63,10 +65,10 @@ def confirmation_notification(browser, blocked_notification):
 
 @pytest.fixture
 def complete_notification(browser, confirmation_notification):
-    """Pytest fixture that installs an addon.
+    """Fixture that installs an add-on.
 
     Returns:
-        obj: Foxpuppet AddOnInstallComplete notification object.
+        :py:class:`AddOnInstallComplete` Firefox notification.
 
     """
     confirmation_notification.install()

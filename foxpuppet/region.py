@@ -19,9 +19,13 @@ class Region(object):
         """Create a Region object.
 
         Args:
-            window (:obj: `BaseWindow`): Window object this region appears in.
-            root (WebDriver Element): Element that serves as the root for the
+            window (:py:class:`BaseWindow`): Window object this region appears
+                in.
+            root
+                (:py:class:`~selenium.webdriver.remote.webelement.WebElement`):
+                WebDriver element object that serves as the root for the
                 region.
+
         """
         self.root = root
         self.selenium = window.selenium

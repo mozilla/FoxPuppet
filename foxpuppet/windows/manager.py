@@ -8,14 +8,17 @@ class WindowManager(object):
     """A window manager that controls the creation of window objects.
 
     Args:
-        selenium (:obj:`Webdriver`): Selenium WebDriver object.
+        selenium: (:py:class:`~selenium.webdriver.remote.webdriver.WebDriver`):
+            Firefox WebDriver object.
     """
 
     def __init__(self, selenium):
         """Create WindowManager Object.
 
         Args:
-            selenium (:obj:`WebDriver`): Selenium WebDriver object.
+            selenium:
+                (:py:class:`~selenium.webdriver.remote.webdriver.WebDriver`):
+                Firefox WebDriver object.
         """
         self.selenium = selenium
 

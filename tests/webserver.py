@@ -1,7 +1,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-"""A simple webserver."""
+"""A simple web server."""
 
 import os
 import threading
@@ -14,13 +14,13 @@ except ImportError:
 
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
-    """Setup http requests for Webserver."""
+    """Custom HTTP request handler that serves files from another directory."""
 
     def translate_path(self, path):
-        """Set path for local files.
+        """Change working directory and translate path.
 
         Returns:
-            obj: SimpleHTTPRequestHandler
+            str: Path to web server resource
 
         """
         os.chdir(os.path.join(os.path.dirname(__file__), 'web'))
@@ -28,14 +28,14 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
 
 
 class WebServer(object):
-    """Webserver for serving local files within the /web directory."""
+    """Web server for serving local files within the /web directory."""
 
     def __init__(self, host='', port=8000):
-        """Set up Webserver.
+        """Set up web server.
 
         Args:
             host (str): Hostname.
-            port (str, optional): Port for webserver.
+            port (int, optional): Port for web server.
                 Optional and defaults to port 8000.
         """
         self.server = HTTPServer((host, port), MyRequestHandler)
@@ -44,38 +44,41 @@ class WebServer(object):
 
     @property
     def host(self):
-        """Hostname of the WebServer.
+        """Hostname of the web server.
 
         Returns:
-            str: WebServer hostname.
+            str: Web server hostname.
 
         """
         return self.server.server_address[0]
 
     @property
     def port(self):
-        """Webserver port.
+        """Web server port.
 
         Returns:
-            str: WebServer port address.
+            int: Web server port.
 
         """
         return self.server.server_address[1]
 
     def start(self):
-        """Start Webserver."""
+        """Start web server."""
         self.thread.start()
 
     def stop(self):
-        """Stop WebServer."""
+        """Stop web server."""
         self.server.shutdown()
         self.thread.join()
 
     def url(self, path='/'):
-        """Webserver URL.
+        """Web server URL.
+
+        Args:
+            path (str, optional): Path to append to the web server URL.
 
         Returns:
-            str: path to append to WebServer URL. Optional.
+            str: URL of web server.
 
         """
         return 'http://{0.host}:{0.port}{1}'.format(self, path)

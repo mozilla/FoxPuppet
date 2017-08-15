@@ -18,13 +18,15 @@ class BaseNotification(Region):
         """Create a notification object.
 
         Args:
-            window (:obj: WebDriver Element): Window object this region appears
-                in.
-            root: (:obj: WebDriver Locator): element that serves as the root
-                for the region.
+            window (:py:class:`BrowserWindow`): Window object this region
+                appears in.
+            root
+                (:py:class:`~selenium.webdriver.remote.webelement.WebElement`):
+                WebDriver element object that serves as the root for the
+                notification.
 
         Returns:
-            obj: Foxpuppet BaseNotification object
+            :py:class:`BaseNotification`: Firefox notification.
 
         """
         notifications = {}
@@ -49,7 +51,7 @@ class BaseNotification(Region):
         """Provide access to the notification origin.
 
         Returns:
-            obj: WebDriver Element point to the notification's origin.
+            str: The notification origin.
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
