@@ -10,6 +10,7 @@ from foxpuppet import expected
 from foxpuppet.windows import BaseWindow
 from foxpuppet.windows.browser.navbar import NavBar
 from foxpuppet.windows.browser.notifications import BaseNotification
+from foxpuppet.windows.browser.tab_bar import Tab_bar
 
 
 class BrowserWindow(BaseWindow):
@@ -22,6 +23,19 @@ class BrowserWindow(BaseWindow):
     _notification_locator = (
         By.CSS_SELECTOR, '#notification-popup popupnotification')
     _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
+
+    @property
+    def tab_bar(self):
+        """Provide access to the Tab Bar.
+
+        Returns:
+            :py:class:`Tab_Bar`: FoxPuppet Tab Bar object.
+
+        """
+        window = BaseWindow(self.selenium, self.selenium.current_window_handle)
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            el = self.selenium.find_element(*self._tab_browser_locator)
+            return Tab_bar(window, el)
 
     @property
     def navbar(self):

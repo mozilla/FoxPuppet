@@ -54,3 +54,27 @@ def test_tracking_protection_shield(foxpuppet, selenium):
     selenium.get('https://www.washingtonpost.com/')
     WebDriverWait(selenium, timeout=5).until(
         lambda _: browser.navbar.is_tracking_shield_displayed)
+
+
+def test_open_new_tab(browser, selenium):
+    """Test Open new Tab."""
+    assert len(browser.tab_bar.tabs) == 1
+    browser.tab_bar.open_new_tab()
+    assert len(browser.tab_bar.tabs) == 2
+
+
+def test_close_tab(browser, selenium):
+    """Test close Tab."""
+    browser.tab_bar.open_new_tab()
+    browser.tab_bar.tabs[1].close()
+    assert len(browser.tab_bar.tabs) == 1
+
+
+def test_select_tab(browser, selenium):
+    """Test selecting a tab."""
+    selenium.get('https://www.mozilla.org/')
+    tabs = browser.tab_bar.open_new_tab()
+    tabs[-1].select()
+    assert 'about:newtab' in selenium.current_url
+    tabs[0].select()
+    assert 'https://www.mozilla.org/' in selenium.current_url
