@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from foxpuppet.region import Region
 
 
-class Tab_bar(Region):
+class TabBar(Region):
     """Representation of the tab bar which contains the tabs.
 
     Args:
@@ -38,18 +38,67 @@ class Tab_bar(Region):
             tab.handle = handle
         return tabs
 
+    @property
+    def selected_index(self):
+        """The index of the currently selected tab.
+
+        :return: Index of the selected tab.
+        """
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            tab_bar = self.selenium.find_element(By.ID, 'tabbrowser-tabs')
+            return int(tab_bar.get_property('selectedIndex'))
+
+    @property
+    def selected_tab(self):
+        """A :class:`Tab` instance of the currently selected tab.
+
+        :returns: :class:`Tab` instance.
+        """
+        return self.tabs[self.selected_index]
+
     def open_new_tab(self):
         """Open a new tab in the current window.
 
         Returns: list of :py:class:`Tab`.
 
         """
-        current_tabs = len(self.selenium.window_handles)
+        starting_tabs = self.selenium.window_handles
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*self._new_tab_button_locator).click()
+        # Wait for tab to open
         self.wait.until(
-            lambda _: len(self.selenium.window_handles) != current_tabs)
-        return self.tabs
+            lambda s: len(s.window_handles) == len(starting_tabs) + 1)
+
+        current_tabs = self.selenium.window_handles
+        [new_handle] = list(set(current_tabs) - set(starting_tabs))
+        [new_tab] = [tab for tab in self.tabs if tab.handle == new_handle]
+
+        # if the new tab is the currently selected tab, switch to it
+        if new_tab == self.selected_tab:
+            new_tab.focus()
+
+        return new_tab
+
+    @staticmethod
+    def get_handle_for_tab(selenium, tab):
+        """Retrieves the marionette handle for the given :class:`Tab` instance.
+
+        :param marionette: An instance of the Marionette client.
+
+        :param tab_element: The DOM element corresponding to a tab inside the tabs toolbar.
+
+        :returns: `handle` of the tab.
+        """
+
+        handle = selenium.execute_script("""
+          let win = arguments[0].linkedBrowser;
+          if (!win) {
+            return null;
+          }
+          return win.outerWindowID.toString();
+        """, tab)
+
+        return handle
 
     class Tab(Region):
         """Representaion of the Tab.
@@ -66,22 +115,40 @@ class Tab_bar(Region):
 
         def close(self):
             """Close the selected tab."""
-            current_tabs = len(self.selenium.window_handles)
+            tab_closed = self.handle
             with self.selenium.context(self.selenium.CONTEXT_CHROME):
                 button = self.root.find_anonymous_element_by_attribute(
                     'anonid', 'close-button')
                 button.click()
             self.wait.until(
-                lambda _: len(self.selenium.window_handles) != current_tabs)
+                lambda s: tab_closed not in s.window_handles,
+                message='No new tab has been opened.')
+            # Switch to last available tab
+            self.selenium.switch_to.window(self.selenium.window_handles[-1])
 
-        def select(self):
-            """Select the tab.
+        @property
+        def selected(self):
+            """Checks if the tab is selected.
+
+            :return: `True` if the tab is selected.
+            """
+            with self.selenium.context(self.selenium.CONTEXT_CHROME):
+                return self.selenium.execute_script("""
+                    return arguments[0].hasAttribute('selected');
+                """, self.root)
+
+        def focus(self):
+            """Focus the tab.
 
             Returns: :py:class:`Tab`.
 
             """
+            with self.selenium.context(self.selenium.CONTEXT_CHROME):
+                self.root.click()
+            self.wait.until(
+                lambda _: self.selected,
+                message='Tab with handle "%s" could not be selected.' % self.handle)
             self.selenium.switch_to.window(self.handle)
-            return self
 
         @property
         def handle(self):
