@@ -79,27 +79,6 @@ class TabBar(Region):
 
         return new_tab
 
-    @staticmethod
-    def get_handle_for_tab(selenium, tab):
-        """Retrieves the marionette handle for the given :class:`Tab` instance.
-
-        :param marionette: An instance of the Marionette client.
-
-        :param tab_element: The DOM element corresponding to a tab inside the tabs toolbar.
-
-        :returns: `handle` of the tab.
-        """
-
-        handle = selenium.execute_script("""
-          let win = arguments[0].linkedBrowser;
-          if (!win) {
-            return null;
-          }
-          return win.outerWindowID.toString();
-        """, tab)
-
-        return handle
-
     class Tab(Region):
         """Representaion of the Tab.
 
@@ -147,7 +126,8 @@ class TabBar(Region):
                 self.root.click()
             self.wait.until(
                 lambda _: self.selected,
-                message='Tab with handle "%s" could not be selected.' % self.handle)
+                message='Tab with handle "{0}" could not be selected.'.format(
+                    self.handle))
             self.selenium.switch_to.window(self.handle)
 
         @property
