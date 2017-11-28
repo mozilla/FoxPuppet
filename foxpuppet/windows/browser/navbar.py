@@ -72,3 +72,6 @@ class NavBar(Region):
                 # Switch to tab
                 self.selenium.switch_to.window(
                     self.selenium.window_handles[-1])
+                # Wait for the URL request to process
+                self.wait.until(
+                    lambda _: self.selenium.current_url != 'about:blank')
