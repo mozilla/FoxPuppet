@@ -54,3 +54,12 @@ def test_tracking_protection_shield(foxpuppet, selenium):
     selenium.get('https://www.washingtonpost.com/')
     WebDriverWait(selenium, timeout=5).until(
         lambda _: browser.navbar.is_tracking_shield_displayed)
+
+
+def test_opening_a_webextension(foxpuppet, selenium, complete_notification):
+    """Test clicking on an installed WebExtension."""
+    browser = foxpuppet.browser
+    extensions = browser.navbar.extensions
+    assert 'WebExtension' in extensions[0].name
+    extensions[0].click()
+    assert 'https://developer.mozilla.org/' in selenium.current_url
