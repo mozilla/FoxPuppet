@@ -1,6 +1,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Contains a base class for interacting with Firefox notifications."""
 
 from abc import ABCMeta
 
@@ -14,6 +15,20 @@ class BaseNotification(Region):
 
     @staticmethod
     def create(window, root):
+        """Create a notification object.
+
+        Args:
+            window (:py:class:`BrowserWindow`): Window object this region
+                appears in.
+            root
+                (:py:class:`~selenium.webdriver.remote.webelement.WebElement`):
+                WebDriver element object that serves as the root for the
+                notification.
+
+        Returns:
+            :py:class:`BaseNotification`: Firefox notification.
+
+        """
         notifications = {}
         _id = root.get_property('id')
         from foxpuppet.windows.browser.notifications import addons
@@ -24,7 +39,9 @@ class BaseNotification(Region):
     def label(self):
         """Provide access to the notification label.
 
-        :returns: The notification label.
+        Returns:
+            str: The notification label
+
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             return self.root.get_attribute('label')
@@ -33,7 +50,9 @@ class BaseNotification(Region):
     def origin(self):
         """Provide access to the notification origin.
 
-        :returns: The notification origin.
+        Returns:
+            str: The notification origin.
+
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             return self.root.get_attribute('origin')

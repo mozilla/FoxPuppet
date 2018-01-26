@@ -4,7 +4,7 @@ FoxPuppet
 FoxPuppet is a library for automating user interactions in `Firefox <https://www.mozilla.org/en-US/firefox/products/>`_ using `Selenium <http://seleniumhq.org/>`_.
 
 .. image:: https://img.shields.io/badge/license-MPL%202.0-blue.svg
-   :target: https://github.com/mozilla/FoxPuppet/blob/master/LICENSE
+   :target: https://github.com/mozilla/FoxPuppet/blob/master/LICENSE.txt
    :alt: License
 
 .. image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
@@ -23,10 +23,10 @@ FoxPuppet is a library for automating user interactions in `Firefox <https://www
    :target: https://github.com/mozilla/FoxPuppet/issues
    :alt: Issues
 
-.. image:: https://pyup.io/repos/github/mozilla/foxpuppet/shield.svg
-   :target: https://pyup.io/repos/github/mozilla/foxpuppet
+.. image:: https://pyup.io/repos/github/mozilla/FoxPuppet/shield.svg
+   :target: https://pyup.io/repos/github/mozilla/FoxPuppet
    :alt: Updates
 
-.. image:: https://pyup.io/repos/github/mozilla/foxpuppet/python-3-shield.svg
-   :target: https://pyup.io/repos/github/mozilla/foxpuppet/
+.. image:: https://pyup.io/repos/github/mozilla/FoxPuppet/python-3-shield.svg
+   :target: https://pyup.io/repos/github/mozilla/FoxPuppet/
    :alt: Python 3

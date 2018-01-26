@@ -1,30 +1,33 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Window Management for FoxPuppet."""
 
 
 class WindowManager(object):
+    """A window manager that controls the creation of window objects.
 
-    """
-        A window manager that controls the creation of window objects
-        for interaction.
-
-        :param selenium: WebDriver object.
-        :type selenium:
-            :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
+    Args:
+        selenium: (:py:class:`~selenium.webdriver.remote.webdriver.WebDriver`):
+            Firefox WebDriver object.
     """
 
     def __init__(self, selenium):
+        """Create WindowManager Object.
+
+        Args:
+            selenium:
+                (:py:class:`~selenium.webdriver.remote.webdriver.WebDriver`):
+                Firefox WebDriver object.
+        """
         self.selenium = selenium
 
     @property
     def windows(self):
-        """
-        Returns a list of all open windows
+        """Return a list of all open windows.
 
-        :returns: :py:class:`~foxpuppet.windows.browser.window.BrowserWindow`
-            objects.
-        :return type: list
+        Returns:
+            list: List of FoxPuppet BrowserWindow objects.
 
         """
         from foxpuppet.windows import BrowserWindow

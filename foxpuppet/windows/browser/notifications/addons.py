@@ -1,17 +1,18 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
-
-from foxpuppet.windows.browser.notifications import BaseNotification
+"""Contains all current install notifications Firefox will display."""
 
 from selenium.webdriver.common.by import By
+
+from foxpuppet.windows.browser.notifications import BaseNotification
 
 
 class AddOnInstallBlocked(BaseNotification):
     """Add-on install blocked notification."""
 
     def allow(self):
-        """Allow the add-on to be installed"""
+        """Allow the add-on to be installed."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.root.find_anonymous_element_by_attribute(
                 'anonid', 'button').click()
@@ -20,20 +21,22 @@ class AddOnInstallBlocked(BaseNotification):
 class AddOnInstallConfirmation(BaseNotification):
     """Add-on install confirmation notification."""
 
-    _addon_name_locator = (
-        By.CSS_SELECTOR,
-        '#addon-webext-perm-header > .addon-webext-name')
+    _addon_name_locator = (By.CSS_SELECTOR, '#addon-webext-perm-header')
     _cancel_locator = (By.ID, 'addon-install-confirmation-cancel')
     _confirm_locator = (By.ID, 'addon-install-confirmation-accept')
 
     @property
     def addon_name(self):
         """Provide access to the add-on name.
-        :returns: The add-on name.
+
+        Returns:
+            str: Add-on name.
+
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             if self.window.firefox_version >= 55:
-                return self.root.find_element(*self._addon_name_locator).text
+                name = self.root.find_element(*self._addon_name_locator).text
+                return name.split()[1]
             else:
                 _addon_name_locator = (
                     By.CSS_SELECTOR,
