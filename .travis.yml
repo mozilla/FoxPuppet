@@ -9,7 +9,7 @@ _aliases:
       paths:
         - results
   - &nightly
-    env: FIREFOX=nightly PYTEST_ADDOPTS=-n=auto
+    env: FIREFOX=nightly PYTEST_ADDOPTS=-n=8
     addons:
       <<: *artifacts
       firefox: latest-nightly
