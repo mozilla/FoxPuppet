@@ -5,27 +5,27 @@ _aliases:
       packages:
         - jwm
   - &nightly
-    env: FIREFOX=nightly MOZ_HEADLESS=1
+    env: FIREFOX=nightly
     addons:
       firefox: latest-nightly
     before_script: skip
   - &dev
-    env: FIREFOX=dev MOZ_HEADLESS=1
+    env: FIREFOX=dev
     addons:
       firefox: latest-dev
     before_script: skip
   - &beta
-    env: FIREFOX=beta MOZ_HEADLESS=1
+    env: FIREFOX=beta
     addons:
       firefox: latest-beta
     before_script: skip
   - &release
     env: FIREFOX=release
     addons:
-      <<: *apt
       firefox: latest
+    before_script: skip
   - &esr
-    env: FIREFOX=esr
+    env: FIREFOX=esr MOZ_HEADLESS=0
     addons:
       <<: *apt
       firefox: latest-esr
@@ -90,6 +90,7 @@ cache:
 env:
   global:
     - DISPLAY=:99.0
+    - MOZ_HEADLESS=1
 before_install:
   - wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz
   - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
