@@ -25,7 +25,7 @@ _aliases:
       firefox: latest
     before_script: skip
   - &esr
-    env: FIREFOX=esr MOZ_HEADLESS=0
+    env: FIREFOX=esr GECKODRIVER_VERSION=0.17.0 MOZ_HEADLESS=0
     addons:
       <<: *apt
       firefox: latest-esr
@@ -90,9 +90,10 @@ cache:
 env:
   global:
     - DISPLAY=:99.0
+    - GECKODRIVER_VERSION=0.19.1
     - MOZ_HEADLESS=1
 before_install:
-  - wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz
+  - wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v${GECKODRIVER_VERSION}/geckodriver-v${GECKODRIVER_VERSION}-linux64.tar.gz
   - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
   - export PATH=$HOME/geckodriver:$PATH
   - firefox --version
