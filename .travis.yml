@@ -4,30 +4,39 @@ _aliases:
     apt:
       packages:
         - jwm
+  - &artifacts
+    artifacts:
+      paths:
+        - results
   - &nightly
     env: FIREFOX=nightly
     addons:
+      <<: *artifacts
       firefox: latest-nightly
     before_script: skip
   - &dev
     env: FIREFOX=dev
     addons:
+      <<: *artifacts
       firefox: latest-dev
     before_script: skip
   - &beta
     env: FIREFOX=beta
     addons:
+      <<: *artifacts
       firefox: latest-beta
     before_script: skip
   - &release
     env: FIREFOX=release
     addons:
+      <<: *artifacts
       firefox: latest
     before_script: skip
   - &esr
     env: FIREFOX=esr GECKODRIVER_VERSION=0.17.0 MOZ_HEADLESS=0
     addons:
       <<: *apt
+      <<: *artifacts
       firefox: latest-esr
 jobs:
   include:
