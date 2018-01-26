@@ -42,6 +42,13 @@ def browser(foxpuppet):
 
 
 @pytest.fixture
+def firefox_options(firefox_options):
+    """Fixture for configuring Firefox."""
+    firefox_options.log.level = 'trace'
+    return firefox_options
+
+
+@pytest.fixture
 def foxpuppet(selenium):
     """Initialize the FoxPuppet object."""
     return FoxPuppet(selenium)
