@@ -4,30 +4,39 @@ _aliases:
     apt:
       packages:
         - jwm
+  - &artifacts
+    artifacts:
+      paths:
+        - results
   - &nightly
     env: FIREFOX=nightly MOZ_HEADLESS=1
     addons:
+      <<: *artifacts
       firefox: latest-nightly
     before_script: skip
   - &dev
     env: FIREFOX=dev MOZ_HEADLESS=1
     addons:
+      <<: *artifacts
       firefox: latest-dev
     before_script: skip
   - &beta
     env: FIREFOX=beta MOZ_HEADLESS=1
     addons:
+      <<: *artifacts
       firefox: latest-beta
     before_script: skip
   - &release
     env: FIREFOX=release
     addons:
       <<: *apt
+      <<: *artifacts
       firefox: latest
   - &esr
     env: FIREFOX=esr
     addons:
       <<: *apt
+      <<: *artifacts
       firefox: latest-esr
 jobs:
   include:
