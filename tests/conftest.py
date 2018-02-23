@@ -46,6 +46,8 @@ def browser(foxpuppet):
 def firefox_options(firefox_options):
     """Fixture for configuring Firefox."""
     firefox_options.log.level = 'trace'
+    # firefox_options.set_preference('devtools.chrome.enabled', True)
+    # firefox_options.set_preference('devtools.debugger.remote-enabled', True)
     return firefox_options
 
 
