@@ -4,6 +4,7 @@
 """Configuration files for pytest."""
 
 import pytest
+
 from foxpuppet import FoxPuppet
 
 

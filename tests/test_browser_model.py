@@ -3,9 +3,8 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 """Tests for the browser model API."""
 
-from selenium.webdriver.support.wait import WebDriverWait
-
 import pytest
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 def test_initial_browser_window(foxpuppet):
