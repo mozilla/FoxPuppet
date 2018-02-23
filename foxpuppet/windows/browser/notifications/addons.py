@@ -21,7 +21,6 @@ class AddOnInstallBlocked(BaseNotification):
 class AddOnInstallConfirmation(BaseNotification):
     """Add-on install confirmation notification."""
 
-    _addon_name_locator = (By.CSS_SELECTOR, '#addon-webext-perm-header')
     _cancel_locator = (By.ID, 'addon-install-confirmation-cancel')
     _confirm_locator = (By.ID, 'addon-install-confirmation-accept')
 
@@ -34,8 +33,14 @@ class AddOnInstallConfirmation(BaseNotification):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            if self.window.firefox_version >= 55:
-                name = self.root.find_element(*self._addon_name_locator).text
+            if self.window.firefox_version >= 59:  # Bug 1431242
+                el = self.root.find_anonymous_element_by_attribute(
+                    'class', 'popup-notification-description')
+                return el.find_element(By.CSS_SELECTOR, 'b').text
+            elif self.window.firefox_version >= 55:
+                _addon_name_locator = (
+                    By.CSS_SELECTOR, '#addon-webext-perm-header')
+                name = self.root.find_element(*_addon_name_locator).text
                 return name.split()[1]
             else:
                 _addon_name_locator = (
