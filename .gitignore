@@ -25,6 +25,7 @@ var/
 .installed.cfg
 *.egg
 .DS_Store
+Pipfile.lock
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -45,6 +46,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
+.pytest_cache
 
 # Translations
 *.mo

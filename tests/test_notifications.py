@@ -3,9 +3,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Tests for the notifications API."""
 
+import pytest
 from selenium.common.exceptions import TimeoutException
 
-import pytest
 from foxpuppet.windows.browser.notifications import BaseNotification
 from foxpuppet.windows.browser.notifications.addons import (  # noqa: I001
     AddOnInstallBlocked,  # noqa: I001
