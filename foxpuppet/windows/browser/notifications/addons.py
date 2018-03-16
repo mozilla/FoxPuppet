@@ -37,11 +37,6 @@ class AddOnInstallConfirmation(BaseNotification):
                 el = self.root.find_anonymous_element_by_attribute(
                     'class', 'popup-notification-description')
                 return el.find_element(By.CSS_SELECTOR, 'b').text
-            elif self.window.firefox_version >= 55:
-                _addon_name_locator = (
-                    By.CSS_SELECTOR, '#addon-webext-perm-header')
-                name = self.root.find_element(*_addon_name_locator).text
-                return name.split()[1]
             else:
                 _addon_name_locator = (
                     By.CSS_SELECTOR,
