@@ -99,7 +99,7 @@ cache:
 env:
   global:
     - DISPLAY=:99.0
-    - GECKODRIVER_VERSION=0.20.0
+    - GECKODRIVER_VERSION=0.20.1
     - MOZ_HEADLESS=1
 before_install:
   - wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v${GECKODRIVER_VERSION}/geckodriver-v${GECKODRIVER_VERSION}-linux64.tar.gz
