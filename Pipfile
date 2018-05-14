@@ -7,7 +7,7 @@ name = "pypi"
 
 [packages]
 
-selenium = "==3.11.0"
+selenium = "==3.12.0"
 
 
 [dev-packages]
