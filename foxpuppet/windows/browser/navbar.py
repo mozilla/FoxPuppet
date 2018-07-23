@@ -20,7 +20,8 @@ class NavBar(Region):
 
     """
 
-    _tracking_protection_shield_locator = (By.ID, 'tracking-protection-icon')
+    _tracking_protection_shield_locator = (
+        By.ID, 'tracking-protection-icon-box')
 
     @property
     def is_tracking_shield_displayed(self):
@@ -31,6 +32,10 @@ class NavBar(Region):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            el = self.selenium.find_element(
-                *self._tracking_protection_shield_locator)
+            if self.window.firefox_version >= 63:  # Bug 1471713
+                el = self.root.find_element(
+                    *self._tracking_protection_shield_locator)
+            else:
+                el = self.root.find_element(
+                    By.ID, 'tracking-protection-icon')
             return bool(el.get_attribute('state'))
