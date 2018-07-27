@@ -2,7 +2,7 @@ User Guide
 ==========
 
 FoxPuppet is a library for automating user interactions in Firefox using Selenium.
-This section give some example use cases of FoxPuppet.
+This section gives some example use-cases of FoxPuppet.
 
 Example
 -------
