@@ -50,6 +50,6 @@ def test_tracking_protection_shield(foxpuppet, selenium):
     """Tests if the tracking protection icon displays."""
     browser = foxpuppet.browser
     assert not browser.navbar.is_tracking_shield_displayed
-    selenium.get('https://www.washingtonpost.com/')
+    selenium.get('https://itisatrap.org/firefox/its-a-tracker.html')
     WebDriverWait(selenium, timeout=5).until(
         lambda _: browser.navbar.is_tracking_shield_displayed)
