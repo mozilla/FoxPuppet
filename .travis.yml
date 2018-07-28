@@ -108,6 +108,7 @@ before_install:
   - firefox --version
   - geckodriver --version
 install:
+  - export PIPENV_IGNORE_VIRTUALENVS=1
   - pip install pipenv
   - pipenv install tox-travis
 before_script:
