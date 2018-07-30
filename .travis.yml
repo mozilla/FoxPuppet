@@ -107,7 +107,11 @@ before_install:
   - export PATH=$HOME/geckodriver:$PATH
   - firefox --version
   - geckodriver --version
-install: pip install tox-travis
+install:
+  - export PIPENV_IGNORE_VIRTUALENVS=1
+  - pip install pipenv
+  - pipenv install tox-travis
+  - pipenv install python-tox
 before_script:
   - sh -e /etc/init.d/xvfb start
   - sleep 10
