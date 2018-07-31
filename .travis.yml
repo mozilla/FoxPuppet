@@ -101,7 +101,6 @@ env:
     - DISPLAY=:99.0
     - GECKODRIVER_VERSION=0.21.0
     - MOZ_HEADLESS=1
-    - PIPENV_IGNORE_VIRTUALENVS=1
 before_install:
   - wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v${GECKODRIVER_VERSION}/geckodriver-v${GECKODRIVER_VERSION}-linux64.tar.gz
   - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
