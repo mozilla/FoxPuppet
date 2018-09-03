@@ -3,6 +3,8 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 """Tests for the browser model API."""
 
+import time
+
 import pytest
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -49,6 +51,7 @@ def test_switch_to(foxpuppet, selenium):
 def test_tracking_protection_shield(foxpuppet, selenium):
     """Tests if the tracking protection icon displays."""
     browser = foxpuppet.browser
+    time.sleep(5)  # it seems necessary to sleep before navigating to get the shield
     assert not browser.navbar.is_tracking_shield_displayed
     selenium.get('https://www.washingtonpost.com/')
     WebDriverWait(selenium, timeout=5).until(
