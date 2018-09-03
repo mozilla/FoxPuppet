@@ -3,6 +3,8 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 """Configuration files for pytest."""
 
+import os
+
 import pytest
 
 from foxpuppet import FoxPuppet
@@ -45,6 +47,8 @@ def browser(foxpuppet):
 @pytest.fixture
 def firefox_options(firefox_options):
     """Fixture for configuring Firefox."""
+    if os.getenv('MOZREGRESSION_BINARY'):
+        firefox_options.binary = os.getenv('MOZREGRESSION_BINARY')
     firefox_options.log.level = 'trace'
     # firefox_options.set_preference('devtools.chrome.enabled', True)
     # firefox_options.set_preference('devtools.debugger.remote-enabled', True)
