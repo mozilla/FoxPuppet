@@ -32,10 +32,9 @@ class NavBar(Region):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            if self.window.firefox_version >= 63:  # Bug 1471713
+            if self.window.firefox_version >= 63:  # Bug 1471713, 1476218
                 el = self.root.find_element(
                     *self._tracking_protection_shield_locator)
-            else:
-                el = self.root.find_element(
-                    By.ID, 'tracking-protection-icon')
+                return el.get_attribute('active') is not None
+            el = self.root.find_element(By.ID, 'tracking-protection-icon')
             return bool(el.get_attribute('state'))
