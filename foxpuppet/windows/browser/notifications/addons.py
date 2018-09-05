@@ -21,9 +21,6 @@ class AddOnInstallBlocked(BaseNotification):
 class AddOnInstallConfirmation(BaseNotification):
     """Add-on install confirmation notification."""
 
-    _cancel_locator = (By.ID, 'addon-install-confirmation-cancel')
-    _confirm_locator = (By.ID, 'addon-install-confirmation-accept')
-
     @property
     def addon_name(self):
         """Provide access to the add-on name.
@@ -33,36 +30,21 @@ class AddOnInstallConfirmation(BaseNotification):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            if self.window.firefox_version >= 59:  # Bug 1431242
-                el = self.root.find_anonymous_element_by_attribute(
-                    'class', 'popup-notification-description')
-                return el.find_element(By.CSS_SELECTOR, 'b').text
-            else:
-                _addon_name_locator = (
-                    By.CSS_SELECTOR,
-                    '#addon-install-confirmation-content label')
-                label = self.root.find_element(*_addon_name_locator)
-                return label.get_property('value')
+            el = self.root.find_anonymous_element_by_attribute(
+                'class', 'popup-notification-description')
+            return el.find_element(By.CSS_SELECTOR, 'b').text
 
     def cancel(self):
         """Cancel add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            if self.window.firefox_version >= 53:
-                # Notifications were restyled in Firefox 53
-                self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'secondarybutton').click()
-            else:
-                self.root.find_element(*self._cancel_locator).click()
+            self.root.find_anonymous_element_by_attribute(
+                'anonid', 'secondarybutton').click()
 
     def install(self):
         """Confirm add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            if self.window.firefox_version >= 53:
-                # Notifications were restyled in Firefox 53
-                self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'button').click()
-            else:
-                self.root.find_element(*self._confirm_locator).click()
+            self.root.find_anonymous_element_by_attribute(
+                'anonid', 'button').click()
 
 
 class AddOnInstallComplete(BaseNotification):
