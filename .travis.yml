@@ -33,7 +33,7 @@ _aliases:
       firefox: latest
     before_script: skip
   - &esr
-    env: FIREFOX=esr GECKODRIVER_VERSION=0.17.0 MOZ_HEADLESS=0
+    env: FIREFOX=esr MOZ_HEADLESS=0
     addons:
       <<: *apt
       <<: *artifacts
