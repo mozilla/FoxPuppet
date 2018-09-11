@@ -30,8 +30,9 @@ class BaseNotification(Region):
 
         """
         notifications = {}
-        _id = root.get_property('id')
+        _id = root.get_property("id")
         from foxpuppet.windows.browser.notifications import addons
+
         notifications.update(addons.NOTIFICATIONS)
         return notifications.get(_id, BaseNotification)(window, root)
 
@@ -44,7 +45,7 @@ class BaseNotification(Region):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return self.root.get_attribute('label')
+            return self.root.get_attribute("label")
 
     @property
     def origin(self):
@@ -55,11 +56,12 @@ class BaseNotification(Region):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return self.root.get_attribute('origin')
+            return self.root.get_attribute("origin")
 
     def close(self):
         """Close the notification."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.root.find_anonymous_element_by_attribute(
-                'anonid', 'closebutton').click()
+                "anonid", "closebutton"
+            ).click()
         self.window.wait_for_notification(None)

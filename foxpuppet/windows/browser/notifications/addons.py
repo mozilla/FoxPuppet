@@ -14,8 +14,7 @@ class AddOnInstallBlocked(BaseNotification):
     def allow(self):
         """Allow the add-on to be installed."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute(
-                'anonid', 'button').click()
+            self.root.find_anonymous_element_by_attribute("anonid", "button").click()
 
 
 class AddOnInstallConfirmation(BaseNotification):
@@ -31,20 +30,21 @@ class AddOnInstallConfirmation(BaseNotification):
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             el = self.root.find_anonymous_element_by_attribute(
-                'class', 'popup-notification-description')
-            return el.find_element(By.CSS_SELECTOR, 'b').text
+                "class", "popup-notification-description"
+            )
+            return el.find_element(By.CSS_SELECTOR, "b").text
 
     def cancel(self):
         """Cancel add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.root.find_anonymous_element_by_attribute(
-                'anonid', 'secondarybutton').click()
+                "anonid", "secondarybutton"
+            ).click()
 
     def install(self):
         """Confirm add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute(
-                'anonid', 'button').click()
+            self.root.find_anonymous_element_by_attribute("anonid", "button").click()
 
 
 class AddOnInstallComplete(BaseNotification):
@@ -64,12 +64,12 @@ class AddOnProgress(BaseNotification):
 
 
 NOTIFICATIONS = {
-    'addon-install-blocked-notification': AddOnInstallBlocked,
-    'addon-install-confirmation-notification': AddOnInstallConfirmation,
-    'addon-install-complete-notification': AddOnInstallComplete,
-    'addon-install-restart-notification': AddOnInstallRestart,
-    'addon-install-failed-notification': AddOnInstallFailed,
-    'addon-installed-notification': AddOnInstallComplete,
-    'addon-progress-notification': AddOnProgress,
-    'addon-webext-permissions-notification': AddOnInstallConfirmation,
+    "addon-install-blocked-notification": AddOnInstallBlocked,
+    "addon-install-confirmation-notification": AddOnInstallConfirmation,
+    "addon-install-complete-notification": AddOnInstallComplete,
+    "addon-install-restart-notification": AddOnInstallRestart,
+    "addon-install-failed-notification": AddOnInstallFailed,
+    "addon-installed-notification": AddOnInstallComplete,
+    "addon-progress-notification": AddOnProgress,
+    "addon-webext-permissions-notification": AddOnInstallConfirmation,
 }

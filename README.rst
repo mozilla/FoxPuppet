@@ -19,6 +19,9 @@ FoxPuppet is a library for automating user interactions in `Firefox <https://www
    :target: https://coveralls.io/github/mozilla/FoxPuppet
    :alt: Coverage
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+  :target: https://github.com/ambv/black
+
 .. image:: https://img.shields.io/github/issues/mozilla/FoxPuppet.svg
    :target: https://github.com/mozilla/FoxPuppet/issues
    :alt: Issues

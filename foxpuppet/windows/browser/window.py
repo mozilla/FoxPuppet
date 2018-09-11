@@ -15,13 +15,12 @@ from foxpuppet.windows.browser.notifications import BaseNotification
 class BrowserWindow(BaseWindow):
     """Representation of a browser window."""
 
-    _file_menu_button_locator = (By.ID, 'file-menu')
-    _file_menu_private_window_locator = (By.ID, 'menu_newPrivateWindow')
-    _file_menu_new_window_button_locator = (By.ID, 'menu_newNavigator')
-    _nav_bar_locator = (By.ID, 'nav-bar')
-    _notification_locator = (
-        By.CSS_SELECTOR, '#notification-popup popupnotification')
-    _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
+    _file_menu_button_locator = (By.ID, "file-menu")
+    _file_menu_private_window_locator = (By.ID, "menu_newPrivateWindow")
+    _file_menu_new_window_button_locator = (By.ID, "menu_newNavigator")
+    _nav_bar_locator = (By.ID, "nav-bar")
+    _notification_locator = (By.CSS_SELECTOR, "#notification-popup popupnotification")
+    _tab_browser_locator = (By.ID, "tabbrowser-tabs")
 
     @property
     def navbar(self):
@@ -66,18 +65,19 @@ class BrowserWindow(BaseWindow):
         """
         if notification_class:
             if notification_class is BaseNotification:
-                message = 'No notification was shown.'
+                message = "No notification was shown."
             else:
-                message = '{0} was not shown.'.format(
-                    notification_class.__name__)
+                message = "{0} was not shown.".format(notification_class.__name__)
             self.wait.until(
                 lambda _: isinstance(self.notification, notification_class),
-                message=message)
+                message=message,
+            )
             return self.notification
         else:
             self.wait.until(
                 lambda _: self.notification is None,
-                message='Unexpected notification shown.')
+                message="Unexpected notification shown.",
+            )
 
     @property
     def is_private(self):
@@ -95,7 +95,9 @@ class BrowserWindow(BaseWindow):
 
                 let chromeWindow = arguments[0].ownerDocument.defaultView;
                 return PrivateBrowsingUtils.isWindowPrivate(chromeWindow);
-                """, self.document_element)
+                """,
+                self.document_element,
+            )
 
     def open_window(self, private=False):
         """Open a new browser window.
@@ -116,12 +118,14 @@ class BrowserWindow(BaseWindow):
             self.selenium.find_element(*self._file_menu_button_locator).click()
             if private:
                 self.selenium.find_element(
-                    *self._file_menu_private_window_locator).click()
+                    *self._file_menu_private_window_locator
+                ).click()
             else:
                 self.selenium.find_element(
-                    *self._file_menu_new_window_button_locator).click()
+                    *self._file_menu_new_window_button_locator
+                ).click()
 
         return self.wait.until(
-            expected.new_browser_window_is_opened(
-                self.selenium, handles_before),
-            message="No new browser window opened")
+            expected.new_browser_window_is_opened(self.selenium, handles_before),
+            message="No new browser window opened",
+        )

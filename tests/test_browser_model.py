@@ -45,11 +45,12 @@ def test_switch_to(foxpuppet, selenium):
     assert foxpuppet.browser.handle == selenium.current_window_handle
 
 
-@pytest.mark.firefox_preferences({'privacy.trackingprotection.enabled': True})
+@pytest.mark.firefox_preferences({"privacy.trackingprotection.enabled": True})
 def test_tracking_protection_shield(foxpuppet, selenium):
     """Tests if the tracking protection icon displays."""
     browser = foxpuppet.browser
     assert not browser.navbar.is_tracking_shield_displayed
-    selenium.get('https://itisatrap.org/firefox/its-a-tracker.html')
+    selenium.get("https://itisatrap.org/firefox/its-a-tracker.html")
     WebDriverWait(selenium, timeout=5).until(
-        lambda _: browser.navbar.is_tracking_shield_displayed)
+        lambda _: browser.navbar.is_tracking_shield_displayed
+    )

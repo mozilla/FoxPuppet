@@ -10,7 +10,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 class BaseWindow(object):
     """A base window model."""
 
-    _document_element = (By.CSS_SELECTOR, ':root')
+    _document_element = (By.CSS_SELECTOR, ":root")
 
     def __init__(self, selenium, handle):
         """Create a BaseWindow object.
@@ -44,8 +44,8 @@ class BaseWindow(object):
             int: Major component of the Firefox version.
 
         """
-        version = self.selenium.capabilities['browserVersion']
-        return int(version.partition('.')[0])
+        version = self.selenium.capabilities["browserVersion"]
+        return int(version.partition(".")[0])
 
     def close(self):
         """Close the window."""
