@@ -1,4 +1,0 @@
-schedule: "every week"
-requirements:
-- Pipfile
-- pipenv.txt

@@ -23,10 +23,6 @@ FoxPuppet is a library for automating user interactions in `Firefox <https://www
    :target: https://github.com/mozilla/FoxPuppet/issues
    :alt: Issues
 
-.. image:: https://pyup.io/repos/github/mozilla/FoxPuppet/shield.svg
-   :target: https://pyup.io/repos/github/mozilla/FoxPuppet
-   :alt: Updates
-
-.. image:: https://pyup.io/repos/github/mozilla/FoxPuppet/python-3-shield.svg
-   :target: https://pyup.io/repos/github/mozilla/FoxPuppet/
-   :alt: Python 3
+.. image:: https://api.dependabot.com/badges/status?host=github&repo=mozilla/FoxPuppet
+   :target: https://dependabot.com
+   :alt: Dependabot
