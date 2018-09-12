@@ -37,4 +37,5 @@ class new_browser_window_is_opened(object):
         handles = list(set(self.selenium.window_handles) - set(self.handles))
         if len(handles) == 1:
             from foxpuppet.windows import BrowserWindow
+
             return BrowserWindow(self.selenium, handles[0])

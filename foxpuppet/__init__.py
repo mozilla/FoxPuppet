@@ -7,4 +7,4 @@ from __future__ import absolute_import
 
 from foxpuppet.foxpuppet import FoxPuppet
 
-__all__ = ['FoxPuppet']
+__all__ = ["FoxPuppet"]

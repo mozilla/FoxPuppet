@@ -23,14 +23,14 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
             str: Path to web server resource
 
         """
-        os.chdir(os.path.join(os.path.dirname(__file__), 'web'))
+        os.chdir(os.path.join(os.path.dirname(__file__), "web"))
         return SimpleHTTPRequestHandler.translate_path(self, path)
 
 
 class WebServer(object):
     """Web server for serving local files within the /web directory."""
 
-    def __init__(self, host='', port=8000):
+    def __init__(self, host="", port=8000):
         """Set up web server.
 
         Args:
@@ -71,7 +71,7 @@ class WebServer(object):
         self.server.shutdown()
         self.thread.join()
 
-    def url(self, path='/'):
+    def url(self, path="/"):
         """Web server URL.
 
         Args:
@@ -81,4 +81,4 @@ class WebServer(object):
             str: URL of web server.
 
         """
-        return 'http://{0.host}:{0.port}{1}'.format(self, path)
+        return "http://{0.host}:{0.port}{1}".format(self, path)

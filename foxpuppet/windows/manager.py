@@ -31,5 +31,8 @@ class WindowManager(object):
 
         """
         from foxpuppet.windows import BrowserWindow
-        return [BrowserWindow(self.selenium, handle)
-                for handle in self.selenium.window_handles]
+
+        return [
+            BrowserWindow(self.selenium, handle)
+            for handle in self.selenium.window_handles
+        ]

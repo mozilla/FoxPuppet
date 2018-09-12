@@ -7,10 +7,11 @@ import pytest
 from selenium.common.exceptions import TimeoutException
 
 from foxpuppet.windows.browser.notifications import BaseNotification
-from foxpuppet.windows.browser.notifications.addons import (  # noqa: I001
-    AddOnInstallBlocked,  # noqa: I001
-    AddOnInstallComplete,  # noqa: I001
-    AddOnInstallConfirmation)  # noqa: I001
+from foxpuppet.windows.browser.notifications.addons import (
+    AddOnInstallBlocked,
+    AddOnInstallComplete,
+    AddOnInstallConfirmation,
+)
 
 
 @pytest.fixture
@@ -19,7 +20,7 @@ def firefox_options(firefox_options):
     # Due to https://bugzilla.mozilla.org/show_bug.cgi?id=1329939 we need the
     # initial browser window to be in the foreground. Without this, the
     # notifications will not be displayed.
-    firefox_options.add_argument('-foreground')
+    firefox_options.add_argument("-foreground")
     return firefox_options
 
 
@@ -32,9 +33,11 @@ def addon():
             add-on.
 
     """
+    # https://github.com/ambv/black/issues/144#issuecomment-392149599
     class AddOn(object):
-        name = 'WebExtension'
-        path = 'webextension.xpi'
+        name = "WebExtension"
+        path = "webextension.xpi"
+
     return AddOn()
 
 
@@ -82,9 +85,13 @@ def test_open_close_notification(browser, blocked_notification):
     return browser.wait_for_notification(None)
 
 
-@pytest.mark.parametrize('_class, message', [
-    (BaseNotification, 'No notification was shown'),
-    (AddOnInstallBlocked, 'AddOnInstallBlocked was not shown')])
+@pytest.mark.parametrize(
+    "_class, message",
+    [
+        (BaseNotification, "No notification was shown"),
+        (AddOnInstallBlocked, "AddOnInstallBlocked was not shown"),
+    ],
+)
 def test_wait_for_notification_timeout(browser, _class, message):
     """Wait for a notification when one is not shown."""
     with pytest.raises(TimeoutException) as excinfo:
@@ -96,12 +103,12 @@ def test_wait_for_no_notification_timeout(browser, blocked_notification):
     """Wait for no notification when one is shown."""
     with pytest.raises(TimeoutException) as excinfo:
         browser.wait_for_notification(None)
-    assert 'Unexpected notification shown' in str(excinfo.value)
+    assert "Unexpected notification shown" in str(excinfo.value)
 
 
 def test_notification_with_origin(browser, webserver, blocked_notification):
     """Trigger a notification with an origin."""
-    assert '{0.host}:{0.port}'.format(webserver) in blocked_notification.origin
+    assert "{0.host}:{0.port}".format(webserver) in blocked_notification.origin
     assert blocked_notification.label is not None
 
 
