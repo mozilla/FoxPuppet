@@ -15,16 +15,16 @@ from foxpuppet.windows.browser.notifications import BaseNotification
 class BrowserWindow(BaseWindow):
     """Representation of a browser window."""
 
-    _file_menu_button_locator = (By.ID, 'file-menu')
-    _file_menu_private_window_locator = (By.ID, 'menu_newPrivateWindow')
-    _file_menu_new_window_button_locator = (By.ID, 'menu_newNavigator')
-    _nav_bar_locator = (By.ID, 'nav-bar')
-    _notification_locator = (
-        By.CSS_SELECTOR, '#notification-popup popupnotification')
+    _file_menu_button_locator = (By.ID, "file-menu")
+    _file_menu_private_window_locator = (By.ID, "menu_newPrivateWindow")
+    _file_menu_new_window_button_locator = (By.ID, "menu_newNavigator")
+    _nav_bar_locator = (By.ID, "nav-bar")
+    _notification_locator = (By.CSS_SELECTOR, "#notification-popup popupnotification")
     _app_menu_notification_locator = (
         By.CSS_SELECTOR,
-        '#appMenu-addon-installed-notification')
-    _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
+        "#appMenu-addon-installed-notification",
+    )
+    _tab_browser_locator = (By.ID, "tabbrowser-tabs")
 
     @property
     def navbar(self):
@@ -54,8 +54,7 @@ class BrowserWindow(BaseWindow):
             except NoSuchElementException:
                 pass
             try:
-                root = self.selenium.find_element(
-                    *self._app_menu_notification_locator)
+                root = self.selenium.find_element(*self._app_menu_notification_locator)
                 if root.is_displayed():
                     return BaseNotification.create(self, root)
             except NoSuchElementException:

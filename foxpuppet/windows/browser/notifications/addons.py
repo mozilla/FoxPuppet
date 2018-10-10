@@ -49,15 +49,18 @@ class AddOnInstallConfirmation(BaseNotification):
 
 class AddOnInstallComplete(BaseNotification):
     """Add-on install complete notification."""
+
     def close(self):
         """Close the notification."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             if self.window.firefox_version > 63:
                 self.root.find_anonymous_element_by_attribute(
-                    'anonid', 'button').click()
+                    "anonid", "button"
+                ).click()
                 self.window.wait_for_notification(None)
             else:
                 BaseNotification.close(self)
+
 
 class AddOnInstallRestart(BaseNotification):
     """Add-on install restart notification."""
@@ -72,13 +75,13 @@ class AddOnProgress(BaseNotification):
 
 
 NOTIFICATIONS = {
-    'addon-install-blocked-notification': AddOnInstallBlocked,
-    'addon-install-confirmation-notification': AddOnInstallConfirmation,
-    'addon-install-complete-notification': AddOnInstallComplete,
-    'appMenu-addon-installed-notification': AddOnInstallComplete,
-    'addon-install-restart-notification': AddOnInstallRestart,
-    'addon-install-failed-notification': AddOnInstallFailed,
-    'addon-installed-notification': AddOnInstallComplete,
-    'addon-progress-notification': AddOnProgress,
-    'addon-webext-permissions-notification': AddOnInstallConfirmation,
+    "addon-install-blocked-notification": AddOnInstallBlocked,
+    "addon-install-confirmation-notification": AddOnInstallConfirmation,
+    "addon-install-complete-notification": AddOnInstallComplete,
+    "appMenu-addon-installed-notification": AddOnInstallComplete,
+    "addon-install-restart-notification": AddOnInstallRestart,
+    "addon-install-failed-notification": AddOnInstallFailed,
+    "addon-installed-notification": AddOnInstallComplete,
+    "addon-progress-notification": AddOnProgress,
+    "addon-webext-permissions-notification": AddOnInstallConfirmation,
 }
