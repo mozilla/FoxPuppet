@@ -15,12 +15,16 @@ from foxpuppet.windows.browser.notifications import BaseNotification
 class BrowserWindow(BaseWindow):
     """Representation of a browser window."""
 
-    _file_menu_button_locator = (By.ID, "file-menu")
-    _file_menu_private_window_locator = (By.ID, "menu_newPrivateWindow")
-    _file_menu_new_window_button_locator = (By.ID, "menu_newNavigator")
-    _nav_bar_locator = (By.ID, "nav-bar")
-    _notification_locator = (By.CSS_SELECTOR, "#notification-popup popupnotification")
-    _tab_browser_locator = (By.ID, "tabbrowser-tabs")
+    _file_menu_button_locator = (By.ID, 'file-menu')
+    _file_menu_private_window_locator = (By.ID, 'menu_newPrivateWindow')
+    _file_menu_new_window_button_locator = (By.ID, 'menu_newNavigator')
+    _nav_bar_locator = (By.ID, 'nav-bar')
+    _notification_locator = (
+        By.CSS_SELECTOR, '#notification-popup popupnotification')
+    _app_menu_notification_locator = (
+        By.CSS_SELECTOR,
+        '#appMenu-addon-installed-notification')
+    _tab_browser_locator = (By.ID, 'tabbrowser-tabs')
 
     @property
     def navbar(self):
@@ -43,12 +47,20 @@ class BrowserWindow(BaseWindow):
             :py:class:`BaseNotification`: FoxPuppet BaseNotification object.
 
         """
-        try:
-            with self.selenium.context(self.selenium.CONTEXT_CHROME):
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            try:
                 root = self.selenium.find_element(*self._notification_locator)
                 return BaseNotification.create(self, root)
-        except NoSuchElementException:
-            return None  # no notification is displayed
+            except NoSuchElementException:
+                pass
+            try:
+                root = self.selenium.find_element(
+                    *self._app_menu_notification_locator)
+                if root.is_displayed():
+                    return BaseNotification.create(self, root)
+            except NoSuchElementException:
+                pass
+        return None  # no notification is displayed
 
     def wait_for_notification(self, notification_class=BaseNotification):
         """Wait for the specified notification to be displayed.
