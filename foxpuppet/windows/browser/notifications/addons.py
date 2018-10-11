@@ -50,6 +50,17 @@ class AddOnInstallConfirmation(BaseNotification):
 class AddOnInstallComplete(BaseNotification):
     """Add-on install complete notification."""
 
+    def close(self):
+        """Close the notification."""
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            if self.window.firefox_version > 63:
+                self.root.find_anonymous_element_by_attribute(
+                    "anonid", "button"
+                ).click()
+                self.window.wait_for_notification(None)
+            else:
+                BaseNotification.close(self)
+
 
 class AddOnInstallRestart(BaseNotification):
     """Add-on install restart notification."""
@@ -63,10 +74,13 @@ class AddOnProgress(BaseNotification):
     """Add-on progress notification."""
 
 
+# Clean up of these notifications will happen once Firefox ESR is past version 63
+# https://github.com/mozilla/FoxPuppet/issues/212
 NOTIFICATIONS = {
     "addon-install-blocked-notification": AddOnInstallBlocked,
     "addon-install-confirmation-notification": AddOnInstallConfirmation,
     "addon-install-complete-notification": AddOnInstallComplete,
+    "appMenu-addon-installed-notification": AddOnInstallComplete,
     "addon-install-restart-notification": AddOnInstallRestart,
     "addon-install-failed-notification": AddOnInstallFailed,
     "addon-installed-notification": AddOnInstallComplete,
