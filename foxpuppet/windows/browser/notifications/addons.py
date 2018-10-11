@@ -74,6 +74,8 @@ class AddOnProgress(BaseNotification):
     """Add-on progress notification."""
 
 
+# Clean up of these notifications will happen once Firefox ESR is past version 63
+# https://github.com/mozilla/FoxPuppet/issues/212
 NOTIFICATIONS = {
     "addon-install-blocked-notification": AddOnInstallBlocked,
     "addon-install-confirmation-notification": AddOnInstallConfirmation,
