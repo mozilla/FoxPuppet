@@ -57,8 +57,6 @@ class BrowserWindow(BaseWindow):
                 notifications = self.selenium.find_elements(*self._app_menu_notification_locator)
                 root = next(n for n in notifications if n.is_displayed())
                 return BaseNotification.create(self, root)
-            except NoSuchElementException:
-                pass
             except StopIteration:
                 pass
         return None  # no notification is displayed
