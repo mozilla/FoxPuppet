@@ -61,7 +61,7 @@ class BaseNotification(Region):
             return self.root.get_attribute("origin")
 
     def find_primary_button(self):
-        """Retrieve the primary button"""
+        """Retrieve the primary button."""
         if self.window.firefox_version >= 67:
             return self.root.find_element(
                 By.CLASS_NAME, "popup-notification-primary-button")
@@ -69,7 +69,7 @@ class BaseNotification(Region):
             "anonid", "button")
 
     def find_secondary_button(self):
-        """Retrieve the secondary button"""
+        """Retrieve the secondary button."""
         if self.window.firefox_version >= 67:
             return self.root.find_element(
                 By.CLASS_NAME, "popup-notification-secondary-button")
@@ -77,7 +77,7 @@ class BaseNotification(Region):
             "anonid", "secondarybutton")
 
     def find_description(self):
-        """Retrieve the notification description"""
+        """Retrieve the notification description."""
         if self.window.firefox_version >= 67:
             return self.root.find_element(
                 By.CLASS_NAME, "popup-notification-description")
@@ -85,7 +85,7 @@ class BaseNotification(Region):
             "class", "popup-notification-description")
 
     def find_close_button(self):
-        """Retrieve the close button"""
+        """Retrieve the close button."""
         if self.window.firefox_version >= 67:
             return self.root.find_element(
                 By.CLASS_NAME, "popup-notification-closebutton")
