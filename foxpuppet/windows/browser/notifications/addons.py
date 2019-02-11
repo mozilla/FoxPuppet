@@ -14,7 +14,7 @@ class AddOnInstallBlocked(BaseNotification):
     def allow(self):
         """Allow the add-on to be installed."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute("anonid", "button").click()
+            self.find_primary_button().click()
 
 
 class AddOnInstallConfirmation(BaseNotification):
@@ -29,22 +29,18 @@ class AddOnInstallConfirmation(BaseNotification):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            el = self.root.find_anonymous_element_by_attribute(
-                "class", "popup-notification-description"
-            )
+            el = self.find_description()
             return el.find_element(By.CSS_SELECTOR, "b").text
 
     def cancel(self):
         """Cancel add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute(
-                "anonid", "secondarybutton"
-            ).click()
+            self.find_secondary_button().click()
 
     def install(self):
         """Confirm add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute("anonid", "button").click()
+            self.find_primary_button().click()
 
 
 class AddOnInstallComplete(BaseNotification):
@@ -54,9 +50,7 @@ class AddOnInstallComplete(BaseNotification):
         """Close the notification."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             if self.window.firefox_version > 63:
-                self.root.find_anonymous_element_by_attribute(
-                    "anonid", "button"
-                ).click()
+                self.find_primary_button().click()
                 self.window.wait_for_notification(None)
             else:
                 BaseNotification.close(self)
