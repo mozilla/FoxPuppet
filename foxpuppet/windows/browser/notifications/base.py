@@ -5,6 +5,8 @@
 
 from abc import ABCMeta
 
+from selenium.webdriver.common.by import By
+
 from foxpuppet.region import Region
 
 
@@ -58,10 +60,40 @@ class BaseNotification(Region):
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             return self.root.get_attribute("origin")
 
+    def find_primary_button(self):
+        """Retrieve the primary button."""
+        if self.window.firefox_version >= 67:
+            return self.root.find_element(
+                By.CLASS_NAME, "popup-notification-primary-button")
+        return self.root.find_anonymous_element_by_attribute(
+            "anonid", "button")
+
+    def find_secondary_button(self):
+        """Retrieve the secondary button."""
+        if self.window.firefox_version >= 67:
+            return self.root.find_element(
+                By.CLASS_NAME, "popup-notification-secondary-button")
+        return self.root.find_anonymous_element_by_attribute(
+            "anonid", "secondarybutton")
+
+    def find_description(self):
+        """Retrieve the notification description."""
+        if self.window.firefox_version >= 67:
+            return self.root.find_element(
+                By.CLASS_NAME, "popup-notification-description")
+        return self.root.find_anonymous_element_by_attribute(
+            "class", "popup-notification-description")
+
+    def find_close_button(self):
+        """Retrieve the close button."""
+        if self.window.firefox_version >= 67:
+            return self.root.find_element(
+                By.CLASS_NAME, "popup-notification-closebutton")
+        return self.root.find_anonymous_element_by_attribute(
+            "anonid", "closebutton")
+
     def close(self):
         """Close the notification."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.root.find_anonymous_element_by_attribute(
-                "anonid", "closebutton"
-            ).click()
+            self.find_close_button().click()
         self.window.wait_for_notification(None)
