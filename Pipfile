@@ -9,7 +9,7 @@ foxpuppet = {path = "."}
 pytest = "*"
 
 [dev-packages]
-coveralls = "==1.7.0"
+coveralls = "==1.8.0"
 flake8 = "==3.7.7"
 flake8-docstrings = "==1.3.0"
 flake8-isort = "==2.7.0"
