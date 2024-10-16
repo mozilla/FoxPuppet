@@ -4,29 +4,33 @@
 """A simple web server."""
 
 import os
-import socketserver
 import threading
-from pathlib import Path
 
-from http.server import SimpleHTTPRequestHandler
+try:
+    from http.server import HTTPServer, SimpleHTTPRequestHandler
+except ImportError:
+    from BaseHTTPServer import HTTPServer
+    from SimpleHTTPServer import SimpleHTTPRequestHandler
 
-
-PORT = 8000
-DIRECTORY = Path.cwd() / "tests" / "web"
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
     """Custom HTTP request handler that serves files from another directory."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=DIRECTORY, **kwargs)
+    def translate_path(self, path):
+        """Change working directory and translate path.
 
-class ReusableTCPServer(socketserver.TCPServer):
-    allow_reuse_address = True
+        Returns:
+            str: Path to web server resource
+
+        """
+        os.chdir(os.path.join(os.path.dirname(__file__), "web"))
+        return SimpleHTTPRequestHandler.translate_path(self, path)
+
 
 class WebServer(object):
     """Web server for serving local files within the /web directory."""
 
-    def __init__(self, host="", port=PORT):
+    def __init__(self, host="", port=8000):
         """Set up web server.
 
         Args:
@@ -34,7 +38,7 @@ class WebServer(object):
             port (int, optional): Port for web server.
                 Optional and defaults to port 8000.
         """
-        self.server = ReusableTCPServer(("", PORT), MyRequestHandler)
+        self.server = HTTPServer((host, port), MyRequestHandler)
         self.thread = threading.Thread(target=self.server.serve_forever)
         self.thread.daemon = True
 

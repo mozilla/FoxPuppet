@@ -19,7 +19,7 @@ jobs:
           python-version: '3.12'
       - name: Run Tests
         shell: bash
-        run: make lint
+        run: make install_poetry lint
   test:
     needs: lint
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
       fail-fast: false
       matrix:
         firefox: ['latest-beta', 'latest-devedition', 'latest-nightly', 'latest-esr', 'latest']
-    name: FoxPuppet Pull Request Tests
+    name: FoxPuppet Firefox Tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,9 +44,9 @@ jobs:
           python-version: '3.12'
       - name: Run Tests
         shell: bash
-        run: make test
+        run: make install_poetry test
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name:  HTML Test Report on firefox v${{ matrix.firefox }}
-          path: /home/runner/work/foxpuppet/foxpuppet/results/report.html
+          path: /home/runner/work/FoxPuppet/FoxPuppet/results/report.html
