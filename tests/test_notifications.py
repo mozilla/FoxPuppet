@@ -33,6 +33,7 @@ def addon():
             add-on.
 
     """
+
     # https://github.com/ambv/black/issues/144#issuecomment-392149599
     class AddOn(object):
         name = "WebExtension"

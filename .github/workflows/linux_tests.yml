@@ -1,0 +1,52 @@
+name: Linux FoxPuppet Tests
+on:
+    pull_request:
+      # Sequence of patterns matched against refs/heads
+      branches:
+        - main
+env:
+  MOZ_HEADLESS: 1
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: FoxPuppet Linting
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run Tests
+        shell: bash
+        run: make install_poetry lint
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        firefox: ['latest-beta', 'latest-devedition', 'latest-nightly', 'latest-esr', 'latest']
+    name: FoxPuppet Firefox Tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup firefox
+        id: setup-firefox
+        uses: browser-actions/setup-firefox@v1
+        with:
+          firefox-version: ${{ matrix.firefox }}
+      - run: |
+          echo Installed firefox versions: ${{ steps.setup-firefox.outputs.firefox-version }}
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run Tests
+        shell: bash
+        run: make install_poetry test
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name:  HTML Test Report on firefox v${{ matrix.firefox }}
+          path: /home/runner/work/FoxPuppet/FoxPuppet/results/report.html
