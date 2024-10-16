@@ -2,6 +2,8 @@ BLACK_CHECK = black -l 90 --check --diff .
 BLACK_FIX = black -l 90 .
 FOXPUPPET_TESTS = pytest -vvv --driver Firefox --cov --html results/report.html
 
+check: install_poetry lint test
+
 code_format: install_dependencies
 	poetry run $(BLACK_FIX)
 

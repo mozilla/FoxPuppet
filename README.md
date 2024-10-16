@@ -1,31 +1,15 @@
-FoxPuppet
-=========
+# FoxPuppet
 
-FoxPuppet is a library for automating user interactions in `Firefox <https://www.mozilla.org/en-US/firefox/products/>`_ using `Selenium <http://seleniumhq.org/>`_.
+FoxPuppet is a library for automating user interactions in [Firefox](https://www.mozilla.org/en-US/firefox/products/) using [Selenium](http://seleniumhq.org/).
 
-.. image:: https://img.shields.io/badge/license-MPL%202.0-blue.svg
-   :target: https://github.com/mozilla/FoxPuppet/blob/master/LICENSE.txt
-   :alt: License
+## Getting Started
 
-.. image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
-   :target: http://foxpuppet.readthedocs.io/en/latest/
-   :alt: Read the Docs
+The following has been confirmed to work on linux based systems.
 
-.. image:: https://img.shields.io/travis/mozilla/FoxPuppet.svg
-   :target: https://travis-ci.org/mozilla/FoxPuppet/
-   :alt: Travis
+1. Clone repository
+2. Install poetry: `make install_poetry`
+3. Run the tests: `make test`
 
-.. image:: https://img.shields.io/coveralls/mozilla/FoxPuppet.svg
-   :target: https://coveralls.io/github/mozilla/FoxPuppet
-   :alt: Coverage
+## Contributing Guidelines
 
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-  :target: https://github.com/ambv/black
-
-.. image:: https://img.shields.io/github/issues/mozilla/FoxPuppet.svg
-   :target: https://github.com/mozilla/FoxPuppet/issues
-   :alt: Issues
-
-.. image:: https://api.dependabot.com/badges/status?host=github&repo=mozilla/FoxPuppet
-   :target: https://dependabot.com
-   :alt: Dependabot
+Please see our [Contributing Guidelines](CONTRIBUTING.md)
