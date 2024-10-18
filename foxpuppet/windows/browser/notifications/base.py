@@ -58,7 +58,7 @@ class BaseNotification(Region):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return self.root.get_attribute("origin")
+            return self.root.get_attribute("name")
 
     def find_primary_button(self):
         """Retrieve the primary button."""
