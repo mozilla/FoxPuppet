@@ -5,16 +5,31 @@
 
 import os
 import threading
-
-try:
-    from http.server import HTTPServer, SimpleHTTPRequestHandler
-except ImportError:
-    from BaseHTTPServer import HTTPServer
-    from SimpleHTTPServer import SimpleHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
     """Custom HTTP request handler that serves files from another directory."""
+
+    @staticmethod
+    def _chdir(directory):
+        """Context manager to change directory and revert back safely.
+
+        Args:
+        directory (str): The directory to change to.
+
+        Returns:
+            ChangeDir: A context manager that changes the current directory
+            to the specified one and reverts it back upon exit.
+        """
+        class ChangeDir:
+            def __enter__(self):
+                self.old_dir = os.getcwd()
+                os.chdir(os.fspath(directory))
+
+            def __exit__(self, _, __, ___):
+                os.chdir(self.old_dir)
+        return ChangeDir()
 
     def translate_path(self, path):
         """Change working directory and translate path.
@@ -23,8 +38,8 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
             str: Path to web server resource
 
         """
-        os.chdir(os.path.join(os.path.dirname(__file__), "web"))
-        return SimpleHTTPRequestHandler.translate_path(self, path)
+        with self._chdir(os.path.join(os.path.dirname(__file__), "web")):
+            return SimpleHTTPRequestHandler.translate_path(self, path)
 
 
 class WebServer(object):
@@ -39,8 +54,7 @@ class WebServer(object):
                 Optional and defaults to port 8000.
         """
         self.server = HTTPServer((host, port), MyRequestHandler)
-        self.thread = threading.Thread(target=self.server.serve_forever)
-        self.thread.daemon = True
+        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
 
     @property
     def host(self):

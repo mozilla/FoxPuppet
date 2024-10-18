@@ -7,12 +7,12 @@ import pytest
 from selenium.common.exceptions import TimeoutException
 
 from foxpuppet.windows.browser.notifications import BaseNotification
+from selenium.webdriver.common.by import By
 from foxpuppet.windows.browser.notifications.addons import (
     AddOnInstallBlocked,
     AddOnInstallComplete,
     AddOnInstallConfirmation,
 )
-
 
 @pytest.fixture
 def firefox_options(firefox_options):
@@ -51,7 +51,9 @@ def blocked_notification(addon, browser, webserver, selenium):
 
     """
     selenium.get(webserver.url())
-    selenium.find_element_by_link_text(addon.path).click()
+    selenium.find_element(By.LINK_TEXT, "tests/").click()
+    selenium.find_element(By.LINK_TEXT, "web/").click()
+    selenium.find_element(By.LINK_TEXT, addon.path).click()
     return browser.wait_for_notification(AddOnInstallBlocked)
 
 
@@ -109,7 +111,7 @@ def test_wait_for_no_notification_timeout(browser, blocked_notification):
 
 def test_notification_with_origin(browser, webserver, blocked_notification):
     """Trigger a notification with an origin."""
-    assert "{0.host}:{0.port}".format(webserver) in blocked_notification.origin
+    assert "{0.host}".format(webserver) in blocked_notification.origin
     assert blocked_notification.label is not None
 
 
