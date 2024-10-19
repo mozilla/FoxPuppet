@@ -4,32 +4,14 @@
 """A simple web server."""
 
 import os
+from pathlib import Path
 import threading
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+import socket
 
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
     """Custom HTTP request handler that serves files from another directory."""
-
-    @staticmethod
-    def _chdir(directory):
-        """Context manager to change directory and revert back safely.
-
-        Args:
-        directory (str): The directory to change to.
-
-        Returns:
-            ChangeDir: A context manager that changes the current directory
-            to the specified one and reverts it back upon exit.
-        """
-        class ChangeDir:
-            def __enter__(self):
-                self.old_dir = os.getcwd()
-                os.chdir(os.fspath(directory))
-
-            def __exit__(self, _, __, ___):
-                os.chdir(self.old_dir)
-        return ChangeDir()
 
     def translate_path(self, path):
         """Change working directory and translate path.
@@ -38,8 +20,9 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
             str: Path to web server resource
 
         """
-        with self._chdir(os.path.join(os.path.dirname(__file__), "web")):
-            return SimpleHTTPRequestHandler.translate_path(self, path)
+        path = SimpleHTTPRequestHandler.translate_path(self, path)
+        rel_path = os.path.relpath(path, os.getcwd())
+        return os.path.join(str(Path(__file__).parent / "web"), rel_path)
 
 
 class WebServer(object):
@@ -96,3 +79,10 @@ class WebServer(object):
 
         """
         return "http://{0.host}:{0.port}{1}".format(self, path)
+
+    @classmethod
+    def get_free_port(cls):
+        """Find and return a free port on the system."""
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(("", 0))
+            return s.getsockname()[1]
