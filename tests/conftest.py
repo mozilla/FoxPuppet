@@ -32,7 +32,7 @@ def webserver():
     """Fixture that starts a local web server."""
     from .webserver import WebServer
 
-    webserver = WebServer()
+    webserver = WebServer(host="127.0.0.1", port=WebServer.get_free_port())
     webserver.start()
     yield webserver
     webserver.stop()

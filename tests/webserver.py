@@ -4,13 +4,10 @@
 """A simple web server."""
 
 import os
+from pathlib import Path
 import threading
-
-try:
-    from http.server import HTTPServer, SimpleHTTPRequestHandler
-except ImportError:
-    from BaseHTTPServer import HTTPServer
-    from SimpleHTTPServer import SimpleHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+import socket
 
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
@@ -23,8 +20,9 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
             str: Path to web server resource
 
         """
-        os.chdir(os.path.join(os.path.dirname(__file__), "web"))
-        return SimpleHTTPRequestHandler.translate_path(self, path)
+        path = SimpleHTTPRequestHandler.translate_path(self, path)
+        rel_path = os.path.relpath(path, os.getcwd())
+        return os.path.join(str(Path(__file__).parent / "web"), rel_path)
 
 
 class WebServer(object):
@@ -39,8 +37,7 @@ class WebServer(object):
                 Optional and defaults to port 8000.
         """
         self.server = HTTPServer((host, port), MyRequestHandler)
-        self.thread = threading.Thread(target=self.server.serve_forever)
-        self.thread.daemon = True
+        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
 
     @property
     def host(self):
@@ -82,3 +79,10 @@ class WebServer(object):
 
         """
         return "http://{0.host}:{0.port}{1}".format(self, path)
+
+    @classmethod
+    def get_free_port(cls):
+        """Find and return a free port on the system."""
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(("", 0))
+            return s.getsockname()[1]
