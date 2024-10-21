@@ -18,6 +18,7 @@ pytest = "^8.3.3"
 pytest-cov = "^5.0.0"
 pytest-selenium = "^4.1.0"
 black = "^24.10.0"
+mypy = "^1.12.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -29,3 +30,18 @@ line-length = 99
 [tool.isort]
 profile = "black"
 skip_gitignore = true
+
+[tool.mypy]
+python_version = "3.12"
+disable_error_code = "attr-defined"
+disallow_untyped_calls = false
+follow_imports = "normal"
+ignore_missing_imports = true
+pretty = true
+show_error_codes = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_unreachable = true
