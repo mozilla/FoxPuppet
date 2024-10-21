@@ -20,4 +20,4 @@ lint: install_dependencies
 	poetry run $(BLACK_CHECK)
 
 typecheck:
-    poetry run mypy .
+	poetry run mypy .
