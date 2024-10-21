@@ -50,3 +50,16 @@ jobs:
         with:
           name:  HTML Test Report on firefox v${{ matrix.firefox }}
           path: /home/runner/work/FoxPuppet/FoxPuppet/results/report.html
+  type-check:
+    runs-on: ubuntu-latest
+    name: FoxPuppet Type Checking
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run Type Check
+        shell: bash
+        run: make install_poetry typecheck
