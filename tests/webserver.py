@@ -12,16 +12,9 @@ import socket
 class MyRequestHandler(SimpleHTTPRequestHandler):
     """Custom HTTP request handler that serves files from another directory."""
 
-    def translate_path(self, path):
-        """Change working directory and translate path.
-
-        Returns:
-            str: Path to web server resource
-
-        """
-        path = SimpleHTTPRequestHandler.translate_path(self, path)
-        rel_path = Path(path).relative_to(Path.cwd())
-        return str(Path(__file__).parent / "web" / rel_path)
+    def __init__(self, *args, **kwargs):
+        self.directory = str(Path(__file__).parent / "web")
+        super().__init__(*args, directory=self.directory, **kwargs)
 
 
 class WebServer(object):
