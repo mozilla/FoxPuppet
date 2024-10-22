@@ -3,7 +3,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """A simple web server."""
 
-import os
 from pathlib import Path
 import threading
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -21,8 +20,8 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
 
         """
         path = SimpleHTTPRequestHandler.translate_path(self, path)
-        rel_path = os.path.relpath(path, os.getcwd())
-        return os.path.join(str(Path(__file__).parent / "web"), rel_path)
+        rel_path = Path(path).relative_to(Path.cwd())
+        return str(Path(__file__).parent / "web" / rel_path)
 
 
 class WebServer(object):
