@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """A Region object model for interacting with different parts of Firefox."""
 
+from selenium.webdriver.remote.webelement import WebElement
 
 class Region(object):
     """A region object.
@@ -14,8 +15,8 @@ class Region(object):
     :type window: :py:class:`~.windows.BaseWindow`
     :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement`
     """
-
-    def __init__(self, window, root):
+    from foxpuppet.windows import BaseWindow
+    def __init__(self, window: BaseWindow, root: WebElement):
         """Create a Region object.
 
         Args:
