@@ -6,6 +6,8 @@
 import os
 import threading
 
+from typing import Any
+
 try:
     from http.server import HTTPServer, SimpleHTTPRequestHandler
 except ImportError:
@@ -16,7 +18,7 @@ except ImportError:
 class MyRequestHandler(SimpleHTTPRequestHandler):
     """Custom HTTP request handler that serves files from another directory."""
 
-    def translate_path(self, path):
+    def translate_path(self, path) -> str:
         """Change working directory and translate path.
 
         Returns:
@@ -30,7 +32,7 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
 class WebServer(object):
     """Web server for serving local files within the /web directory."""
 
-    def __init__(self, host="", port=8000):
+    def __init__(self, host: str = "", port: int = 8000):
         """Set up web server.
 
         Args:
@@ -43,7 +45,7 @@ class WebServer(object):
         self.thread.daemon = True
 
     @property
-    def host(self):
+    def host(self) -> Any:
         """Hostname of the web server.
 
         Returns:
@@ -53,7 +55,7 @@ class WebServer(object):
         return self.server.server_address[0]
 
     @property
-    def port(self):
+    def port(self) -> int:
         """Web server port.
 
         Returns:
@@ -62,16 +64,16 @@ class WebServer(object):
         """
         return self.server.server_address[1]
 
-    def start(self):
+    def start(self) -> None:
         """Start web server."""
         self.thread.start()
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop web server."""
         self.server.shutdown()
         self.thread.join()
 
-    def url(self, path="/"):
+    def url(self, path="/") -> str:
         """Web server URL.
 
         Args:

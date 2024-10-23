@@ -56,7 +56,7 @@ class BaseNotification(Region):
             return self.root.get_attribute("label")
 
     @property
-    def origin(self) -> str | None:
+    def origin(self) -> str | Any:
         """Provide access to the notification origin.
 
         Returns:

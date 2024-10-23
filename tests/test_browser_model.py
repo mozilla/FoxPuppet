@@ -5,16 +5,18 @@
 
 import pytest
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.remote.webdriver import WebDriver
+from foxpuppet import FoxPuppet
 
 
-def test_initial_browser_window(foxpuppet):
+def test_initial_browser_window(foxpuppet: FoxPuppet) -> None:
     """Tests initial state of browser windows."""
     assert len(foxpuppet.window_manager.windows) == 1
     assert foxpuppet.browser is not None
     assert not foxpuppet.browser.is_private
 
 
-def test_new_private_window(foxpuppet):
+def test_new_private_window(foxpuppet: FoxPuppet) -> None:
     """Tests opening a new private browsing window via menu."""
     new_browser = foxpuppet.browser.open_window(private=True)
     assert new_browser is not foxpuppet.browser
@@ -22,7 +24,7 @@ def test_new_private_window(foxpuppet):
     assert len(foxpuppet.window_manager.windows) == 2
 
 
-def test_open_new_window(foxpuppet):
+def test_open_new_window(foxpuppet: FoxPuppet) -> None:
     """Tests opening a new window via menu."""
     new_browser = foxpuppet.browser.open_window(private=False)
     assert new_browser is not foxpuppet.browser
@@ -30,14 +32,14 @@ def test_open_new_window(foxpuppet):
     assert len(foxpuppet.window_manager.windows) == 2
 
 
-def test_close_window(foxpuppet):
+def test_close_window(foxpuppet: FoxPuppet) -> None:
     """Tests closing a window."""
     new_browser = foxpuppet.browser.open_window()
     new_browser.close()
     assert len(foxpuppet.window_manager.windows) == 1
 
 
-def test_switch_to(foxpuppet, selenium):
+def test_switch_to(foxpuppet: FoxPuppet, selenium: WebDriver) -> None:
     """Test Switch to function."""
     foxpuppet.browser.open_window()
     # Switch to originally window opened by pytest
@@ -46,7 +48,7 @@ def test_switch_to(foxpuppet, selenium):
 
 
 @pytest.mark.firefox_preferences({"privacy.trackingprotection.enabled": True})
-def test_tracking_protection_shield(foxpuppet, selenium):
+def test_tracking_protection_shield(foxpuppet: FoxPuppet, selenium: WebDriver) -> None:
     """Tests if the tracking protection icon displays."""
     browser = foxpuppet.browser
     assert not browser.navbar.is_tracking_shield_displayed

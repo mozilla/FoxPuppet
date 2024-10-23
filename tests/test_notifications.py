@@ -5,6 +5,7 @@
 
 import pytest
 from selenium.common.exceptions import TimeoutException
+from typing import Any
 
 from foxpuppet.windows.browser.notifications import BaseNotification
 from foxpuppet.windows.browser.notifications.addons import (
@@ -12,10 +13,12 @@ from foxpuppet.windows.browser.notifications.addons import (
     AddOnInstallComplete,
     AddOnInstallConfirmation,
 )
+from selenium.webdriver.remote.webdriver import WebDriver
+from foxpuppet.windows import BrowserWindow
 
 
 @pytest.fixture
-def firefox_options(firefox_options):
+def firefox_options(firefox_options: Any) -> Any:
     """Fixture for configuring Firefox."""
     # Due to https://bugzilla.mozilla.org/show_bug.cgi?id=1329939 we need the
     # initial browser window to be in the foreground. Without this, the
@@ -42,8 +45,13 @@ def addon():
     return AddOn()
 
 
+from .webserver import WebServer
+
+
 @pytest.fixture
-def blocked_notification(addon, browser, webserver, selenium):
+def blocked_notification(
+    addon: Any, browser: BrowserWindow, webserver: WebServer, selenium: WebDriver
+) -> BaseNotification:
     """Fixture causing a blocked notification to appear in Firefox.
 
     Returns:
@@ -56,7 +64,9 @@ def blocked_notification(addon, browser, webserver, selenium):
 
 
 @pytest.fixture
-def confirmation_notification(browser, blocked_notification):
+def confirmation_notification(
+    browser: BrowserWindow, blocked_notification: AddOnInstallBlocked
+) -> BaseNotification:
     """Fixture that allows an add-on to be installed.
 
     Returns:
@@ -68,7 +78,9 @@ def confirmation_notification(browser, blocked_notification):
 
 
 @pytest.fixture
-def complete_notification(browser, confirmation_notification):
+def complete_notification(
+    browser: BrowserWindow, confirmation_notification: AddOnInstallConfirmation
+) -> BaseNotification:
     """Fixture that installs an add-on.
 
     Returns:
@@ -79,7 +91,9 @@ def complete_notification(browser, confirmation_notification):
     return browser.wait_for_notification(AddOnInstallComplete)
 
 
-def test_open_close_notification(browser, blocked_notification):
+def test_open_close_notification(
+    browser: BrowserWindow, blocked_notification: AddOnInstallBlocked
+) -> BaseNotification:
     """Trigger and dismiss a notification."""
     assert blocked_notification is not None
     blocked_notification.close()
@@ -93,46 +107,60 @@ def test_open_close_notification(browser, blocked_notification):
         (AddOnInstallBlocked, "AddOnInstallBlocked was not shown"),
     ],
 )
-def test_wait_for_notification_timeout(browser, _class, message):
+def test_wait_for_notification_timeout(browser: BrowserWindow, _class: Any, message: Any):
     """Wait for a notification when one is not shown."""
     with pytest.raises(TimeoutException) as excinfo:
         browser.wait_for_notification(_class)
     assert message in str(excinfo.value)
 
 
-def test_wait_for_no_notification_timeout(browser, blocked_notification):
+def test_wait_for_no_notification_timeout(
+    browser: BrowserWindow, blocked_notification: AddOnInstallBlocked
+) -> None:
     """Wait for no notification when one is shown."""
     with pytest.raises(TimeoutException) as excinfo:
         browser.wait_for_notification(None)
     assert "Unexpected notification shown" in str(excinfo.value)
 
 
-def test_notification_with_origin(browser, webserver, blocked_notification):
+def test_notification_with_origin(
+    browser: BrowserWindow,
+    webserver: WebServer,
+    blocked_notification: AddOnInstallBlocked,
+) -> None:
     """Trigger a notification with an origin."""
     assert "{0.host}:{0.port}".format(webserver) in blocked_notification.origin
     assert blocked_notification.label is not None
 
 
-def test_allow_blocked_addon(browser, blocked_notification):
+def test_allow_blocked_addon(
+    browser: BrowserWindow, blocked_notification: AddOnInstallBlocked
+) -> None:
     """Allow a blocked add-on installation."""
     blocked_notification.allow()
     browser.wait_for_notification(AddOnInstallConfirmation)
 
 
-def test_cancel_addon_install(browser, confirmation_notification):
+def test_cancel_addon_install(
+    browser: BrowserWindow, confirmation_notification: AddOnInstallConfirmation
+) -> None:
     """Cancel add-on installation."""
     confirmation_notification.cancel()
     browser.wait_for_notification(None)
 
 
-def test_confirm_addon_install(addon, browser, confirmation_notification):
+def test_confirm_addon_install(
+    addon, browser: BrowserWindow, confirmation_notification: AddOnInstallConfirmation
+) -> None:
     """Confirm add-on installation."""
     assert confirmation_notification.addon_name == addon.name
     confirmation_notification.install()
     browser.wait_for_notification(AddOnInstallComplete)
 
 
-def test_addon_install_complete(addon, browser, complete_notification):
+def test_addon_install_complete(
+    addon, browser: BrowserWindow, complete_notification: AddOnInstallComplete
+) -> None:
     """Complete add-on installation and close notification."""
     complete_notification.close()
     browser.wait_for_notification(None)

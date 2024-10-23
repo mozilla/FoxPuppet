@@ -6,12 +6,15 @@
 import os
 
 import pytest
+from _pytest.nodes import Item
 
 from foxpuppet import FoxPuppet
+from foxpuppet.windows import BrowserWindow
+from typing import Any, Generator
 
 
 @pytest.mark.hookwrapper
-def pytest_runtest_makereport(item, call):
+def pytest_runtest_makereport(item: Item, call) -> Generator[None, Any, None]:
     """Add a report to the generated html report."""
     pytest_html = item.config.pluginmanager.getplugin("html")
     outcome = yield
@@ -28,7 +31,7 @@ def pytest_runtest_makereport(item, call):
 
 
 @pytest.fixture(scope="session")
-def webserver():
+def webserver() -> Any:
     """Fixture that starts a local web server."""
     from .webserver import WebServer
 
@@ -39,13 +42,13 @@ def webserver():
 
 
 @pytest.fixture
-def browser(foxpuppet):
+def browser(foxpuppet: FoxPuppet) -> BrowserWindow:
     """First Firefox browser window opened."""
     return foxpuppet.browser
 
 
 @pytest.fixture
-def firefox_options(firefox_options):
+def firefox_options(firefox_options: Any) -> Any:
     """Fixture for configuring Firefox."""
     if os.getenv("MOZREGRESSION_BINARY"):
         firefox_options.binary = os.getenv("MOZREGRESSION_BINARY")
@@ -56,6 +59,6 @@ def firefox_options(firefox_options):
 
 
 @pytest.fixture
-def foxpuppet(selenium):
+def foxpuppet(selenium) -> FoxPuppet:
     """Initialize the FoxPuppet object."""
     return FoxPuppet(selenium)

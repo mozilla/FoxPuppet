@@ -11,7 +11,7 @@ from foxpuppet.windows import BaseWindow
 from foxpuppet.windows.browser.navbar import NavBar
 from foxpuppet.windows.browser.notifications import BaseNotification
 from selenium.webdriver.remote.webelement import WebElement
-from typing import Any, Optional, Type
+from typing import Any, Optional, Union
 
 
 class BrowserWindow(BaseWindow):
@@ -117,7 +117,7 @@ class BrowserWindow(BaseWindow):
                 self.document_element,
             )
 
-    def open_window(self, private: bool = False) -> Optional["BrowserWindow"]:
+    def open_window(self, private: bool = False) -> Union["BrowserWindow", Any]:
         """Open a new browser window.
 
         Args:
