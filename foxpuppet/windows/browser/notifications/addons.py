@@ -60,13 +60,56 @@ class AddOnInstallComplete(BaseNotification):
 class AddOnInstallRestart(BaseNotification):
     """Add-on install restart notification."""
 
+    def restart_now(self):
+        """Restart Firefox immediately to complete the add-on installation."""
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            self.find_primary_button().click()
+
+    def restart_later(self):
+        """Defer Firefox restart for later."""
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            self.find_secondary_button().click()
+
 
 class AddOnInstallFailed(BaseNotification):
     """Add-on install failed notification."""
 
+    @property
+    def error_message(self):
+        """Provide access to the error message.
+
+        Returns:
+            str: The error message explaining why the installation failed.
+        """
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            return self.find_description().text
+
+    def close(self):
+        """Close the failed installation notification."""
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            self.find_primary_button().click()
+
 
 class AddOnProgress(BaseNotification):
     """Add-on progress notification."""
+
+    @property
+    def is_downloading(self):
+        """Check if the add-on is currently downloading.
+
+        Returns:
+            bool: True if the download and verification is in progress.
+        """
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            return "Downloading and verifying add-on…" in self.find_description().text
+
+    def wait_until_complete(self, timeout=None):
+        """Wait until the progress notification disappears, indicating completion.
+
+        Args:
+            timeout (int, optional): Maximum time to wait in seconds.
+        """
+        self.window.wait_for_notification(None, timeout=timeout)
 
 
 # Clean up of these notifications will happen once Firefox ESR is past version 63
