@@ -8,15 +8,21 @@ from abc import ABCMeta
 from selenium.webdriver.common.by import By
 
 from foxpuppet.region import Region
+from selenium.webdriver.remote.webelement import WebElement
+from typing import Type, Any, TYPE_CHECKING
 
 
 class BaseNotification(Region):
     """Abstract base class for any kind of notification."""
 
     __metaclass__ = ABCMeta
+    if TYPE_CHECKING:
+        from foxpuppet.windows import BrowserWindow
 
     @staticmethod
-    def create(window, root):
+    def create(
+        window: Type["BrowserWindow"], root: WebElement
+    ) -> Type["BaseNotification"] | Any:
         """Create a notification object.
 
         Args:
@@ -31,7 +37,7 @@ class BaseNotification(Region):
             :py:class:`BaseNotification`: Firefox notification.
 
         """
-        notifications = {}
+        notifications: dict[Any, Any] = {}
         _id = root.get_property("id")
         from foxpuppet.windows.browser.notifications import addons
 
@@ -39,7 +45,7 @@ class BaseNotification(Region):
         return notifications.get(_id, BaseNotification)(window, root)
 
     @property
-    def label(self):
+    def label(self) -> str | None:
         """Provide access to the notification label.
 
         Returns:
@@ -50,7 +56,7 @@ class BaseNotification(Region):
             return self.root.get_attribute("label")
 
     @property
-    def origin(self):
+    def origin(self) -> str | None:
         """Provide access to the notification origin.
 
         Returns:
@@ -60,7 +66,7 @@ class BaseNotification(Region):
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             return self.root.get_attribute("origin")
 
-    def find_primary_button(self):
+    def find_primary_button(self) -> WebElement | Any:
         """Retrieve the primary button."""
         if self.window.firefox_version >= 67:
             return self.root.find_element(
@@ -68,7 +74,7 @@ class BaseNotification(Region):
             )
         return self.root.find_anonymous_element_by_attribute("anonid", "button")
 
-    def find_secondary_button(self):
+    def find_secondary_button(self) -> WebElement | Any:
         """Retrieve the secondary button."""
         if self.window.firefox_version >= 67:
             return self.root.find_element(
@@ -76,7 +82,7 @@ class BaseNotification(Region):
             )
         return self.root.find_anonymous_element_by_attribute("anonid", "secondarybutton")
 
-    def find_description(self):
+    def find_description(self) -> WebElement | Any:
         """Retrieve the notification description."""
         if self.window.firefox_version >= 67:
             return self.root.find_element(By.CLASS_NAME, "popup-notification-description")
@@ -84,13 +90,13 @@ class BaseNotification(Region):
             "class", "popup-notification-description"
         )
 
-    def find_close_button(self):
+    def find_close_button(self) -> WebElement | Any:
         """Retrieve the close button."""
         if self.window.firefox_version >= 67:
             return self.root.find_element(By.CLASS_NAME, "popup-notification-closebutton")
         return self.root.find_anonymous_element_by_attribute("anonid", "closebutton")
 
-    def close(self):
+    def close(self) -> None:
         """Close the notification."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.find_close_button().click()
