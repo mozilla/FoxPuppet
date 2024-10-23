@@ -5,7 +5,7 @@
 
 from __future__ import absolute_import
 from selenium.webdriver.remote.webdriver import WebDriver
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, Optional, Type
 
 
 class new_browser_window_is_opened(object):
@@ -32,7 +32,7 @@ class new_browser_window_is_opened(object):
     if TYPE_CHECKING:
         from foxpuppet.windows import BrowserWindow  # Import for static typing
 
-    def __call__(self, *args: tuple, **kwargs: dict[str, Any]) -> "BrowserWindow | None":
+    def __call__(self, *args: Any, **kwargs: Any) -> Type["BrowserWindow"] | None:
         """Check to see if a new window has opened.
 
         Returns:

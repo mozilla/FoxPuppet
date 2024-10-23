@@ -23,7 +23,7 @@ class NavBar(Region):
     _tracking_protection_shield_locator = (By.ID, "tracking-protection-icon-box")
 
     @property
-    def is_tracking_shield_displayed(self):
+    def is_tracking_shield_displayed(self) -> bool:
         """Tracking Protection shield.
 
         Returns:

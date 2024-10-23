@@ -10,6 +10,8 @@ from foxpuppet import expected
 from foxpuppet.windows import BaseWindow
 from foxpuppet.windows.browser.navbar import NavBar
 from foxpuppet.windows.browser.notifications import BaseNotification
+from selenium.webdriver.remote.webelement import WebElement
+from typing import Any, Optional, Type
 
 
 class BrowserWindow(BaseWindow):
@@ -27,7 +29,7 @@ class BrowserWindow(BaseWindow):
     _tab_browser_locator = (By.ID, "tabbrowser-tabs")
 
     @property
-    def navbar(self):
+    def navbar(self) -> NavBar:
         """Provide access to the Navigation Bar.
 
         Returns:
@@ -36,11 +38,11 @@ class BrowserWindow(BaseWindow):
         """
         window = BaseWindow(self.selenium, self.selenium.current_window_handle)
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            el = self.selenium.find_element(*self._nav_bar_locator)
+            el: WebElement = self.selenium.find_element(*self._nav_bar_locator)
             return NavBar(window, el)
 
     @property
-    def notification(self):
+    def notification(self) -> BaseNotification | Any:
         """Provide access to the currently displayed notification.
 
         Returns:
@@ -63,7 +65,9 @@ class BrowserWindow(BaseWindow):
                 pass
         return None  # no notification is displayed
 
-    def wait_for_notification(self, notification_class=BaseNotification):
+    def wait_for_notification(
+        self, notification_class: Optional[type["BaseNotification"]] = BaseNotification
+    ) -> BaseNotification | Any:
         """Wait for the specified notification to be displayed.
 
         Args:
@@ -91,9 +95,10 @@ class BrowserWindow(BaseWindow):
                 lambda _: self.notification is None,
                 message="Unexpected notification shown.",
             )
+        return None
 
     @property
-    def is_private(self):
+    def is_private(self) -> bool | Any:
         """Property that checks if the specified window is private or not.
 
         Returns:
@@ -112,7 +117,7 @@ class BrowserWindow(BaseWindow):
                 self.document_element,
             )
 
-    def open_window(self, private=False):
+    def open_window(self, private: bool = False) -> Type["BrowserWindow"] | None:
         """Open a new browser window.
 
         Args:
@@ -123,7 +128,7 @@ class BrowserWindow(BaseWindow):
             :py:class:`BrowserWindow`: Opened window.
 
         """
-        handles_before = self.selenium.window_handles
+        handles_before: list[str] = self.selenium.window_handles
         self.switch_to()
 
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
