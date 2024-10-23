@@ -5,6 +5,9 @@
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from typing import Any
 
 
 class BaseWindow(object):
@@ -12,7 +15,7 @@ class BaseWindow(object):
 
     _document_element = (By.CSS_SELECTOR, ":root")
 
-    def __init__(self, selenium, handle):
+    def __init__(self, selenium: WebDriver, handle: str) -> None:
         """Create a BaseWindow object.
 
         Args:
@@ -26,7 +29,7 @@ class BaseWindow(object):
         self.wait = WebDriverWait(self.selenium, timeout=10)
 
     @property
-    def document_element(self):
+    def document_element(self) -> WebElement:
         """Return the inner DOM window element.
 
         Returns:
@@ -37,21 +40,21 @@ class BaseWindow(object):
         return self.selenium.find_element(*self._document_element)
 
     @property
-    def firefox_version(self):
+    def firefox_version(self) -> int:
         """Major version of Firefox in use.
 
         Returns:
             int: Major component of the Firefox version.
 
         """
-        version = self.selenium.capabilities["browserVersion"]
+        version: Any = self.selenium.capabilities["browserVersion"]
         return int(version.partition(".")[0])
 
-    def close(self):
+    def close(self) -> None:
         """Close the window."""
         self.switch_to()
         self.selenium.close()
 
-    def switch_to(self):
+    def switch_to(self) -> None:
         """Switch focus for Selenium commands to this window."""
         self.selenium.switch_to.window(self.handle)
