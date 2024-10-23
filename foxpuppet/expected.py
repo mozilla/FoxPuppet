@@ -28,10 +28,11 @@ class new_browser_window_is_opened(object):
         """
         self.selenium = selenium
         self.handles = handles
+
     if TYPE_CHECKING:
         from foxpuppet.windows import BrowserWindow  # Import for static typing
 
-    def __call__(self, *args : tuple, **kwargs: dict[str, Any]) -> "BrowserWindow | None":
+    def __call__(self, *args: tuple, **kwargs: dict[str, Any]) -> "BrowserWindow | None":
         """Check to see if a new window has opened.
 
         Returns:

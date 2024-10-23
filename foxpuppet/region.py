@@ -5,6 +5,7 @@
 
 from selenium.webdriver.remote.webelement import WebElement
 
+
 class Region(object):
     """A region object.
 
@@ -15,7 +16,9 @@ class Region(object):
     :type window: :py:class:`~.windows.BaseWindow`
     :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement`
     """
+
     from foxpuppet.windows import BaseWindow
+
     def __init__(self, window: BaseWindow, root: WebElement):
         """Create a Region object.
 
