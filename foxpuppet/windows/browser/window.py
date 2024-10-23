@@ -117,7 +117,7 @@ class BrowserWindow(BaseWindow):
                 self.document_element,
             )
 
-    def open_window(self, private: bool = False) -> Type["BrowserWindow"] | None:
+    def open_window(self, private: bool = False) -> Optional["BrowserWindow"]:
         """Open a new browser window.
 
         Args:

@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 
 from foxpuppet.region import Region
 from selenium.webdriver.remote.webelement import WebElement
-from typing import Type, Any, TYPE_CHECKING
+from typing import Type, Any, TYPE_CHECKING, Optional
 
 
 class BaseNotification(Region):
@@ -21,7 +21,7 @@ class BaseNotification(Region):
 
     @staticmethod
     def create(
-        window: Type["BrowserWindow"], root: WebElement
+        window: Optional["BrowserWindow"], root: WebElement
     ) -> Type["BaseNotification"] | Any:
         """Create a notification object.
 
