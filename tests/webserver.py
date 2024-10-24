@@ -8,11 +8,7 @@ import threading
 
 from typing import Any
 
-try:
-    from http.server import HTTPServer, SimpleHTTPRequestHandler
-except ImportError:
-    from BaseHTTPServer import HTTPServer
-    from SimpleHTTPServer import SimpleHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
