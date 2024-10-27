@@ -13,6 +13,7 @@ from foxpuppet.windows.browser.notifications.addons import (
     AddOnInstallBlocked,
     AddOnInstallComplete,
     AddOnInstallConfirmation,
+    AddOnInstallFailed,
 )
 from selenium.webdriver.remote.webdriver import WebDriver
 from foxpuppet.windows import BrowserWindow
@@ -49,6 +50,17 @@ def addon() -> AddOn:
     """
 
     # https://github.com/ambv/black/issues/144#issuecomment-392149599
+    class AddOn:
+        def __init__(self):
+            self.name = "WebExtension"
+            self.paths = {
+                "default": "webextension.xpi",
+                "corrupt": "corruptwebextension.xpi",
+            }
+
+        def get_path(self, size="default"):
+            """Returns web extension path."""
+            return self.paths.get(size, self.paths["default"])
 
     return AddOn(name="WebExtension", path="webextension.xpi")
 
@@ -64,7 +76,7 @@ def blocked_notification(
 
     """
     selenium.get(webserver.url())
-    selenium.find_element(By.LINK_TEXT, addon.path).click()
+    selenium.find_element(By.LINK_TEXT, addon.get_path()).click()
     return browser.wait_for_notification(AddOnInstallBlocked)
 
 
@@ -94,6 +106,30 @@ def complete_notification(
     """
     confirmation_notification.install()
     return browser.wait_for_notification(AddOnInstallComplete)
+
+
+@pytest.fixture
+def failed_notification(addon, browser, webserver, selenium):
+    """Fixture that triggers a failed installation notification.
+
+    Returns:
+        :py:class:`AddOnInstallFailed`: Firefox notification.
+    """
+    selenium.get(webserver.url())
+    selenium.find_element(By.LINK_TEXT, addon.get_path("corrupt")).click()
+    return browser.wait_for_notification(AddOnInstallFailed)
+
+
+@pytest.fixture
+def failed_notification(addon, browser, webserver, selenium):
+    """Fixture that triggers a failed installation notification.
+
+    Returns:
+        :py:class:`AddOnInstallFailed`: Firefox notification.
+    """
+    selenium.get(webserver.url())
+    selenium.find_element(By.LINK_TEXT, addon.get_path("corrupt")).click()
+    return browser.wait_for_notification(AddOnInstallFailed)
 
 
 def test_open_close_notification(
@@ -136,7 +172,6 @@ def test_notification_with_origin(
     blocked_notification: AddOnInstallBlocked,
 ) -> None:
     """Trigger a notification with an origin."""
-    assert blocked_notification.origin is not None
     assert f"{webserver.host}" in blocked_notification.origin
     assert blocked_notification.label is not None
 
@@ -174,3 +209,9 @@ def test_addon_install_complete(
     """Complete add-on installation and close notification."""
     complete_notification.close()
     browser.wait_for_notification(None)
+
+
+def test_failed_installation_notification(failed_notification):
+    """Test that a failed installation notification is shown for a corrupt add-on."""
+    error_text = "The add-on downloaded from this site could not be installed because it appears to be corrupt."
+    assert failed_notification.error_message == error_text
