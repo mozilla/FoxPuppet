@@ -7,6 +7,7 @@ from pathlib import Path
 import threading
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import socket
+from typing import Any
 
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
@@ -32,7 +33,7 @@ class WebServer(object):
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
 
     @property
-    def host(self) -> Any:
+    def host(self) -> Any | str:
         """Hostname of the web server.
 
         Returns:
