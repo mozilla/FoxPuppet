@@ -52,8 +52,8 @@ def browser(foxpuppet: FoxPuppet) -> BrowserWindow:
 def firefox_options(firefox_options: FirefoxOptions) -> Any:
     """Fixture for configuring Firefox."""
     if os.getenv("MOZREGRESSION_BINARY"):
-        firefox_options.binary = os.getenv("MOZREGRESSION_BINARY") #type: ignore
-    firefox_options.log.level = "trace" #type: ignore
+        firefox_options.binary = os.getenv("MOZREGRESSION_BINARY")  # type: ignore
+    firefox_options.log.level = "trace"  # type: ignore
     # firefox_options.set_preference('devtools.chrome.enabled', True)
     # firefox_options.set_preference('devtools.debugger.remote-enabled', True)
     return firefox_options

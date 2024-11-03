@@ -17,7 +17,7 @@ from foxpuppet.windows.browser.notifications.addons import (
 from selenium.webdriver.remote.webdriver import WebDriver
 from foxpuppet.windows import BrowserWindow
 from tests.webserver import WebServer
-from selenium.webdriver.firefox.options import Options as FirefoxOptions    
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 
 @pytest.fixture
@@ -46,8 +46,6 @@ def addon():
         path = "webextension.xpi"
 
     return AddOn()
-
-
 
 
 @pytest.fixture

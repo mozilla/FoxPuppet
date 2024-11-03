@@ -25,7 +25,6 @@ class WindowManager(object):
         """
         self.selenium = selenium
 
-
     @property
     def windows(self) -> list[BrowserWindow]:
         """Return a list of all open windows.
