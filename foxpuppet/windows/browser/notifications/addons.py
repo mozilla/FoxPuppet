@@ -57,20 +57,6 @@ class AddOnInstallComplete(BaseNotification):
                 BaseNotification.close(self)
 
 
-class AddOnInstallRestart(BaseNotification):
-    """Add-on install restart notification."""
-
-    def restart_now(self):
-        """Restart Firefox immediately to complete the add-on installation."""
-        with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.find_primary_button().click()
-
-    def restart_later(self):
-        """Defer Firefox restart for later."""
-        with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.find_secondary_button().click()
-
-
 class AddOnInstallFailed(BaseNotification):
     """Add-on install failed notification."""
 
@@ -103,14 +89,6 @@ class AddOnProgress(BaseNotification):
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             return "Downloading and verifying add-on…" in self.find_description().text
 
-    def wait_until_complete(self, timeout=None):
-        """Wait until the progress notification disappears, indicating completion.
-
-        Args:
-            timeout (int, optional): Maximum time to wait in seconds.
-        """
-        self.window.wait_for_notification(None, timeout=timeout)
-
 
 # Clean up of these notifications will happen once Firefox ESR is past version 63
 # https://github.com/mozilla/FoxPuppet/issues/212
@@ -119,7 +97,6 @@ NOTIFICATIONS = {
     "addon-install-confirmation-notification": AddOnInstallConfirmation,
     "addon-install-complete-notification": AddOnInstallComplete,
     "appMenu-addon-installed-notification": AddOnInstallComplete,
-    "addon-install-restart-notification": AddOnInstallRestart,
     "addon-install-failed-notification": AddOnInstallFailed,
     "addon-installed-notification": AddOnInstallComplete,
     "addon-progress-notification": AddOnProgress,
