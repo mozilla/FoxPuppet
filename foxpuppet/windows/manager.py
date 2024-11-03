@@ -4,6 +4,7 @@
 """Window Management for FoxPuppet."""
 
 from selenium.webdriver.remote.webdriver import WebDriver
+from foxpuppet.windows import BrowserWindow
 
 
 class WindowManager(object):
@@ -24,7 +25,6 @@ class WindowManager(object):
         """
         self.selenium = selenium
 
-    from foxpuppet.windows import BrowserWindow
 
     @property
     def windows(self) -> list[BrowserWindow]:

@@ -16,10 +16,12 @@ from foxpuppet.windows.browser.notifications.addons import (
 )
 from selenium.webdriver.remote.webdriver import WebDriver
 from foxpuppet.windows import BrowserWindow
+from tests.webserver import WebServer
+from selenium.webdriver.firefox.options import Options as FirefoxOptions    
 
 
 @pytest.fixture
-def firefox_options(firefox_options: Any) -> Any:
+def firefox_options(firefox_options: FirefoxOptions) -> FirefoxOptions:
     """Fixture for configuring Firefox."""
     # Due to https://bugzilla.mozilla.org/show_bug.cgi?id=1329939 we need the
     # initial browser window to be in the foreground. Without this, the
@@ -46,7 +48,6 @@ def addon():
     return AddOn()
 
 
-from .webserver import WebServer
 
 
 @pytest.fixture
@@ -94,7 +95,7 @@ def complete_notification(
 
 def test_open_close_notification(
     browser: BrowserWindow, blocked_notification: AddOnInstallBlocked
-) -> BaseNotification:
+):
     """Trigger and dismiss a notification."""
     assert blocked_notification is not None
     blocked_notification.close()

@@ -10,6 +10,7 @@ from _pytest.nodes import Item
 
 from foxpuppet import FoxPuppet
 from foxpuppet.windows import BrowserWindow
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from typing import Any, Generator
 
 
@@ -48,11 +49,11 @@ def browser(foxpuppet: FoxPuppet) -> BrowserWindow:
 
 
 @pytest.fixture
-def firefox_options(firefox_options: Any) -> Any:
+def firefox_options(firefox_options: FirefoxOptions) -> Any:
     """Fixture for configuring Firefox."""
     if os.getenv("MOZREGRESSION_BINARY"):
-        firefox_options.binary = os.getenv("MOZREGRESSION_BINARY")
-    firefox_options.log.level = "trace"
+        firefox_options.binary = os.getenv("MOZREGRESSION_BINARY") #type: ignore
+    firefox_options.log.level = "trace" #type: ignore
     # firefox_options.set_preference('devtools.chrome.enabled', True)
     # firefox_options.set_preference('devtools.debugger.remote-enabled', True)
     return firefox_options

@@ -22,7 +22,7 @@ class AddOnInstallConfirmation(BaseNotification):
     """Add-on install confirmation notification."""
 
     @property
-    def addon_name(self) -> str | Any:
+    def addon_name(self) -> str:
         """Provide access to the add-on name.
 
         Returns:
