@@ -12,6 +12,7 @@ from foxpuppet import FoxPuppet
 from foxpuppet.windows import BrowserWindow
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from typing import Any, Generator
+from tests.webserver import WebServer
 
 
 @pytest.mark.hookwrapper
@@ -32,7 +33,7 @@ def pytest_runtest_makereport(item: Item, call) -> Generator[None, Any, None]:
 
 
 @pytest.fixture(scope="session")
-def webserver() -> Any:
+def webserver() -> Generator[WebServer, None, None]:
     """Fixture that starts a local web server."""
     from .webserver import WebServer
 
@@ -49,10 +50,8 @@ def browser(foxpuppet: FoxPuppet) -> BrowserWindow:
 
 
 @pytest.fixture
-def firefox_options(firefox_options: FirefoxOptions) -> Any:
+def firefox_options(firefox_options: FirefoxOptions) -> FirefoxOptions:
     """Fixture for configuring Firefox."""
-    if os.getenv("MOZREGRESSION_BINARY"):
-        firefox_options.binary = os.getenv("MOZREGRESSION_BINARY")  # type: ignore
     firefox_options.log.level = "trace"  # type: ignore
     # firefox_options.set_preference('devtools.chrome.enabled', True)
     # firefox_options.set_preference('devtools.debugger.remote-enabled', True)

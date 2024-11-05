@@ -30,8 +30,16 @@ def firefox_options(firefox_options: FirefoxOptions) -> FirefoxOptions:
     return firefox_options
 
 
+class AddOn:
+    """Class representing an add-on."""
+
+    def __init__(self, name: str, path: str):
+        self.name = name
+        self.path = path
+
+
 @pytest.fixture
-def addon():
+def addon() -> AddOn:
     """Fixture for creating an installable add-on.
 
     Returns:
@@ -41,16 +49,13 @@ def addon():
     """
 
     # https://github.com/ambv/black/issues/144#issuecomment-392149599
-    class AddOn(object):
-        name = "WebExtension"
-        path = "webextension.xpi"
 
-    return AddOn()
+    return AddOn(name="WebExtension", path="webextension.xpi")
 
 
 @pytest.fixture
 def blocked_notification(
-    addon: Any, browser: BrowserWindow, webserver: WebServer, selenium: WebDriver
+    addon: AddOn, browser: BrowserWindow, webserver: WebServer, selenium: WebDriver
 ) -> BaseNotification:
     """Fixture causing a blocked notification to appear in Firefox.
 
@@ -150,7 +155,9 @@ def test_cancel_addon_install(
 
 
 def test_confirm_addon_install(
-    addon, browser: BrowserWindow, confirmation_notification: AddOnInstallConfirmation
+    addon: AddOn,
+    browser: BrowserWindow,
+    confirmation_notification: AddOnInstallConfirmation,
 ) -> None:
     """Confirm add-on installation."""
     assert confirmation_notification.addon_name == addon.name
@@ -159,7 +166,7 @@ def test_confirm_addon_install(
 
 
 def test_addon_install_complete(
-    addon, browser: BrowserWindow, complete_notification: AddOnInstallComplete
+    addon: AddOn, browser: BrowserWindow, complete_notification: AddOnInstallComplete
 ) -> None:
     """Complete add-on installation and close notification."""
     complete_notification.close()
