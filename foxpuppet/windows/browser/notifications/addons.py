@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 
 from foxpuppet.windows.browser.notifications import BaseNotification
 from typing import Any
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class AddOnInstallBlocked(BaseNotification):
@@ -30,7 +31,7 @@ class AddOnInstallConfirmation(BaseNotification):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            el = self.find_description()
+            el: WebElement = self.find_description()
             return el.find_element(By.CSS_SELECTOR, "b").text
 
     def cancel(self) -> None:

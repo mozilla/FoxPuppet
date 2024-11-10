@@ -24,8 +24,8 @@ class BaseWindow(object):
                 Firefox WebDriver object.
             handle: (str): WebDriver Firefox window handle.
         """
-        self.selenium = selenium
-        self.handle = handle
+        self.selenium: WebDriver = selenium
+        self.handle: str = handle
         self.wait: WebDriverWait = WebDriverWait(self.selenium, timeout=10)
 
     @property
@@ -47,7 +47,7 @@ class BaseWindow(object):
             int: Major component of the Firefox version.
 
         """
-        version: Any = self.selenium.capabilities["browserVersion"]
+        version: str = self.selenium.capabilities["browserVersion"]
         return int(version.partition(".")[0])
 
     def close(self) -> None:

@@ -134,6 +134,7 @@ def test_notification_with_origin(
     blocked_notification: AddOnInstallBlocked,
 ) -> None:
     """Trigger a notification with an origin."""
+    assert blocked_notification.origin is not None
     assert f"{webserver.host}" in blocked_notification.origin
     assert blocked_notification.label is not None
 

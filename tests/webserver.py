@@ -8,6 +8,7 @@ import threading
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import socket
 from typing import Any
+from threading import Thread
 
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
@@ -29,8 +30,10 @@ class WebServer(object):
             port (int, optional): Port for web server.
                 Optional and defaults to port 8000.
         """
-        self.server = HTTPServer((host, port), MyRequestHandler)
-        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
+        self.server: HTTPServer = HTTPServer((host, port), MyRequestHandler)
+        self.thread: Thread = threading.Thread(
+            target=self.server.serve_forever, daemon=True
+        )
 
     @property
     def host(self) -> Any | str:

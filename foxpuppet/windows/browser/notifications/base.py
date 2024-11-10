@@ -37,8 +37,8 @@ class BaseNotification(Region):
             :py:class:`BaseNotification`: Firefox notification.
 
         """
-        notifications: dict[Any, Any] = {}
-        _id = root.get_property("id")
+        notifications: dict = {}
+        _id: str | bool | WebElement | dict = root.get_property("id")
         from foxpuppet.windows.browser.notifications import addons
 
         notifications.update(addons.NOTIFICATIONS)
@@ -56,7 +56,7 @@ class BaseNotification(Region):
             return self.root.get_attribute("label")
 
     @property
-    def origin(self) -> str | Any:
+    def origin(self) -> str | None:
         """Provide access to the notification origin.
 
         Returns:
