@@ -98,7 +98,7 @@ def complete_notification(
 
 def test_open_close_notification(
     browser: BrowserWindow, blocked_notification: AddOnInstallBlocked
-):
+) -> BaseNotification | None:
     """Trigger and dismiss a notification."""
     assert blocked_notification is not None
     blocked_notification.close()
@@ -112,7 +112,9 @@ def test_open_close_notification(
         (AddOnInstallBlocked, "AddOnInstallBlocked was not shown"),
     ],
 )
-def test_wait_for_notification_timeout(browser: BrowserWindow, _class: Any, message: Any):
+def test_wait_for_notification_timeout(
+    browser: BrowserWindow, _class: Any, message: str
+) -> None:
     """Wait for a notification when one is not shown."""
     with pytest.raises(TimeoutException) as excinfo:
         browser.wait_for_notification(_class)

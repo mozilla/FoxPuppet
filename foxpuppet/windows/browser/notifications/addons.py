@@ -6,7 +6,6 @@
 from selenium.webdriver.common.by import By
 
 from foxpuppet.windows.browser.notifications import BaseNotification
-from typing import Any
 from selenium.webdriver.remote.webelement import WebElement
 
 
