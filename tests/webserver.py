@@ -7,6 +7,8 @@ from pathlib import Path
 import threading
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import socket
+from typing import Any
+from threading import Thread
 
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
@@ -20,7 +22,7 @@ class MyRequestHandler(SimpleHTTPRequestHandler):
 class WebServer(object):
     """Web server for serving local files within the /web directory."""
 
-    def __init__(self, host="", port=8000):
+    def __init__(self, host: str = "", port: int = 8000):
         """Set up web server.
 
         Args:
@@ -28,11 +30,13 @@ class WebServer(object):
             port (int, optional): Port for web server.
                 Optional and defaults to port 8000.
         """
-        self.server = HTTPServer((host, port), MyRequestHandler)
-        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
+        self.server: HTTPServer = HTTPServer((host, port), MyRequestHandler)
+        self.thread: Thread = threading.Thread(
+            target=self.server.serve_forever, daemon=True
+        )
 
     @property
-    def host(self):
+    def host(self) -> Any | str:
         """Hostname of the web server.
 
         Returns:
@@ -42,7 +46,7 @@ class WebServer(object):
         return self.server.server_address[0]
 
     @property
-    def port(self):
+    def port(self) -> int:
         """Web server port.
 
         Returns:
@@ -51,16 +55,16 @@ class WebServer(object):
         """
         return self.server.server_address[1]
 
-    def start(self):
+    def start(self) -> None:
         """Start web server."""
         self.thread.start()
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop web server."""
         self.server.shutdown()
         self.thread.join()
 
-    def url(self, path="/"):
+    def url(self, path="/") -> str:
         """Web server URL.
 
         Args:

@@ -18,3 +18,6 @@ test: install_dependencies
 
 lint: install_dependencies
 	poetry run $(BLACK_CHECK)
+
+typecheck: install_dependencies
+	poetry run mypy .

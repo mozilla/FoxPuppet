@@ -3,6 +3,9 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 """Window Management for FoxPuppet."""
 
+from selenium.webdriver.remote.webdriver import WebDriver
+from foxpuppet.windows import BrowserWindow
+
 
 class WindowManager(object):
     """A window manager that controls the creation of window objects.
@@ -12,7 +15,7 @@ class WindowManager(object):
             Firefox WebDriver object.
     """
 
-    def __init__(self, selenium):
+    def __init__(self, selenium: WebDriver) -> None:
         """Create WindowManager Object.
 
         Args:
@@ -23,7 +26,7 @@ class WindowManager(object):
         self.selenium = selenium
 
     @property
-    def windows(self):
+    def windows(self) -> list[BrowserWindow]:
         """Return a list of all open windows.
 
         Returns:

@@ -6,6 +6,7 @@
 from __future__ import absolute_import
 
 from foxpuppet.windows import WindowManager
+from selenium.webdriver.remote.webdriver import WebDriver
 
 
 class FoxPuppet(object):
@@ -17,7 +18,7 @@ class FoxPuppet(object):
             Firefox WebDriver object.
     """
 
-    def __init__(self, selenium):
+    def __init__(self, selenium: WebDriver):
         """Create FoxPuppet object.
 
         Args:

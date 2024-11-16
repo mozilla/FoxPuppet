@@ -4,6 +4,8 @@
 """Module contained custom expected waits and conditions."""
 
 from __future__ import absolute_import
+from selenium.webdriver.remote.webdriver import WebDriver
+from typing import Any, TYPE_CHECKING, Optional, Type
 
 
 class new_browser_window_is_opened(object):
@@ -14,7 +16,7 @@ class new_browser_window_is_opened(object):
 
     """
 
-    def __init__(self, selenium, handles):
+    def __init__(self, selenium: WebDriver, handles: list[str]):
         """Create new_browser_window_is_opened object.
 
         Args:
@@ -27,7 +29,10 @@ class new_browser_window_is_opened(object):
         self.selenium = selenium
         self.handles = handles
 
-    def __call__(self, *args, **kwargs):
+    if TYPE_CHECKING:
+        from foxpuppet.windows import BrowserWindow  # Import for static typing
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Optional["BrowserWindow"]:
         """Check to see if a new window has opened.
 
         Returns:
@@ -39,3 +44,5 @@ class new_browser_window_is_opened(object):
             from foxpuppet.windows import BrowserWindow
 
             return BrowserWindow(self.selenium, handles[0])
+        else:
+            return None

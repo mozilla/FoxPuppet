@@ -6,12 +6,13 @@
 from selenium.webdriver.common.by import By
 
 from foxpuppet.windows.browser.notifications import BaseNotification
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class AddOnInstallBlocked(BaseNotification):
     """Add-on install blocked notification."""
 
-    def allow(self):
+    def allow(self) -> None:
         """Allow the add-on to be installed."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.find_primary_button().click()
@@ -21,7 +22,7 @@ class AddOnInstallConfirmation(BaseNotification):
     """Add-on install confirmation notification."""
 
     @property
-    def addon_name(self):
+    def addon_name(self) -> str:
         """Provide access to the add-on name.
 
         Returns:
@@ -29,15 +30,15 @@ class AddOnInstallConfirmation(BaseNotification):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            el = self.find_description()
+            el: WebElement = self.find_description()
             return el.find_element(By.CSS_SELECTOR, "b").text
 
-    def cancel(self):
+    def cancel(self) -> None:
         """Cancel add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.find_secondary_button().click()
 
-    def install(self):
+    def install(self) -> None:
         """Confirm add-on install."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.find_primary_button().click()
@@ -46,7 +47,7 @@ class AddOnInstallConfirmation(BaseNotification):
 class AddOnInstallComplete(BaseNotification):
     """Add-on install complete notification."""
 
-    def close(self):
+    def close(self) -> None:
         """Close the notification."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             if self.window.firefox_version > 63:
