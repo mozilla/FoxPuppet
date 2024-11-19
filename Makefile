@@ -1,6 +1,7 @@
 BLACK_CHECK = black -l 90 --check --diff .
 BLACK_FIX = black -l 90 .
-FOXPUPPET_TESTS = pytest -vvv --driver Firefox --cov --html results/report.html
+MINIMUM_COVERAGE = 95
+FOXPUPPET_TESTS = pytest -vvv --driver Firefox --cov --cov-fail-under=$(MINIMUM_COVERAGE) --html results/report.html
 
 check: install_poetry lint test
 
