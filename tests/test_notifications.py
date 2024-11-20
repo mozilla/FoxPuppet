@@ -73,7 +73,7 @@ def addon() -> AddOn:
 @pytest.fixture
 def progress_notification(
     addon: AddOn, browser: BrowserWindow, webserver: WebServer, selenium: WebDriver
-) -> AddOnProgress:
+) -> AddOnProgress | None:
     """Fixture that triggers the download progress notification.
 
     Returns:
@@ -91,7 +91,7 @@ def progress_notification(
 @pytest.fixture
 def blocked_notification(
     addon: AddOn, browser: BrowserWindow, webserver: WebServer, selenium: WebDriver
-) -> AddOnInstallBlocked:
+) -> AddOnInstallBlocked | None:
     """Fixture causing a blocked notification to appear in Firefox.
 
     Returns:
@@ -106,7 +106,7 @@ def blocked_notification(
 @pytest.fixture
 def confirmation_notification(
     browser: BrowserWindow, blocked_notification: AddOnInstallBlocked
-) -> AddOnInstallConfirmation:
+) -> AddOnInstallConfirmation | None:
     """Fixture that allows an add-on to be installed.
 
     Returns:
@@ -120,7 +120,7 @@ def confirmation_notification(
 @pytest.fixture
 def complete_notification(
     browser: BrowserWindow, confirmation_notification: AddOnInstallConfirmation
-) -> AddOnInstallComplete:
+) -> AddOnInstallComplete | None:
     """Fixture that installs an add-on.
 
     Returns:
@@ -134,7 +134,7 @@ def complete_notification(
 @pytest.fixture
 def failed_notification(
     addon: AddOn, browser: BrowserWindow, webserver: WebServer, selenium: WebDriver
-) -> AddOnInstallFailed:
+) -> AddOnInstallFailed | None:
     """Fixture that triggers a failed installation notification.
 
     Returns:
@@ -248,6 +248,7 @@ def test_close_failed_notification(
     failed_notification.close()
     browser.wait_for_notification(None)
 
+
 @pytest.mark.parametrize(
     "firefox_options", [{"page_load_strategy_none": True}], indirect=True
 )
@@ -256,4 +257,4 @@ def test_progress_notification_downloading(
 ) -> None:
     """Verify downloading status is reported correctly."""
     description = progress_notification.is_downloading
-    assert description is not None
+    assert description is True
