@@ -55,7 +55,12 @@ class WebServer(object):
         """
         return self.server.server_address[1]
 
-    def start(self) -> None:
+    @property
+    def url(self) -> str:
+        """Web server URL."""
+        return "http://{0.host}:{0.port}/".format(self)
+
+    def start(self):
         """Start web server."""
         self.thread.start()
 
@@ -63,18 +68,6 @@ class WebServer(object):
         """Stop web server."""
         self.server.shutdown()
         self.thread.join()
-
-    def url(self, path="/") -> str:
-        """Web server URL.
-
-        Args:
-            path (str, optional): Path to append to the web server URL.
-
-        Returns:
-            str: URL of web server.
-
-        """
-        return "http://{0.host}:{0.port}{1}".format(self, path)
 
     @classmethod
     def get_free_port(cls):
