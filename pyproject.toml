@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-selenium = "^4.26.1"
+selenium = "^4.27.1"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.1.1"
