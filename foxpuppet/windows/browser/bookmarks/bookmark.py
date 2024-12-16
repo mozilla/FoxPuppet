@@ -8,7 +8,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
 from foxpuppet.windows.browser.navbar import NavBar
-from typing import Type, Any, TYPE_CHECKING, Optional, TypedDict, List
+from typing import TYPE_CHECKING, Optional, TypedDict, List
 
 
 class BookmarkData(TypedDict):
@@ -32,7 +32,7 @@ class BasicBookmark(NavBar):
 
         Args:
             window (:py:class:`BrowserWindow`): Window object this bookmark appears in
-            root (:py:class:`~selenium.webdriver.remote.webelement.WebElement`): WebDriver element object for the bookmark panel
+            root (:py:class:`~selenium.webdriver.remote.webelement.WebElement`): WebDriver element object for bookmark
 
         Returns:
             :py:class:`BaseBookmark`: Bookmark instance or None
@@ -52,10 +52,7 @@ class BasicBookmark(NavBar):
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             star_button_image = self.find_element(BookmarkLocators.STAR_BUTTON_IMAGE)
-            if star_button_image is not None:
-                return star_button_image.get_attribute("starred") == "true"
-            else:
-                return False
+            return star_button_image.get_attribute("starred") == "true"
 
     def add(self) -> None:
         """Add a Bookmark using the star button."""
@@ -66,7 +63,7 @@ class BasicBookmark(NavBar):
 
     def retrieve_bookmark(self, label: str) -> bool:
         """
-        Check if a bookmark with the given label exists under 'Other Bookmarks'.
+        Check if a bookmark with the given label exists.
 
         Args:
             label (str): The name of the bookmark to search for.
@@ -77,18 +74,15 @@ class BasicBookmark(NavBar):
                 locator_bookmark=BookmarkLocators.PANEL_BOOKMARK_MENU,
             )
             panel_bookmarks = self.find_element(BookmarkLocators.PANEL_BOOKMARK_TOOLBAR)
-            if panel_bookmarks is None:
-                return False
-            menu_items = panel_bookmarks.find_elements(
-                By.CSS_SELECTOR, "toolbarbutton.bookmark-item"
-            )
-            if not menu_items:
-                return False
-            for item in menu_items:
-                item_label = item.get_attribute("label")
-                if item_label and label.lower() in item_label.lower():
-                    return True
-
+            if panel_bookmarks is not None:
+                menu_items = panel_bookmarks.find_elements(
+                    By.CSS_SELECTOR, "toolbarbutton.bookmark-item"
+                )
+                if menu_items is not None:
+                    for item in menu_items:
+                        item_label = item.get_attribute("label")
+                        if item_label and label.lower() in item_label.lower():
+                            return True
             return False
 
     def delete(self) -> None:
@@ -136,19 +130,17 @@ class AdvancedBookmark(BasicBookmark):
             locator_menu_bar=BookmarkLocators.MENU_BAR,
         )
         bookmark_menu = self.find_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
-        if bookmark_menu is None:
-            return False
-        self.click_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
-        with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            menu_items = bookmark_menu.find_elements(
-                By.CSS_SELECTOR, "menuitem.bookmark-item"
-            )
-            for item in menu_items:
-                item_label = item.get_attribute("label")
-                if item_label and item_label.lower() in current_page_title.lower():
-                    return True
-
-            return False
+        if bookmark_menu is not None:
+            self.click_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
+            with self.selenium.context(self.selenium.CONTEXT_CHROME):
+                menu_items = bookmark_menu.find_elements(
+                    By.CSS_SELECTOR, "menuitem.bookmark-item"
+                )
+                for item in menu_items:
+                    item_label = item.get_attribute("label")
+                    if item_label and item_label.lower() in current_page_title.lower():
+                        return True
+        return False
 
     def add_bookmark(self, bookmark_data: BookmarkData) -> None:
         """Add a Bookmark using the main bookmark menu."""
@@ -185,15 +177,13 @@ class AdvancedBookmark(BasicBookmark):
         self.actions.send_keys(Keys.TAB, Keys.ENTER).perform()
         self.switch_to_default_context()
 
-    def delete_bookmark(self, label: str) -> None:
+    def delete_bookmark(self, label: str) -> bool:
         """Delete a bookmark using the main bookmark menu."""
         self.open_main_menu(
             locator_toolbar=BookmarkLocators.NAVIGATOR_TOOLBOX,
             locator_menu_bar=BookmarkLocators.MENU_BAR,
         )
         bookmark_menu = self.find_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
-        if bookmark_menu is None:
-            raise ValueError("Bookmark menu not found")
         self.click_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             menu_item = bookmark_menu.find_element(
@@ -201,6 +191,7 @@ class AdvancedBookmark(BasicBookmark):
             )
             self.actions.context_click(menu_item).perform()
             self.click_element(BookmarkLocators.DELETE_MENU_ITEM)
+        return True
 
 
 class BookmarkLocators:

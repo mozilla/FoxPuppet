@@ -13,7 +13,9 @@ from foxpuppet.windows.browser.notifications import BaseNotification
 from foxpuppet.windows.browser.bookmarks.bookmark import BasicBookmark
 from foxpuppet.windows.browser.bookmarks.bookmark import AdvancedBookmark
 from selenium.webdriver.remote.webelement import WebElement
-from typing import Any, Optional, Union, Type
+from typing import Any, Optional, Union, TypeVar, Type
+
+T = TypeVar("T", bound="BaseNotification")
 
 
 class BrowserWindow(BaseWindow):
@@ -98,8 +100,9 @@ class BrowserWindow(BaseWindow):
                 return None
 
     def wait_for_notification(
-        self, notification_class: Optional[type["BaseNotification"]] = BaseNotification
-    ) -> BaseNotification | Any:
+        self,
+        notification_class: Optional[Type[T]] = BaseNotification,  # type: ignore
+    ) -> Optional[T]:
         """Wait for the specified notification to be displayed.
 
         Args:
@@ -109,7 +112,7 @@ class BrowserWindow(BaseWindow):
                 `BaseNotification`.
 
         Returns:
-            :py:class:`BaseNotification`: Firefox notification.
+            Optional[:py:class:`BaseNotification`]: Firefox notification or None.
 
         """
         if notification_class:
@@ -121,13 +124,13 @@ class BrowserWindow(BaseWindow):
                 lambda _: isinstance(self.notification, notification_class),
                 message=message,
             )
-            return self.notification
+            return self.notification  # type: ignore
         else:
             self.wait.until(
                 lambda _: self.notification is None,
                 message="Unexpected notification shown.",
             )
-        return None
+            return None
 
     def wait_for_bookmark(
         self,

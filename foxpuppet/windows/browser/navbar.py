@@ -52,21 +52,18 @@ class NavBar(Region):
     def click_element(self, locator: Tuple[str, str]) -> None:
         """Click on an element by its locator."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            element = self.find_element(locator)
-            if element is not None:
-                element.click()
-            else:
-                raise NoSuchElementException(f"Element with locator {locator} not found.")
+            self.find_element(locator).click()
 
-    def find_element(self, locator: Tuple[str, str]) -> Optional[WebElement]:
+    def find_element(self, locator: Tuple[str, str]) -> WebElement:
         """Find and return a web element by its locator."""
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             try:
                 element = self.root.find_element(*locator)
                 return element
             except Exception as e:
-                raise NoSuchElementException(f"Error locating element with locator {locator}: {e}")
-                return None
+                raise NoSuchElementException(
+                    f"Error locating element with locator {locator}: {e}"
+                )
 
     def context_click(self, locator: Tuple[str, str]) -> None:
         """

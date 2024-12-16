@@ -164,14 +164,14 @@ def test_retrieve_advanced_bookmark(advanced_bookmark: AdvancedBookmark) -> None
     assert advanced_bookmark.retrieve_bookmark(label) is True
 
 
+def test_retrieve_deleted_bookmark(basic_bookmark: BasicBookmark) -> None:
+    """Test retrieve deleted bookmark."""
+    basic_bookmark.delete()
+    assert basic_bookmark.retrieve_bookmark("any label") is False
+
+
 def test_delete_advanced_bookmark(advanced_bookmark: AdvancedBookmark) -> None:
     """Delete Advanced bookmark"""
     label = "Internet for people"
     advanced_bookmark.delete_bookmark(label)
     assert advanced_bookmark.is_bookmarked is False
-
-
-def test_retrieve_deleted_bookmark(basic_bookmark: BasicBookmark) -> None:
-    """Test retrieve deleted bookmark."""
-    basic_bookmark.delete()
-    assert basic_bookmark.retrieve_bookmark("any label") is False
