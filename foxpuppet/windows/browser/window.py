@@ -10,8 +10,7 @@ from foxpuppet import expected
 from foxpuppet.windows import BaseWindow
 from foxpuppet.windows.browser.navbar import NavBar
 from foxpuppet.windows.browser.notifications import BaseNotification
-from foxpuppet.windows.browser.bookmarks.bookmark import BasicBookmark
-from foxpuppet.windows.browser.bookmarks.bookmark import AdvancedBookmark
+from foxpuppet.windows.browser.bookmarks.bookmark import Bookmark
 from selenium.webdriver.remote.webelement import WebElement
 from typing import Any, Optional, Union, TypeVar, Type
 
@@ -21,7 +20,7 @@ T = TypeVar("T", bound="BaseNotification")
 class BrowserWindow(BaseWindow):
     """Representation of a browser window."""
 
-    _bookmark_panel_locator = (By.ID, "main-window")  # editBookmarkPanelTemplate
+    _bookmark_locator = (By.ID, "main-window")  # editBookmarkPanelTemplate
     _file_menu_button_locator = (By.ID, "file-menu")
     _file_menu_private_window_locator = (By.ID, "menu_newPrivateWindow")
     _file_menu_new_window_button_locator = (By.ID, "menu_newNavigator")
@@ -71,7 +70,7 @@ class BrowserWindow(BaseWindow):
         return None  # no notification is displayed
 
     @property
-    def basic_bookmark(self) -> Optional[BasicBookmark]:
+    def bookmark(self) -> Bookmark:
         """Provide access to the currently displayed bookmark.
 
         Returns:
@@ -79,25 +78,8 @@ class BrowserWindow(BaseWindow):
 
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            try:
-                root = self.selenium.find_element(*self._bookmark_panel_locator)
-                return BasicBookmark.create(self, root)
-            except NoSuchElementException:
-                return None
-
-    @property
-    def advanced_bookmark(self) -> Optional[AdvancedBookmark]:
-        """Provide access to the currently displayed advanced bookmark.
-
-        Returns:
-            :py:class:`AdvancedBookmark`: FoxPuppet AdvancedBookmark object.
-        """
-        with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            try:
-                root = self.selenium.find_element(*self._bookmark_panel_locator)
-                return AdvancedBookmark.create(self, root)
-            except NoSuchElementException:
-                return None
+            root = self.selenium.find_element(*self._bookmark_locator)
+            return Bookmark.create(self, root)
 
     def wait_for_notification(
         self,
@@ -132,38 +114,20 @@ class BrowserWindow(BaseWindow):
             )
             return None
 
-    def wait_for_bookmark(
-        self,
-        bookmark_class: Optional[
-            Type[Union[BasicBookmark, AdvancedBookmark]]
-        ] = BasicBookmark,
-    ) -> Optional[Union[BasicBookmark, AdvancedBookmark]]:
-        """Wait for the specified bookmark panel to be displayed.
+    def wait_for_bookmark(self) -> Bookmark:
+        """Wait for the bookmark panel to be displayed.
 
-        Args:
-            bookmark_class (:py:class:`BasicBookmark` | :py:class:`AdvancedBookmark`, optional):
-                The bookmark class to wait for. If `None` is specified, it will
-                wait for any bookmark object to be shown. Defaults to `BasicBookmark`.
-
-          Optional[BasicBookmark | AdvancedBookmark]: Firefox Bookmark object (Basic or Advanced), or None if not found.
+        Returns:
+            Optional[Bookmark]: The Bookmark object if found, or None if not found.
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             message = "Bookmark panel was not shown."
 
-            if bookmark_class is BasicBookmark:
-                self.wait.until(
-                    lambda _: self.basic_bookmark is not None,
-                    message=message,
-                )
-                return self.basic_bookmark
-            elif bookmark_class is AdvancedBookmark:
-                self.wait.until(
-                    lambda _: self.advanced_bookmark is not None,
-                    message=message,
-                )
-                return self.advanced_bookmark
-            else:
-                raise ValueError(f"Unsupported bookmark class: {bookmark_class}")
+            self.wait.until(
+                lambda _: self.bookmark is not None,
+                message=message,
+            )
+            return self.bookmark
 
     @property
     def is_private(self) -> bool | Any:
