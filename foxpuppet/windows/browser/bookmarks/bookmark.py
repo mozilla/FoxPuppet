@@ -20,14 +20,14 @@ class BookmarkData(TypedDict):
     keyword: Optional[str]
 
 
-class BasicBookmark(NavBar):
-    """Handles basic bookmark operations."""
+class Bookmark(NavBar):
+    """Handles Bookmark operations in Firefox."""
 
     if TYPE_CHECKING:
         from foxpuppet.windows.browser.window import BrowserWindow
 
     @staticmethod
-    def create(window: "BrowserWindow", root: WebElement) -> Optional["BasicBookmark"]:
+    def create(window: "BrowserWindow", root: WebElement) -> "Bookmark":
         """Create a bookmark object.
 
         Args:
@@ -35,33 +35,90 @@ class BasicBookmark(NavBar):
             root (:py:class:`~selenium.webdriver.remote.webelement.WebElement`): WebDriver element object for bookmark
 
         Returns:
-            :py:class:`BaseBookmark`: Bookmark instance or None
+            :py:class:`Bookmark`: Bookmark instance
         """
         with window.selenium.context(window.selenium.CONTEXT_CHROME):
-            try:
-                return BasicBookmark(window, root)
-            except NoSuchElementException:
-                return None
+            return Bookmark(window, root)
 
     @property
     def is_bookmarked(self) -> bool:
-        """Checks if the current page is bookmarked.
+        """Checks if the current page is bookmarked using the star button.
 
         Returns:
             bool: True if the page is bookmarked, False otherwise.
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            star_button_image = self.find_element(BookmarkLocators.STAR_BUTTON_IMAGE)
+            star_button_image = self.selenium.find_element(
+                *BookmarkLocators.STAR_BUTTON_IMAGE
+            )
             return star_button_image.get_attribute("starred") == "true"
 
-    def add(self) -> None:
-        """Add a Bookmark using the star button."""
-        self.click_element(BookmarkLocators.STAR_BUTTON)
-        self.click_element(BookmarkLocators.FOLDER_MENU)
-        self.click_element(BookmarkLocators.OTHER_BOOKMARKS_STAR)
-        self.click_element(BookmarkLocators.SAVE_BUTTON)
+    def add_bookmark(
+        self, bookmark_data: Optional[BookmarkData] = None, is_detailed: bool = False
+    ) -> None:
+        """
+        Add a bookmark using either quick add (star button) or detailed menu approach.
 
-    def retrieve_bookmark(self, label: str) -> bool:
+        Args:
+            detailed (bool, optional): Whether to use detailed menu approach. Defaults to False.
+            bookmark_data (BookmarkData, optional): Data for the bookmark when using detailed menu.
+                Required when detailed is True.
+        """
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            if not is_detailed:
+                self.selenium.find_element(*BookmarkLocators.STAR_BUTTON).click()
+                self.selenium.find_element(*BookmarkLocators.FOLDER_MENU).click()
+                self.selenium.find_element(*BookmarkLocators.OTHER_BOOKMARKS_STAR).click()
+                self.selenium.find_element(*BookmarkLocators.SAVE_BUTTON).click()
+            else:
+                with self.selenium.context(self.selenium.CONTEXT_CHROME):
+                    self.actions.context_click(
+                        self.selenium.find_element(*BookmarkLocators.NAVIGATOR_TOOLBOX)
+                    ).perform()
+                    self.selenium.find_element(*BookmarkLocators.MENU_BAR).click()
+                    self.selenium.find_element(
+                        *BookmarkLocators.MAIN_MENU_BOOKMARK
+                    ).click()
+                    self.actions.context_click(
+                        self.selenium.find_element(*BookmarkLocators.MANAGE_BOOKMARKS)
+                    ).perform()
+                    self.selenium.find_element(*BookmarkLocators.ADD_BOOKMARK).click()
+
+                    bookmark_frame = self.selenium.find_element(
+                        *BookmarkLocators.ADD_BOOKMARK_FRAME
+                    )
+                    self.selenium.switch_to.frame(bookmark_frame)
+                    if bookmark_data:
+                        if bookmark_data["name"]:
+                            self.actions.send_keys(bookmark_data["name"]).perform()
+                        self.actions.send_keys(Keys.TAB).perform()
+
+                        if bookmark_data["url"]:
+                            self.actions.send_keys(
+                                bookmark_data["url"] + Keys.TAB
+                            ).perform()
+
+                        if (tags := bookmark_data["tags"]) is not None:
+                            for tag in tags:
+                                self.actions.send_keys(tag).perform()
+                                self.actions.send_keys(",").perform()
+                            self.actions.send_keys(Keys.TAB).perform()
+
+                        if bookmark_data.get("keyword"):
+                            keyword = bookmark_data["keyword"] or ""
+                            self.actions.send_keys(keyword + Keys.TAB).perform()
+
+                    self.actions.send_keys(
+                        Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER
+                    ).perform()
+                    if folder := self.selenium.find_element(
+                        *BookmarkLocators.BOOKMARK_FOLDER
+                    ):
+                        folder.click()
+                        self.selenium.switch_to.frame(folder)
+                        self.actions.send_keys(Keys.TAB, Keys.ENTER).perform()
+
+    def bookmark_exists(self, label: str) -> bool:
         """
         Check if a bookmark with the given label exists.
 
@@ -69,134 +126,70 @@ class BasicBookmark(NavBar):
             label (str): The name of the bookmark to search for.
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            self.open_bookmark_menu(
-                locator_panel=BookmarkLocators.PANEL_MENU,
-                locator_bookmark=BookmarkLocators.PANEL_BOOKMARK_MENU,
+            self.selenium.find_element(*BookmarkLocators.PANEL_MENU).click()
+            self.selenium.find_element(*BookmarkLocators.PANEL_BOOKMARK_MENU).click()
+            panel_bookmarks = self.selenium.find_element(
+                *BookmarkLocators.PANEL_BOOKMARK_TOOLBAR
             )
-            panel_bookmarks = self.find_element(BookmarkLocators.PANEL_BOOKMARK_TOOLBAR)
-            if panel_bookmarks is not None:
-                menu_items = panel_bookmarks.find_elements(
-                    By.CSS_SELECTOR, "toolbarbutton.bookmark-item"
-                )
-                if menu_items is not None:
-                    for item in menu_items:
-                        item_label = item.get_attribute("label")
-                        if item_label and label.lower() in item_label.lower():
-                            return True
-            return False
-
-    def delete(self) -> None:
-        """Delete a bookmark using the star button."""
-        with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            star_button_image = self.find_element(BookmarkLocators.STAR_BUTTON_IMAGE)
-            if star_button_image and star_button_image.get_attribute("starred") == "true":
-                self.click_element(BookmarkLocators.STAR_BUTTON)
-                self.click_element(BookmarkLocators.REMOVE_BUTTON)
-
-
-class AdvancedBookmark(BasicBookmark):
-    """Handles advanced bookmark operations."""
-
-    if TYPE_CHECKING:
-        from foxpuppet.windows.browser.window import BrowserWindow
-
-    @staticmethod
-    def create(window: "BrowserWindow", root: WebElement) -> Optional["AdvancedBookmark"]:
-        """Create an advanced bookmark object.
-
-        Args:
-            window (:py:class:`BrowserWindow`): The window object where the bookmark appears.
-            root (:py:class:`~selenium.webdriver.remote.webelement.WebElement`): WebElement for the bookmark panel.
-
-        Returns:
-            :py:class:`AdvancedBookmark`: An instance of AdvancedBookmark if successful, otherwise None.
-        """
-        with window.selenium.context(window.selenium.CONTEXT_CHROME):
-            try:
-                return AdvancedBookmark(window, root)
-            except NoSuchElementException:
-                return None
-
-    @property
-    def is_bookmarked(self) -> bool:
-        """Checks if the current page is bookmarked.
-
-        Returns:
-            bool: True if the page is bookmarked, False otherwise.
-        """
-        current_page_title = self.selenium.title
-        self.open_main_menu(
-            locator_toolbar=BookmarkLocators.NAVIGATOR_TOOLBOX,
-            locator_menu_bar=BookmarkLocators.MENU_BAR,
-        )
-        bookmark_menu = self.find_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
-        if bookmark_menu is not None:
-            self.click_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
-            with self.selenium.context(self.selenium.CONTEXT_CHROME):
-                menu_items = bookmark_menu.find_elements(
-                    By.CSS_SELECTOR, "menuitem.bookmark-item"
-                )
-                for item in menu_items:
-                    item_label = item.get_attribute("label")
-                    if item_label and item_label.lower() in current_page_title.lower():
-                        return True
+            menu_items = panel_bookmarks.find_elements(
+                By.CSS_SELECTOR, "toolbarbutton.bookmark-item"
+            )
+            if any(
+                label.lower() in item_label.lower()
+                for item in menu_items
+                if (item_label := item.get_attribute("label"))
+            ):
+                return True
         return False
 
-    def add_bookmark(self, bookmark_data: BookmarkData) -> None:
-        """Add a Bookmark using the main bookmark menu."""
-        self.open_main_menu(
-            locator_toolbar=BookmarkLocators.NAVIGATOR_TOOLBOX,
-            locator_menu_bar=BookmarkLocators.MENU_BAR,
-        )
-        self.click_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
-        self.context_click(BookmarkLocators.MANAGE_BOOKMARKS)
-        self.click_element(BookmarkLocators.ADD_BOOKMARK)
-        self.switch_to_frame(BookmarkLocators.ADD_BOOKMARK_FRAME)
+    def delete_bookmark(
+        self, label: Optional[str] = None, is_detailed: bool = False
+    ) -> None:
+        """
+        Delete a bookmark using either quick delete (star button) or detailed menu approach.
 
-        if bookmark_data["name"]:
-            self.actions.send_keys(bookmark_data["name"]).perform()
-        self.actions.send_keys(Keys.TAB).perform()
+        Args:
+            detailed (bool, optional): Whether to use detailed menu approach. Defaults to False.
+            label (str, optional): Label of the bookmark to delete when using detailed approach.
+                Required when detailed is True.
 
-        if bookmark_data["url"]:
-            self.actions.send_keys(bookmark_data["url"] + Keys.TAB).perform()
-
-        tags = bookmark_data["tags"]
-        if tags is not None:
-            for tag in tags:
-                self.actions.send_keys(tag).perform()
-                self.actions.send_keys(",").perform()
-            self.actions.send_keys(Keys.TAB).perform()
-
-        if bookmark_data.get("keyword"):
-            keyword = (
-                bookmark_data["keyword"] if bookmark_data["keyword"] is not None else ""
-            )
-            self.actions.send_keys(keyword + Keys.TAB).perform()
-
-        self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
-        self.actions.send_keys(Keys.TAB, Keys.ENTER).perform()
-        self.switch_to_default_context()
-
-    def delete_bookmark(self, label: str) -> bool:
-        """Delete a bookmark using the main bookmark menu."""
-        self.open_main_menu(
-            locator_toolbar=BookmarkLocators.NAVIGATOR_TOOLBOX,
-            locator_menu_bar=BookmarkLocators.MENU_BAR,
-        )
-        bookmark_menu = self.find_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
-        self.click_element(BookmarkLocators.MAIN_MENU_BOOKMARK)
+        Returns:
+            bool: True if bookmark was successfully deleted (always True for detailed approach)
+        """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            if not is_detailed:
+                star_button_image = self.selenium.find_element(
+                    *BookmarkLocators.STAR_BUTTON_IMAGE
+                )
+                if (
+                    star_button_image
+                    and star_button_image.get_attribute("starred") == "true"
+                ):
+                    self.selenium.find_element(*BookmarkLocators.STAR_BUTTON).click()
+                    self.selenium.find_element(*BookmarkLocators.REMOVE_BUTTON).click()
+                return
+            self.actions.context_click(
+                self.selenium.find_element(*BookmarkLocators.NAVIGATOR_TOOLBOX)
+            ).perform()
+            self.selenium.find_element(*BookmarkLocators.MENU_BAR).click()
+            bookmark_menu = self.selenium.find_element(
+                *BookmarkLocators.MAIN_MENU_BOOKMARK
+            )
+            self.selenium.find_element(*BookmarkLocators.MAIN_MENU_BOOKMARK).click()
             menu_item = bookmark_menu.find_element(
                 By.CSS_SELECTOR, f"menuitem.bookmark-item[label='{label}']"
             )
             self.actions.context_click(menu_item).perform()
-            self.click_element(BookmarkLocators.DELETE_MENU_ITEM)
-        return True
+            self.selenium.find_element(*BookmarkLocators.DELETE_MENU_ITEM).click()
 
 
 class BookmarkLocators:
     ADD_BOOKMARK = (By.ID, "placesContext_new:bookmark")
     ADD_BOOKMARK_FRAME = (By.CSS_SELECTOR, "browser[class='dialogFrame']")
+    BOOKMARK_FOLDER = (
+        By.CSS_SELECTOR,
+        "browser.dialogFrame[name='dialogFrame-window-modal-dialog-subdialog']",
+    )
     BOOKMARK_PROPERTIES_DIALOG = (By.ID, "bookmarkproperties")
     DELETE_MENU_ITEM = (By.ID, "placesContext_deleteBookmark")
     FOLDER_MENU = (By.ID, "editBMPanel_folderMenuList")
