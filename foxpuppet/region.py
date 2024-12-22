@@ -6,6 +6,7 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.action_chains import ActionChains
 from foxpuppet.windows import BaseWindow
 
 
@@ -38,3 +39,4 @@ class Region(object):
         self.selenium: WebDriver = window.selenium
         self.wait: WebDriverWait = window.wait
         self.window: BaseWindow = window
+        self.actions: ActionChains = ActionChains(self.selenium)
