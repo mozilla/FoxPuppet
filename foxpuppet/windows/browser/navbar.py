@@ -4,8 +4,8 @@
 """Creates Navbar object to interact with Firefox Navigation Bar."""
 
 from selenium.webdriver.common.by import By
-
 from foxpuppet.region import Region
+from foxpuppet.windows.base import BaseWindow
 
 
 class NavBar(Region):
@@ -20,7 +20,10 @@ class NavBar(Region):
 
     """
 
-    _tracking_protection_shield_locator = (By.ID, "tracking-protection-icon-box")
+    _tracking_protection_shield_locator = (
+        By.ID,
+        "tracking-protection-icon-box",
+    )
 
     @property
     def is_tracking_shield_displayed(self) -> bool:
