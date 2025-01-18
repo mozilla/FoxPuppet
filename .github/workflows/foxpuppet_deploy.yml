@@ -1,0 +1,105 @@
+name: Publish to PyPI
+
+
+on:
+    pull_request:
+      # Sequence of patterns matched against refs/heads
+      branches:
+        - main
+# on:
+#   release:
+#     types:
+#       - created
+
+env:
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  test-and-publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.8.5
+          export PATH="$HOME/.local/bin:$PATH"
+
+      - name: Setup Firefox
+        id: setup-firefox
+        uses: ./.github/actions/setup_firefox/
+        with:
+          firefox-version: ${{ matrix.firefox }}
+
+      - run: |
+          echo Installed firefox versions: ${{ steps.setup-firefox.outputs.firefox-version }}
+
+      - name: Echo Geckodriver Path and Version
+        run: |
+          echo "Geckodriver is installed at: $(which geckodriver)"
+          geckodriver --version
+
+      - name: Build the Package
+        run: poetry build
+
+      -name: Install and Test the Wheel
+        run: |
+          python -m venv wheel-env
+          source wheel-env/bin/activate
+          pip install dist/*.whl
+          pip install pytest pytest-selenium pytest-cov pytest-html
+          mkdir -p results
+          export PYTHONUNBUFFERED=1
+          export MOZ_HEADLESS=1
+          export GECKODRIVER_LOG="$(pwd)/results/geckodriver.log"
+          pytest -vvv \
+            --driver Firefox \
+            --capture=no \
+            --cov --cov-fail-under=95 \
+            --html results/report.html 2>&1 | tee results/pytest.log
+          deactivate
+
+      - name: Install and Test the Tarball
+        run: |
+          python -m venv tarball-env
+          source tarball-env/bin/activate
+          pip install dist/*.tar.gz
+          pip install pytest pytest-selenium pytest-cov pytest-html
+          mkdir -p results
+          export PYTHONUNBUFFERED=1
+          export MOZ_HEADLESS=1
+          export GECKODRIVER_LOG="$(pwd)/results/geckodriver.log"
+          pytest -vvv \
+            --driver Firefox \
+            --capture=no \
+            --cov --cov-fail-under=95 \
+            --html results/report.html 2>&1 | tee results/pytest.log
+          deactivate
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+  create-release:
+    name: Create GitHub Release
+    needs: test-and-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist/*.whl dist/*.tar.gz \
+            --title "Release ${GITHUB_REF_NAME}" \
+            --notes "Automated release of version ${GITHUB_REF_NAME}"
