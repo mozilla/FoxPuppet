@@ -1,4 +1,3 @@
-export PYTHONUNBUFFERED = 1
 export MOZ_HEADLESS = 1
 export GECKODRIVER_LOG = $(shell pwd)/results/geckodriver.log
 

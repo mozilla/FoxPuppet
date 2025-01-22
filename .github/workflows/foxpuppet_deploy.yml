@@ -49,6 +49,16 @@ jobs:
           make test
           deactivate
 
+      - name: Upload Wheel Test Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-test-results
+          path: |
+            results/report.html
+            results/geckodriver.log
+          retention-days: 14
+
       - name: Install and Test the Tarball
         run: |
           python -m venv tarball-env
@@ -58,6 +68,16 @@ jobs:
           mkdir -p results
           make test
           deactivate
+
+      - name: Upload Tarball Test Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tarball-test-results
+          path: |
+            results/report.html
+            results/geckodriver.log
+          retention-days: 14
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
