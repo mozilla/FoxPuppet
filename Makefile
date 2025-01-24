@@ -1,3 +1,6 @@
+export MOZ_HEADLESS = 1
+export GECKODRIVER_LOG = $(shell pwd)/results/geckodriver.log
+
 BLACK_CHECK = black -l 90 --check --diff .
 BLACK_FIX = black -l 90 .
 MINIMUM_COVERAGE = 95
