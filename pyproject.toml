@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "foxpuppet"
-version = "0.1.0"
+version = "1.0.4"
 description = ""
-authors = ["Benjamin Forehand Jr <bforehand@mozilla.com>"]
+authors = ["Benjamin Forehand Jr <bforehand@mozilla.com>", "Temidayo Azeez <temidayoazeez032@gmail.com>"]
 license = "Mozilla Public License 2.0 (MPL 2.0)"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-selenium = "^4.27.1"
+selenium = "^4.28.1"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.1.1"
