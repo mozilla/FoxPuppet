@@ -50,11 +50,27 @@ class PanelUI(Region):
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.PANEL_UI_BUTTON).click()
 
+    def open_new_tab(self) -> None:
+        """
+        Opens a new tab using the Panel UI menu.
+        """
+        self.open_panel_menu()
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            self.selenium.find_element(*PanelUILocators.NEW_TAB).click()
+
+    def open_new_window(self) -> None:
+        """
+        Opens a new window using the Panel UI menu.
+        """
+        self.open_panel_menu()
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            self.selenium.find_element(*PanelUILocators.NEW_WINDOW).click()
+
     def open_private_window(self) -> None:
         """
         Opens a new window in private browsing mode using the Panel UI menu.
         """
-        # self.open_panel_menu()
+        self.open_panel_menu()
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.PRIVATE_WINDOW).click()
 
@@ -62,11 +78,11 @@ class PanelUI(Region):
         """
         Opens the History in Panel UI Menu
         """
-        # self.open_panel_menu()
+        self.open_panel_menu()
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.HISTORY).click()
 
-    def wait_for_num_windows_or_tabs(self, expected_count: int) -> None:
+    def wait_for_num_windows_or_tabs(self, expected_count: int) -> bool:
         """
         Waits until the number of open browser windows or tabs matches the expected value.
 
@@ -74,18 +90,40 @@ class PanelUI(Region):
             expected_count (int): The expected number of windows or tabs.
         """
         self.wait.until(
-            lambda _: len(self.driver.window_handles) == expected_count,
-            f"Expected {expected_count} windows or tabs, but found {len(self.driver.window_handles)}",
+            lambda _: len(self.selenium.window_handles) == expected_count,
+            f"Expected {expected_count} windows or tabs, but found {len(self.selenium.window_handles)}",
         )
+        return True
 
     def switch_to_new_window_or_tab(self) -> None:
         """Get list of all window handles, switch to the newly opened tab/window"""
         handles = self.selenium.window_handles
         self.selenium.switch_to.window(handles[-1])
 
+    def awesome_bar(self, links: list) -> list:
+        """Check if the provided links are present in the awesome bar's suggestion links."""
+        urls = []
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            for link in links:
+                awesome_bar = self.selenium.find_element(*PanelUILocators.INPUT_FIELD)
+                awesome_bar.clear()
+                awesome_bar.send_keys(link)
 
-class History(PanelUI):
-    """Handles interactions with Firefox History."""
+                self.wait.until(
+                    lambda _: self.selenium.find_elements(*PanelUILocators.SEARCH_RESULTS)
+                )
+
+                search_results = self.selenium.find_elements(
+                    *PanelUILocators.SEARCH_RESULT_ITEMS
+                )
+
+                for result in search_results:
+                    url_span = result.find_element(*PanelUILocators.SEARCH_RESULT_ITEM)
+                    if url_span.text in link:
+                        if len(url_span.text) != 0:
+                            urls.append(link)
+                            break
+        return urls
 
     def is_present(self, link: str) -> bool:
         """
@@ -132,9 +170,23 @@ class History(PanelUI):
                 )
             self.selenium.switch_to.default_content()
 
+    def verify_links_in_awesome_bar(self, links: list, new_window: bool = False) -> list:
+        """
+        Verifies that the provided links appear in the awesome bar.
+        Args:
+            links `list`: A list of links to be verified.
 
-class PrivateWindow(PanelUI):
-    """Handles interactions with Firefox Private Window."""
+        Returns:
+            list: A list of links that were not found in the awesome bar.
+        """
+        if new_window:
+            self.open_new_window()
+        else:
+            self.open_new_tab()
+        self.switch_to_new_window_or_tab()
+        for link in links:
+            self.selenium.get(link)
+        return self.awesome_bar(links)
 
     def verify_private_browsing_links_not_in_awesome_bar(self, links: list) -> list:
         """
@@ -145,36 +197,43 @@ class PrivateWindow(PanelUI):
         Returns:
             list: A list of links that appeared in the awesome bar during private browsing.
         """
-        invalid_links = []
-        initial_window_handle = self.driver.current_window_handle
-        # self.open_private_window()
+        initial_window_handle = self.selenium.current_window_handle
+        self.open_private_window()
         self.switch_to_new_window_or_tab()
 
         for link in links:
             self.selenium.get(link)
 
-        self.driver.switch_to.window(initial_window_handle)
+        self.selenium.switch_to.window(initial_window_handle)
+        return self.awesome_bar(links)
 
-        with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            for link in links:
-                awesome_bar = self.selenium.find_element(*PanelUILocators.INPUT_FIELD)
-                awesome_bar.clear()
-                awesome_bar.send_keys(link)
+    def verify_links_in_history(self, links: list, new_window: bool = False) -> list:
+        """
+        Verifies that the provided links appear in the history.
+        Args:
+            links `list`: A list of links to be verified.
 
-                self.wait.until(
-                    lambda _: self.selenium.find_elements(*PanelUILocators.SEARCH_RESULTS)
-                )
-
-                search_results = self.selenium.find_elements(
-                    *PanelUILocators.SEARCH_RESULTS
-                )
-                if any(link in result.text for result in search_results):
-                    invalid_links.append(link)
-
-        return invalid_links
+        Returns:
+            list: A list of links that were not found in the history.
+        """
+        if new_window:
+            self.open_new_window()
+        else:
+            self.open_new_tab()
+        self.switch_to_new_window_or_tab()
+        for link in links:
+            self.selenium.get(link)
+        self.open_panel_menu()
+        self.open_history_menu()
+        urls = []
+        for link in links:
+            if not self.is_present(link):
+                urls.append(link)
+        return urls
 
     def verify_private_browsing_links_not_in_history(
-        self, links: list, history: History
+        self,
+        links: list,
     ) -> list:
         """
         Verifies that the provided links visited in private browsing session do not appear in the history.
@@ -186,8 +245,8 @@ class PrivateWindow(PanelUI):
             list: A list of links that were found in the history during the private browsing session.
         """
         invalid_links = []
-        initial_window_handle = self.driver.current_window_handle
-        # self.open_private_window()
+        initial_window_handle = self.selenium.current_window_handle
+        self.open_private_window()
         self.switch_to_new_window_or_tab()
 
         for link in links:
@@ -197,15 +256,18 @@ class PrivateWindow(PanelUI):
         self.open_panel_menu()
         self.open_history_menu()
         for link in links:
-            if history.is_present(link):
+            if self.is_present(link):
                 invalid_links.append(link)
         return invalid_links
 
 
 class PanelUILocators:
     PANEL_UI_BUTTON = (By.ID, "PanelUI-menu-button")
+    NEW_TAB = (By.ID, "appMenu-new-tab-button2")
+    NEW_WINDOW = (By.ID, "appMenu-new-window-button2")
     PRIVATE_WINDOW = (By.ID, "appMenu-new-private-window-button2")
     HISTORY = (By.ID, "appMenu-history-button")
+    INPUT_FIELD = (By.ID, "urlbar-input")
     CLEAR_RECENT_HISTORY = (By.ID, "appMenuClearRecentHistory")
     CLEAR_RECENT_HISTORY_BUTTON = (By.CSS_SELECTOR, "button[dlgtype='accept']")
     CLEAR_HISTORY_EVERYTHING = (By.CSS_SELECTOR, "menuitem[value='0']")
@@ -216,10 +278,11 @@ class PanelUILocators:
         "#appMenu_historyMenu toolbarbutton.subviewbutton",
     )
     HISTORY_IFRAME = (By.CSS_SELECTOR, "browser.dialogFrame")
+    SEARCH_RESULTS = (By.ID, "urlbar-results")
+    SEARCH_RESULT_ITEMS = (By.CSS_SELECTOR, "div.urlbarView-row[role='presentation']")
+    SEARCH_RESULT_ITEM = (By.CSS_SELECTOR, "span.urlbarView-url")
 
 
 PANEL_ITEMS = {
     "PanelUI-menu-button": PanelUI,
-    "appMenu-history-button": History,
-    "appMenu-new-private-window-button2": PrivateWindow,
 }
