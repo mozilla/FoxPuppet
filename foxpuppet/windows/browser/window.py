@@ -22,7 +22,7 @@ P = TypeVar("P", bound="PanelUI")
 class BrowserWindow(BaseWindow):
     """Representation of a browser window."""
 
-    _bookmark_locator = (By.ID, "main-window")  # editBookmarkPanelTemplate
+    _bookmark_locator = (By.ID, "main-window")
     _file_menu_button_locator = (By.ID, "file-menu")
     _file_menu_private_window_locator = (By.ID, "menu_newPrivateWindow")
     _file_menu_new_window_button_locator = (By.ID, "menu_newNavigator")
@@ -32,10 +32,6 @@ class BrowserWindow(BaseWindow):
     _app_menu_notification_locator = (
         By.CSS_SELECTOR,
         "#appMenu-notification-popup popupnotification",
-    )
-    _app_menu_panel_ui_locator = (
-        By.CSS_SELECTOR,
-        "#appMenu-mainView .panel-subview-body toolbarbutton",
     )
     _tab_browser_locator = (By.ID, "tabbrowser-tabs")
 
@@ -97,20 +93,6 @@ class BrowserWindow(BaseWindow):
                 panel_root = PanelUI.create(self, root)
             except NoSuchElementException:
                 pass
-
-            try:
-                panel_items = self.selenium.find_elements(
-                    *self._app_menu_panel_ui_locator
-                )
-                for item in panel_items:
-                    _id = item.get_property("id")
-                    from foxpuppet.windows.browser.panel_ui.panel_ui import PANEL_ITEMS
-
-                    if _id in PANEL_ITEMS and item.is_displayed():
-                        panel_root = PANEL_ITEMS[_id].create(self, item)  # type: ignore
-            except StopIteration:
-                pass
-
         return panel_root
 
     def wait_for_notification(
