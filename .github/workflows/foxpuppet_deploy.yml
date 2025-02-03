@@ -79,6 +79,12 @@ jobs:
             results/geckodriver.log
           retention-days: 14
 
+      - name: Upload Package Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-artifacts
+          path: dist/
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -91,6 +97,16 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: package-artifacts
+          path: dist/
+
+      - name: Verify Artifacts
+        run: |
+          ls -al dist
 
       - name: Create Release
         env:
