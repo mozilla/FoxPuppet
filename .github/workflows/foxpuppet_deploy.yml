@@ -26,15 +26,21 @@ jobs:
           curl -sSL https://install.python-poetry.org | python3 - --version 1.8.5
           export PATH="$HOME/.local/bin:$PATH"
 
+      - name: Remove Firefox
+        run: |
+          sudo rm -rf /usr/bin/firefox
+          echo "Firefox has been removed."
+
       - name: Setup Firefox
         id: setup-firefox
-        uses: ./.github/actions/setup_firefox/
+        uses: browser-actions/setup-firefox@v1    #./.github/actions/setup_firefox/
         with:
           firefox-version: latest
 
       - name: Verify Firefox Installation
         run: |
           echo Installed Firefox version:
+          which firefox
           firefox --version
 
       - name: Build the Package
