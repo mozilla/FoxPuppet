@@ -4,7 +4,8 @@
 """Contains classes for handling Firefox bookmarks."""
 
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
 from foxpuppet.windows.browser.navbar import NavBar
@@ -75,6 +76,9 @@ class Bookmark(NavBar):
                     self.actions.context_click(
                         self.selenium.find_element(*BookmarkLocators.NAVIGATOR_TOOLBOX)
                     ).perform()
+                    WebDriverWait(self.selenium, 10).until(
+                        EC.presence_of_element_located(BookmarkLocators.MENU_BAR)
+                    )
                     self.selenium.find_element(*BookmarkLocators.MENU_BAR).click()
                     self.selenium.find_element(
                         *BookmarkLocators.MAIN_MENU_BOOKMARK
@@ -197,7 +201,7 @@ class BookmarkLocators:
     MANAGE_BOOKMARKS = (By.ID, "bookmarksShowAll")
     MENU_BAR = (By.ID, "toggle_toolbar-menubar")
     NAME_FIELD = (By.ID, "editBMPanel_namePicker")
-    NAVIGATOR_TOOLBOX = (By.ID, "navigator-toolbox")
+    NAVIGATOR_TOOLBOX = (By.ID, "TabsToolbar")
     OTHER_BOOKMARKS = (By.ID, "OtherBookmarks")
     OTHER_BOOKMARKS_STAR = (By.ID, "editBMPanel_unfiledRootItem")
     PANEL_BOOKMARK_MENU = (By.ID, "appMenu-bookmarks-button")
