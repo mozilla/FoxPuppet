@@ -139,12 +139,19 @@ class BrowserWindow(BaseWindow):
         """
         self.switch_to()
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            return self.selenium.execute_script(
+            return self.selenium.execute_async_script(
                 """
-                Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
+                let callback = arguments[arguments.length - 1];
+                (async () => {
+                    try {
+                        const mod = await import("resource://gre/modules/PrivateBrowsingUtils.sys.mjs");
+                        let chromeWindow = arguments[0].ownerDocument.defaultView;
 
-                let chromeWindow = arguments[0].ownerDocument.defaultView;
-                return PrivateBrowsingUtils.isWindowPrivate(chromeWindow);
+                        callback(mod.PrivateBrowsingUtils.isWindowPrivate(chromeWindow));
+                    } catch (e) {
+                        callback({error: e.message});
+                    }
+                })();
                 """,
                 self.document_element,
             )
