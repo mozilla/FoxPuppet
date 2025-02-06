@@ -196,7 +196,10 @@ class BookmarkLocators:
     )
     BOOKMARK_PROPERTIES_DIALOG = (By.ID, "bookmarkproperties")
     DELETE_MENU_ITEM = (By.ID, "placesContext_deleteBookmark")
-    FOLDER_MENU = (By.ID, "editBMPanel_folderMenuList")
+    FOLDER_MENU = (
+        By.CSS_SELECTOR,
+        "#editBookmarkPanelContent .editBMPanel_folderRow #editBMPanel_folderMenuList",
+    )
     MAIN_MENU_BOOKMARK = (By.ID, "bookmarksMenu")
     MANAGE_BOOKMARKS = (By.ID, "bookmarksShowAll")
     MENU_BAR = (By.ID, "toggle_toolbar-menubar")
