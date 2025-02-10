@@ -39,3 +39,35 @@ class NavBar(Region):
                 return el.get_attribute("active") is not None
             el = self.root.find_element(By.ID, "tracking-protection-icon")
             return bool(el.get_attribute("state"))
+
+    def url_bar(self, links: list) -> list:
+        """Check if the provided links are present in the url bar's suggestions."""
+        urls = []
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            for link in links:
+                url_bar = self.selenium.find_element(*NavBarLocators.INPUT_FIELD)
+                url_bar.clear()
+                url_bar.send_keys(link)
+
+                self.wait.until(
+                    lambda _: self.selenium.find_elements(*NavBarLocators.SEARCH_RESULTS)
+                )
+
+                search_results = self.selenium.find_elements(
+                    *NavBarLocators.SEARCH_RESULT_ITEMS
+                )
+
+                for result in search_results:
+                    url_span = result.find_element(*NavBarLocators.SEARCH_RESULT_ITEM)
+                    if url_span.text in link:
+                        if len(url_span.text) != 0:
+                            urls.append(link)
+                            break
+        return urls
+
+
+class NavBarLocators:
+    INPUT_FIELD = (By.ID, "urlbar-input")
+    SEARCH_RESULTS = (By.ID, "urlbar-results")
+    SEARCH_RESULT_ITEM = (By.CSS_SELECTOR, "span.urlbarView-url")
+    SEARCH_RESULT_ITEMS = (By.CSS_SELECTOR, "div.urlbarView-row[role='presentation']")
