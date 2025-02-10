@@ -33,6 +33,10 @@ class BrowserWindow(BaseWindow):
         By.CSS_SELECTOR,
         "#appMenu-notification-popup popupnotification",
     )
+    _app_menu_panel_ui_locator = (
+        By.CSS_SELECTOR,
+        "#appMenu-mainView .panel-subview-body toolbarbutton",
+    )
     _tab_browser_locator = (By.ID, "tabbrowser-tabs")
 
     @property
@@ -85,14 +89,20 @@ class BrowserWindow(BaseWindow):
             return Bookmark.create(self, root)
 
     @property
-    def panel_ui(self) -> PanelUI | Any:
+    def panel(self) -> PanelUI | Any:
         panel_root = None
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            try:
-                root = self.selenium.find_element(*self._panel_ui_locator)
-                panel_root = PanelUI.create(self, root)
-            except NoSuchElementException:
-                pass
+            root = self.selenium.find_element(*self._panel_ui_locator)
+            panel_root = PanelUI.create(self, root)
+
+            panel_items = self.selenium.find_elements(*self._app_menu_panel_ui_locator)
+            for item in panel_items:
+                _id = item.get_property("id")
+                from foxpuppet.windows.browser.panel_ui.panel_ui import PANEL_ITEMS
+
+                if _id in PANEL_ITEMS and item.is_displayed():
+                    panel_root = PANEL_ITEMS[_id].create(self, item)  # type: ignore
+
         return panel_root
 
     def wait_for_notification(
@@ -143,10 +153,10 @@ class BrowserWindow(BaseWindow):
             )
             return self.bookmark
 
-    def wait_for_panel_ui(
+    def wait_for_panel(
         self, panel_ui_class: Optional[Type[P]] = PanelUI  # type: ignore
     ) -> Optional[P]:
-        """Wait for the specified PanelUI to be displayed.
+        """Wait for the specified PanelUI item to be displayed.
 
         Args:
             panel_ui_class (:py:class:`PanelUI`, optional):
@@ -162,13 +172,13 @@ class BrowserWindow(BaseWindow):
             else:
                 message = f"{panel_ui_class.__name__} was not shown."
             self.wait.until(
-                lambda _: isinstance(self.panel_ui, panel_ui_class),
+                lambda _: isinstance(self.panel, panel_ui_class),
                 message=message,
             )
-            return self.panel_ui  # type: ignore
+            return self.panel  # type: ignore
         else:
             self.wait.until(
-                lambda _: self.panel_ui is None,
+                lambda _: self.panel is None,
                 message="Unexpected panel UI was shown.",
             )
             return None
@@ -230,3 +240,21 @@ class BrowserWindow(BaseWindow):
             expected.new_browser_window_is_opened(self.selenium, handles_before),
             message="No new browser window opened",
         )
+
+    def wait_for_num_windows_or_tabs(self, expected_count: int) -> bool:
+        """
+        Waits until the number of open browser windows or tabs matches the expected value.
+
+        Args:
+            expected_count (int): The expected number of windows or tabs.
+        """
+        self.wait.until(
+            lambda _: len(self.selenium.window_handles) == expected_count,
+            f"Expected {expected_count} windows or tabs, but found {len(self.selenium.window_handles)}",
+        )
+        return True
+
+    def switch_to_new_window_or_tab(self) -> None:
+        """Get list of all window handles, switch to the newly opened tab/window"""
+        handles = self.selenium.window_handles
+        self.selenium.switch_to.window(handles[-1])
