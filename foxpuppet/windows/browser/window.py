@@ -240,21 +240,3 @@ class BrowserWindow(BaseWindow):
             expected.new_browser_window_is_opened(self.selenium, handles_before),
             message="No new browser window opened",
         )
-
-    def wait_for_num_windows_or_tabs(self, expected_count: int) -> bool:
-        """
-        Waits until the number of open browser windows or tabs matches the expected value.
-
-        Args:
-            expected_count (int): The expected number of windows or tabs.
-        """
-        self.wait.until(
-            lambda _: len(self.selenium.window_handles) == expected_count,
-            f"Expected {expected_count} windows or tabs, but found {len(self.selenium.window_handles)}",
-        )
-        return True
-
-    def switch_to_new_window_or_tab(self) -> None:
-        """Get list of all window handles, switch to the newly opened tab/window"""
-        handles = self.selenium.window_handles
-        self.selenium.switch_to.window(handles[-1])
