@@ -8,6 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 from foxpuppet.windows import BaseWindow
+from foxpuppet.windows.browser.urlbar import UrlBar
 
 
 class Region(object):
@@ -40,3 +41,4 @@ class Region(object):
         self.wait: WebDriverWait = window.wait
         self.window: BaseWindow = window
         self.actions: ActionChains = ActionChains(self.selenium)
+        self._url_bar: UrlBar = UrlBar(self.selenium, self.wait)

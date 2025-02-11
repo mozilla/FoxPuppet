@@ -41,7 +41,7 @@ class PanelUI(NavBar):
         return panel_items.get(_id, PanelUI)(window, root)
 
     @property
-    def is_barged(self) -> bool:
+    def is_update_available(self) -> bool:
         """
         Checks if the Panel UI button indicates a pending Firefox update.
 
