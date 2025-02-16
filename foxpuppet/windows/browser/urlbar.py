@@ -13,29 +13,37 @@ class UrlBar:
         self.selenium = selenium
         self.wait = wait
 
-    def check_suggestions(self, links: list) -> list:
-        """Check if the provided links are present in the URL bar's suggestions."""
-        urls = []
+    def suggestions(self, url: str) -> list[str]:
+        """
+        Get all URL suggestions shown in the URL bar.
+
+        Args:
+            url (str): The URL to type into the URL bar
+
+        Returns:
+            list[str]: List of suggested URLs that appear in the URL bar
+        """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            for link in links:
-                url_bar = self.selenium.find_element(*URLBarLocators.INPUT_FIELD)
-                url_bar.clear()
-                url_bar.send_keys(link)
+            url_bar = self.selenium.find_element(*URLBarLocators.INPUT_FIELD)
+            url_bar.clear()
+            url_bar.send_keys(url)
 
-                self.wait.until(
-                    lambda _: self.selenium.find_elements(*URLBarLocators.SEARCH_RESULTS)
-                )
+            self.wait.until(
+                lambda _: self.selenium.find_elements(*URLBarLocators.SEARCH_RESULTS)
+            )
 
-                search_results = self.selenium.find_elements(
-                    *URLBarLocators.SEARCH_RESULT_ITEMS
-                )
+            search_results = self.selenium.find_elements(
+                *URLBarLocators.SEARCH_RESULT_ITEMS
+            )
 
-                for result in search_results:
-                    url_span = result.find_element(*URLBarLocators.SEARCH_RESULT_ITEM)
-                    if url_span.text in link and len(url_span.text) != 0:
-                        urls.append(link)
-                        break
-        return urls
+            suggested_urls = [
+                result.find_element(*URLBarLocators.SEARCH_RESULT_ITEM).text
+                for result in search_results
+                if result.find_element(*URLBarLocators.SEARCH_RESULT_ITEM).text
+            ]
+            print(suggested_urls)
+
+            return suggested_urls
 
 
 class URLBarLocators:

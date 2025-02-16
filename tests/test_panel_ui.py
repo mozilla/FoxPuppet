@@ -64,45 +64,74 @@ def test_url_is_present_in_history(browser_history: History, selenium: WebDriver
     url = "https://www.mozilla.org/en-US/?v=a"
     selenium.get(url)
     browser_history.open_history_menu()
-    assert browser_history.is_present(url)
+    history_items = browser_history.history_items()
+    with selenium.context(selenium.CONTEXT_CHROME):
+        is_present = False
+        for item in history_items:
+            image_attr = item.get_attribute("image")
+            if image_attr is not None:
+                is_present = url in image_attr
+                if is_present:
+                    break
+        assert is_present
 
 
 def test_verify_url_bar_suggestions(panel_ui: PanelUI, selenium: WebDriver) -> None:
     """Test that a link appears in url bar suggestions."""
     test_url = "https://www.mozilla.org/en-US/?v=a"
     selenium.get(test_url)
-    suggestions = panel_ui.url_bar.check_suggestions([test_url])
-    assert len(suggestions) == 1
+    all_suggestions = panel_ui.url_bar.suggestions(test_url)
+    matching_suggestions = [
+        suggestion
+        for suggestion in all_suggestions
+        if suggestion in test_url and len(suggestion) != 0
+    ]
+    assert len(matching_suggestions) == 1
 
 
-def test_verify_links_open_in_new_tab_in_history(
+def test_verify_links_open_in_new_tab_from_history(
     panel_ui: PanelUI, browser_history: History, selenium: WebDriver, links: list
 ) -> None:
     """Test that links opened in new tab are present in browser history."""
-    urls = []
     panel_ui.open_new_tab()
     selenium.switch_to.window(selenium.window_handles[-1])
     for link in links:
         selenium.get(link)
     panel_ui.open_panel_menu()
     panel_ui.open_history_menu()
-    urls = [link for link in links if browser_history.is_present(link)]
-    assert len(urls) == 3
+    history_items = browser_history.history_items()
+    with selenium.context(selenium.CONTEXT_CHROME):
+        found_urls = []
+        for link in links:
+            for item in history_items:
+                image_attr = item.get_attribute("image")
+                if image_attr is not None and link in image_attr:
+                    found_urls.append(link)
+                    break
+        assert len(found_urls) == 3
 
 
-def test_verify_links_open_in_new_window_in_history(
+def test_verify_links_open_in_new_window_from_history(
     panel_ui: PanelUI, browser_history: History, selenium: WebDriver, links: list
 ) -> None:
     """Test that links opened in new window are present in browser history."""
-    urls = []
     panel_ui.open_new_window()
     selenium.switch_to.window(selenium.window_handles[-1])
+    time.sleep(3)
     for link in links:
         selenium.get(link)
     panel_ui.open_panel_menu()
     panel_ui.open_history_menu()
-    urls = [link for link in links if browser_history.is_present(link)]
-    assert len(urls) == 3
+    history_items = browser_history.history_items()
+    with selenium.context(selenium.CONTEXT_CHROME):
+        found_urls = []
+        for link in links:
+            for item in history_items:
+                image_attr = item.get_attribute("image")
+                if image_attr is not None and link in image_attr:
+                    found_urls.append(link)
+                    break
+        assert len(found_urls) == 3
 
 
 def test_clear_recent_history(
@@ -116,4 +145,13 @@ def test_clear_recent_history(
     time.sleep(1)
     panel_ui.open_panel_menu()
     panel_ui.open_history_menu()
-    assert not browser_history.is_present(url)
+    history_items = browser_history.history_items()
+    with selenium.context(selenium.CONTEXT_CHROME):
+        is_present = False
+        for item in history_items:
+            image_attr = item.get_attribute("image")
+            if image_attr is not None:
+                is_present = url in image_attr
+                if is_present:
+                    break
+        assert not is_present
