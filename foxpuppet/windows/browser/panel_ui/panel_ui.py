@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from foxpuppet.windows.browser.navbar import NavBar
 from selenium.webdriver.remote.webelement import WebElement
 from typing import Type, Any, TYPE_CHECKING, Optional
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class PanelUI(NavBar):
@@ -60,30 +61,49 @@ class PanelUI(NavBar):
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.PANEL_UI_BUTTON).click()
+            self.wait.until(
+                EC.visibility_of_element_located(*PanelUILocators.PANEL_POPUP),
+                message="Panel UI menu did not open",
+            )
 
     def open_new_tab(self) -> None:
         """
         Opens a new tab using the Panel UI menu.
         """
+        initial_handles = set(self.selenium.window_handles)
         self.open_panel_menu()
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.NEW_TAB).click()
+            self.wait.until(
+                lambda _: set(self.selenium.window_handles) - initial_handles,
+                message="New Tab did not open",
+            )
 
     def open_new_window(self) -> None:
         """
         Opens a new window using the Panel UI menu.
         """
+        initial_handles = set(self.selenium.window_handles)
         self.open_panel_menu()
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.NEW_WINDOW).click()
+            self.wait.until(
+                lambda _: set(self.selenium.window_handles) - initial_handles,
+                message="New window did not open",
+            )
 
     def open_private_window(self) -> None:
         """
         Opens a new window in private browsing mode using the Panel UI menu.
         """
+        initial_handles = set(self.selenium.window_handles)
         self.open_panel_menu()
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.PRIVATE_WINDOW).click()
+            self.wait.until(
+                lambda _: set(self.selenium.window_handles) - initial_handles,
+                message="Private window did not open",
+            )
 
     def open_history_menu(self) -> None:
         """
@@ -91,28 +111,29 @@ class PanelUI(NavBar):
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.HISTORY).click()
+            self.wait.until(
+                lambda _: self.selenium.find_element(
+                    *PanelUILocators.PANEL_HISTORY
+                ).is_displayed(),
+                message="History menu did not open",
+            )
 
 
 class History(PanelUI):
-    def is_present(self, link: str) -> bool:
+    def history_items(self) -> list[WebElement]:
         """
-        Checks if a specific link is present in the recent history.
-        Args:
-            link `str`: The URL or part of the URL to check for in the recent history.
+        Retrieves all history items from the Panel UI history menu.
 
         Returns:
-            bool: `True` if the link is present in the recent history, `False` otherwise.
+            list[WebElement]: List of WebElement objects representing history items.
+                Returns an empty list if no history items are found.
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             history_items = self.selenium.find_elements(
                 *PanelUILocators.RECENT_HISTORY_ITEMS
             )
-            for item in history_items:
-                item_src = item.get_attribute("image")
-                if item_src and link in item_src:
-                    print(item_src)
-                    return True
-            return False
+            print(history_items)
+            return history_items
 
     def clear_history(self):
         """
@@ -150,6 +171,8 @@ class PanelUILocators:
     HISTORY_IFRAME = (By.CSS_SELECTOR, "browser.dialogFrame")
     NEW_TAB = (By.ID, "appMenu-new-tab-button2")
     NEW_WINDOW = (By.ID, "appMenu-new-window-button2")
+    PANEL_HISTORY = (By.ID, "PanelUI-history")
+    PANEL_POPUP = ((By.ID, "appMenu-popup"),)
     PANEL_UI_BUTTON = (By.ID, "PanelUI-menu-button")
     PRIVATE_WINDOW = (By.ID, "appMenu-new-private-window-button2")
     RECENT_HISTORY_ITEMS = (
