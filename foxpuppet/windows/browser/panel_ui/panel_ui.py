@@ -62,7 +62,7 @@ class PanelUI(NavBar):
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             self.selenium.find_element(*PanelUILocators.PANEL_UI_BUTTON).click()
             self.wait.until(
-                EC.visibility_of_element_located(*PanelUILocators.PANEL_POPUP),
+                EC.presence_of_element_located(*PanelUILocators.PANEL_POPUP),
                 message="Panel UI menu did not open",
             )
 
