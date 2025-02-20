@@ -67,7 +67,7 @@ class Bookmark(NavBar):
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
             if not is_detailed:
-                self.selenium.find_element(*BookmarkLocators.STAR_BUTTON).click()
+                self.selenium.find_element(*BookmarkLocators.STAR_BUTTON_IMAGE).click()
                 self.selenium.find_element(*BookmarkLocators.FOLDER_MENU).click()
                 self.selenium.find_element(*BookmarkLocators.OTHER_BOOKMARKS_STAR).click()
                 self.selenium.find_element(*BookmarkLocators.SAVE_BUTTON).click()
@@ -169,7 +169,9 @@ class Bookmark(NavBar):
                     star_button_image
                     and star_button_image.get_attribute("starred") == "true"
                 ):
-                    self.selenium.find_element(*BookmarkLocators.STAR_BUTTON).click()
+                    self.selenium.find_element(
+                        *BookmarkLocators.STAR_BUTTON_IMAGE
+                    ).click()
                     self.selenium.find_element(*BookmarkLocators.REMOVE_BUTTON).click()
                 return
             self.actions.context_click(
