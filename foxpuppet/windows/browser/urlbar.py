@@ -6,13 +6,10 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
+from foxpuppet.region import Region
 
 
-class UrlBar:
-    def __init__(self, selenium: WebDriver, wait: WebDriverWait):
-        self.selenium = selenium
-        self.wait = wait
-
+class UrlBar(Region):
     def suggestions(self, url: str) -> list[str]:
         """
         Get all URL suggestions shown in the URL bar.
@@ -41,7 +38,6 @@ class UrlBar:
                 for result in search_results
                 if result.find_element(*URLBarLocators.SEARCH_RESULT_ITEM).text
             ]
-            print(suggested_urls)
 
             return suggested_urls
 

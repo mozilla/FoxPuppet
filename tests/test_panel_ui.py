@@ -59,6 +59,12 @@ def test_open_new_window(panel_ui: PanelUI, selenium: WebDriver) -> None:
     assert len(selenium.window_handles) == 2
 
 
+def test_open_new_private_window(panel_ui: PanelUI, selenium: WebDriver) -> None:
+    """Test opening a new window using the Panel UI."""
+    panel_ui.open_private_window()
+    assert len(selenium.window_handles) == 2
+
+
 def test_url_is_present_in_history(browser_history: History, selenium: WebDriver) -> None:
     """Test that visited URL appears in browser history."""
     url = "https://www.mozilla.org/en-US/?v=a"
@@ -94,7 +100,6 @@ def test_verify_links_open_in_new_tab_from_history(
 ) -> None:
     """Test that links opened in new tab are present in browser history."""
     panel_ui.open_new_tab()
-    selenium.switch_to.window(selenium.window_handles[-1])
     for link in links:
         selenium.get(link)
     panel_ui.open_panel_menu()
@@ -116,7 +121,6 @@ def test_verify_links_open_in_new_window_from_history(
 ) -> None:
     """Test that links opened in new window are present in browser history."""
     panel_ui.open_new_window()
-    selenium.switch_to.window(selenium.window_handles[-1])
     time.sleep(3)
     for link in links:
         selenium.get(link)

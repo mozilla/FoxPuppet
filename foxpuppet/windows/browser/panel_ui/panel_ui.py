@@ -50,10 +50,10 @@ class PanelUI(NavBar):
             bool: True if an update notification (barge) is present, False otherwise.
         """
         with self.selenium.context(self.selenium.CONTEXT_CHROME):
-            barged_status = self.selenium.find_element(
+            update_status = self.selenium.find_element(
                 *PanelUILocators.PANEL_UI_BUTTON
             ).get_attribute("barged")
-            return barged_status == "true"
+            return update_status == "true"
 
     def open_panel_menu(self) -> None:
         """
@@ -78,6 +78,8 @@ class PanelUI(NavBar):
                 lambda _: set(self.selenium.window_handles) - initial_handles,
                 message="New Tab did not open",
             )
+            new_tab = (set(self.selenium.window_handles) - initial_handles).pop()
+            self.selenium.switch_to.window(new_tab)
 
     def open_new_window(self) -> None:
         """
@@ -91,6 +93,8 @@ class PanelUI(NavBar):
                 lambda _: set(self.selenium.window_handles) - initial_handles,
                 message="New window did not open",
             )
+            new_window = (set(self.selenium.window_handles) - initial_handles).pop()
+            self.selenium.switch_to.window(new_window)
 
     def open_private_window(self) -> None:
         """
@@ -104,6 +108,17 @@ class PanelUI(NavBar):
                 lambda _: set(self.selenium.window_handles) - initial_handles,
                 message="Private window did not open",
             )
+            new_private_window = (
+                set(self.selenium.window_handles) - initial_handles
+            ).pop()
+            self.selenium.switch_to.window(new_private_window)
+
+            from foxpuppet.windows.browser.window import BrowserWindow
+
+            new_window = BrowserWindow(self.selenium, new_private_window)
+
+            if not new_window.is_private:
+                raise ValueError("The new window is not private.")
 
     def open_history_menu(self) -> None:
         """
@@ -132,7 +147,6 @@ class History(PanelUI):
             history_items = self.selenium.find_elements(
                 *PanelUILocators.RECENT_HISTORY_ITEMS
             )
-            print(history_items)
             return history_items
 
     def clear_history(self):

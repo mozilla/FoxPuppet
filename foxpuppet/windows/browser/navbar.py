@@ -43,4 +43,4 @@ class NavBar(Region):
     @property
     def url_bar(self) -> UrlBar:
         """Returns an instance of the UrlBar class."""
-        return self._url_bar
+        return UrlBar(self.window, self.root)
