@@ -32,7 +32,7 @@ def pytest_runtest_makereport(item: Item, call) -> Generator[None, Any, None]:
         report.extra = extra
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def webserver() -> Generator[WebServer, None, None]:
     """Fixture that starts a local web server."""
     from .webserver import WebServer
