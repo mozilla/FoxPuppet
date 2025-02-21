@@ -11,24 +11,31 @@ from foxpuppet.windows import BaseWindow
 from foxpuppet.windows.browser.navbar import NavBar
 from foxpuppet.windows.browser.notifications import BaseNotification
 from foxpuppet.windows.browser.bookmarks.bookmark import Bookmark
+from foxpuppet.windows.browser.panel_ui.panel_ui import PanelUI
 from selenium.webdriver.remote.webelement import WebElement
 from typing import Any, Optional, Union, TypeVar, Type
 
 T = TypeVar("T", bound="BaseNotification")
+P = TypeVar("P", bound="PanelUI")
 
 
 class BrowserWindow(BaseWindow):
     """Representation of a browser window."""
 
-    _bookmark_locator = (By.ID, "main-window")  # editBookmarkPanelTemplate
+    _bookmark_locator = (By.ID, "main-window")
     _file_menu_button_locator = (By.ID, "file-menu")
     _file_menu_private_window_locator = (By.ID, "menu_newPrivateWindow")
     _file_menu_new_window_button_locator = (By.ID, "menu_newNavigator")
     _nav_bar_locator = (By.ID, "nav-bar")
     _notification_locator = (By.CSS_SELECTOR, "#notification-popup popupnotification")
+    _panel_ui_locator = (By.ID, "PanelUI-menu-button")
     _app_menu_notification_locator = (
         By.CSS_SELECTOR,
         "#appMenu-notification-popup popupnotification",
+    )
+    _app_menu_panel_ui_locator = (
+        By.CSS_SELECTOR,
+        "#appMenu-mainView .panel-subview-body toolbarbutton",
     )
     _tab_browser_locator = (By.ID, "tabbrowser-tabs")
 
@@ -81,6 +88,23 @@ class BrowserWindow(BaseWindow):
             root = self.selenium.find_element(*self._bookmark_locator)
             return Bookmark.create(self, root)
 
+    @property
+    def panel(self) -> PanelUI | Any:
+        panel_root = None
+        with self.selenium.context(self.selenium.CONTEXT_CHROME):
+            root = self.selenium.find_element(*self._panel_ui_locator)
+            panel_root = PanelUI.create(self, root)
+
+            panel_items = self.selenium.find_elements(*self._app_menu_panel_ui_locator)
+            for item in panel_items:
+                _id = item.get_property("id")
+                from foxpuppet.windows.browser.panel_ui.panel_ui import PANEL_ITEMS
+
+                if _id in PANEL_ITEMS and item.is_displayed():
+                    panel_root = PANEL_ITEMS[_id].create(self, item)  # type: ignore
+
+        return panel_root
+
     def wait_for_notification(
         self,
         notification_class: Optional[Type[T]] = BaseNotification,  # type: ignore
@@ -128,6 +152,36 @@ class BrowserWindow(BaseWindow):
                 message=message,
             )
             return self.bookmark
+
+    def wait_for_panel(
+        self, panel_ui_class: Optional[Type[P]] = PanelUI  # type: ignore
+    ) -> Optional[P]:
+        """Wait for the specified PanelUI item to be displayed.
+
+        Args:
+            panel_ui_class (:py:class:`PanelUI`, optional):
+                The PanelUI subclass to wait for. If `None` is specified, it
+                will wait for any panel UI to be displayed. Defaults to `PanelUI`.
+
+        Returns:
+            Optional[:py:class:`PanelUI`]: The displayed PanelUI or `None` if not found.
+        """
+        if panel_ui_class:
+            if panel_ui_class is PanelUI:
+                message = "No panel UI was shown."
+            else:
+                message = f"{panel_ui_class.__name__} was not shown."
+            self.wait.until(
+                lambda _: isinstance(self.panel, panel_ui_class),
+                message=message,
+            )
+            return self.panel  # type: ignore
+        else:
+            self.wait.until(
+                lambda _: self.panel is None,
+                message="Unexpected panel UI was shown.",
+            )
+            return None
 
     @property
     def is_private(self) -> bool | Any:

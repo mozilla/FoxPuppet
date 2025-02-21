@@ -5,7 +5,7 @@
 
 from selenium.webdriver.common.by import By
 from foxpuppet.region import Region
-from foxpuppet.windows.base import BaseWindow
+from foxpuppet.windows.browser.urlbar import UrlBar
 
 
 class NavBar(Region):
@@ -39,3 +39,8 @@ class NavBar(Region):
                 return el.get_attribute("active") is not None
             el = self.root.find_element(By.ID, "tracking-protection-icon")
             return bool(el.get_attribute("state"))
+
+    @property
+    def url_bar(self) -> UrlBar:
+        """Returns an instance of the UrlBar class."""
+        return UrlBar(self.window, self.root)
