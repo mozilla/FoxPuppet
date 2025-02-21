@@ -72,13 +72,10 @@ def test_url_is_present_in_history(browser_history: History, selenium: WebDriver
     browser_history.open_history_menu()
     history_items = browser_history.history_items()
     with selenium.context(selenium.CONTEXT_CHROME):
-        is_present = False
-        for item in history_items:
-            image_attr = item.get_attribute("image")
-            if image_attr is not None:
-                is_present = url in image_attr
-                if is_present:
-                    break
+        is_present = any(
+            (image_attr := item.get_attribute("image")) and url in image_attr
+            for item in history_items
+        )
         assert is_present
 
 
@@ -106,13 +103,15 @@ def test_verify_links_open_in_new_tab_from_history(
     panel_ui.open_history_menu()
     history_items = browser_history.history_items()
     with selenium.context(selenium.CONTEXT_CHROME):
-        found_urls = []
-        for link in links:
-            for item in history_items:
-                image_attr = item.get_attribute("image")
-                if image_attr is not None and link in image_attr:
-                    found_urls.append(link)
-                    break
+        found_urls = [
+            link
+            for link in links
+            if any(
+                image_attr is not None and link in image_attr
+                for item in history_items
+                if (image_attr := item.get_attribute("image"))
+            )
+        ]
         assert len(found_urls) == 3
 
 
@@ -128,13 +127,15 @@ def test_verify_links_open_in_new_window_from_history(
     panel_ui.open_history_menu()
     history_items = browser_history.history_items()
     with selenium.context(selenium.CONTEXT_CHROME):
-        found_urls = []
-        for link in links:
-            for item in history_items:
-                image_attr = item.get_attribute("image")
-                if image_attr is not None and link in image_attr:
-                    found_urls.append(link)
-                    break
+        found_urls = [
+            link
+            for link in links
+            if any(
+                image_attr is not None and link in image_attr
+                for item in history_items
+                if (image_attr := item.get_attribute("image"))
+            )
+        ]
         assert len(found_urls) == 3
 
 
@@ -151,11 +152,8 @@ def test_clear_recent_history(
     panel_ui.open_history_menu()
     history_items = browser_history.history_items()
     with selenium.context(selenium.CONTEXT_CHROME):
-        is_present = False
-        for item in history_items:
-            image_attr = item.get_attribute("image")
-            if image_attr is not None:
-                is_present = url in image_attr
-                if is_present:
-                    break
+        is_present = any(
+            (image_attr := item.get_attribute("image")) and url in image_attr
+            for item in history_items
+        )
         assert not is_present
