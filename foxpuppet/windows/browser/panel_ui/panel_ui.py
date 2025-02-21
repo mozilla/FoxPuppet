@@ -108,17 +108,17 @@ class PanelUI(NavBar):
                 lambda _: set(self.selenium.window_handles) - initial_handles,
                 message="Private window did not open",
             )
-            new_private_window = (
-                set(self.selenium.window_handles) - initial_handles
-            ).pop()
-            self.selenium.switch_to.window(new_private_window)
-
             from foxpuppet.windows.browser.window import BrowserWindow
 
-            new_window = BrowserWindow(self.selenium, new_private_window)
-
-            if not new_window.is_private:
-                raise ValueError("The new window is not private.")
+            new_private_window = self.selenium.window_handles[-1]
+            try:
+                private_window = BrowserWindow(
+                    self.selenium, new_private_window
+                ).is_private
+                if private_window:
+                    self.selenium.switch_to.window(new_private_window)
+            except Exception as e:
+                raise Exception(f"The new window is not private: {str(e)}")
 
     def open_history_menu(self) -> None:
         """
