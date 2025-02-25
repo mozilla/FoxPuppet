@@ -4,8 +4,10 @@
 """Tests for Panel UI."""
 
 import pytest
-import time
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from foxpuppet.windows import BrowserWindow
 from foxpuppet.windows.browser.panel_ui.panel_ui import PanelUI, History
 
@@ -120,7 +122,6 @@ def test_verify_links_open_in_new_window_from_history(
 ) -> None:
     """Test that links opened in new window are present in browser history."""
     panel_ui.open_new_window()
-    time.sleep(3)
     for link in links:
         selenium.get(link)
     panel_ui.open_panel_menu()
@@ -147,7 +148,6 @@ def test_clear_recent_history(
     selenium.get(url)
     panel_ui.open_history_menu()
     browser_history.clear_history()
-    time.sleep(1)
     panel_ui.open_panel_menu()
     panel_ui.open_history_menu()
     history_items = browser_history.history_items()

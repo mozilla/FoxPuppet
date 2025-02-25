@@ -4,7 +4,7 @@
 """Contains classes for handling Firefox Panel UI (Hamburger menu)."""
 
 from selenium.webdriver.common.by import By
-
+import time
 from foxpuppet.windows.browser.navbar import NavBar
 from selenium.webdriver.remote.webelement import WebElement
 from typing import Type, Any, TYPE_CHECKING, Optional
@@ -95,6 +95,11 @@ class PanelUI(NavBar):
             )
             new_window = (set(self.selenium.window_handles) - initial_handles).pop()
             self.selenium.switch_to.window(new_window)
+            self.wait.until(
+                lambda _: self.selenium.execute_script("return document.readyState")
+                == "complete",
+                message="New window document not fully loaded",
+            )
 
     def open_private_window(self) -> None:
         """
@@ -172,6 +177,7 @@ class History(PanelUI):
                 """,
                     self.selenium.find_element(*PanelUILocators.HISTORY_DIALOG_BUTTON),
                 )
+        time.sleep(1)
 
 
 class PanelUILocators:
