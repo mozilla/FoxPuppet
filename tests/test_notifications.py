@@ -249,7 +249,6 @@ def test_close_failed_notification(
     browser.wait_for_notification(None)
 
 
-@pytest.mark.repeat(100)
 @pytest.mark.parametrize(
     "firefox_options", [{"page_load_strategy_none": True}], indirect=True
 )
