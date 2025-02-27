@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "foxpuppet"
-version = "1.0.5"
+version = "1.0.6"
 description = ""
 authors = ["Benjamin Forehand Jr <bforehand@mozilla.com>", "Temidayo Azeez <temidayoazeez032@gmail.com>"]
 license = "Mozilla Public License 2.0 (MPL 2.0)"
