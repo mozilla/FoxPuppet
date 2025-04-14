@@ -53,6 +53,7 @@ def browser(foxpuppet: FoxPuppet) -> BrowserWindow:
 def firefox_options(firefox_options: FirefoxOptions) -> FirefoxOptions:
     """Fixture for configuring Firefox."""
     firefox_options.log.level = "trace"  # type: ignore
+    firefox_options.set_preference("remote.system-access-check.enabled", False)
     # firefox_options.set_preference('devtools.chrome.enabled', True)
     # firefox_options.set_preference('devtools.debugger.remote-enabled', True)
     return firefox_options
